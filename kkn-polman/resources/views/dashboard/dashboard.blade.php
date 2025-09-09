@@ -585,7 +585,7 @@
                                             <i class="fas fa-file-medical"></i>
                                             <span>Formulir Pendaftaran</span>
                                         </a>
-                                        <a href="#" class="menu-item dropdown-menu-item">
+                                        <a href="{{ route('data-diri') }}" class="menu-item dropdown-menu-item">
                                             <i class="fas fa-id-card"></i>
                                             <span>Data Pribadi</span>
                                         </a>

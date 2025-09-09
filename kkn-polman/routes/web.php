@@ -11,3 +11,6 @@ Route::get('/dashboard',function(){
 Route::get('/form',function(){
     return view('dashboard.formulir_pendaftaran');
 })->name('formulir');
+Route::get('/data-diri',function(){
+    return view('dashboard.data_diri');
+})->name('data-diri');
