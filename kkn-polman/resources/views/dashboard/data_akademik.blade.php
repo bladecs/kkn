@@ -19,20 +19,17 @@
             --sidebar-width: 250px;
             --sidebar-collapsed-width: 70px;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
             color: #333;
             overflow-x: hidden;
         }
-
         /* Sidebar Styles */
         #sidebar {
             position: fixed;
@@ -46,11 +43,9 @@
             display: flex;
             flex-direction: column;
         }
-
         #sidebar.collapsed {
             width: var(--sidebar-collapsed-width);
         }
-
         #sidebar .sidebar-header {
             padding: 20px;
             background: var(--dark-color);
@@ -59,25 +54,22 @@
             white-space: nowrap;
             overflow: hidden;
         }
-
         #sidebar.collapsed .sidebar-header {
             padding: 20px 10px;
         }
-
+        
         #sidebar.collapsed .sidebar-header h3 {
             display: none;
         }
-
+        
         #sidebar.collapsed .sidebar-header p {
             display: none;
         }
-
+        
         #sidebar ul.components {
-            padding: 20px 0;
             transition: all 0.3s ease;
             flex-grow: 1;
         }
-
         #sidebar ul li a {
             padding: 15px 25px;
             display: block;
@@ -88,38 +80,31 @@
             white-space: nowrap;
             overflow: hidden;
         }
-
         #sidebar.collapsed ul li a {
             padding: 15px;
             text-align: center;
         }
-
         #sidebar.collapsed ul li a span {
             display: none;
         }
-
         #sidebar ul li a:hover {
             background: var(--secondary-color);
             color: white;
         }
-
         #sidebar ul li a i {
             margin-right: 10px;
             width: 20px;
             text-align: center;
             transition: all 0.3s ease;
         }
-
         #sidebar.collapsed ul li a i {
             margin-right: 0;
             font-size: 1.3rem;
         }
-
         #sidebar ul li.active > a {
             background: var(--secondary-color);
             color: white;
         }
-
         /* Sidebar footer */
         #sidebar .sidebar-footer {
             padding: 15px;
@@ -129,15 +114,14 @@
         #sidebar.collapsed .sidebar-footer {
             padding: 15px 5px;
         }
-
+        
         #sidebar.collapsed .sidebar-footer .btn span {
             display: none;
         }
-
+        
         #sidebar.collapsed .sidebar-footer .btn i {
             margin-right: 0;
         }
-
         /* Navbar Styles */
         .navbar {
             background-color: white;
@@ -154,7 +138,7 @@
         #content.collapsed .navbar {
             left: var(--sidebar-collapsed-width);
         }
-
+        
         /* Content Styles */
         #content {
             width: calc(100% - var(--sidebar-width));
@@ -235,7 +219,7 @@
         .info-section {
             margin-bottom: 30px;
         }
-
+        
         .section-title {
             color: var(--primary-color);
             font-weight: 600;
@@ -300,7 +284,7 @@
         .chart-title i {
             margin-right: 10px;
         }
-
+        
         /* Transcript Table */
         .transcript-table {
             width: 100%;
@@ -383,7 +367,6 @@
             font-weight: 600;
             transition: all 0.3s;
         }
-
         .btn-outline-primary:hover {
             background: var(--primary-color);
             color: white;
@@ -399,59 +382,53 @@
             #sidebar.active {
                 margin-left: 0;
             }
-
+            
             #content {
                 width: 100%;
                 margin-left: 0;
                 padding-top: 0;
             }
-
             #content.active {
                 width: calc(100% - var(--sidebar-width));
                 margin-left: var(--sidebar-width);
             }
-
             #sidebar.collapsed {
                 margin-left: -var(--sidebar-collapsed-width);
                 width: var(--sidebar-collapsed-width);
             }
-
             #content.collapsed {
                 width: 100%;
                 margin-left: 0;
             }
-
             .navbar {
                 left: 0;
                 right: 0;
             }
-
             #content.collapsed .navbar {
                 left: 0;
             }
-
+            
             .info-grid {
                 grid-template-columns: 1fr;
             }
-
+            
             .student-info {
                 flex-direction: column;
                 text-align: center;
             }
-
             .student-avatar {
                 margin-right: 0;
                 margin-bottom: 15px;
             }
-
+            
             .academic-actions {
                 flex-direction: column;
             }
-
+            
             .academic-actions .btn {
                 width: 100%;
             }
-
+            
             .transcript-table {
                 display: block;
                 overflow-x: auto;
@@ -474,7 +451,7 @@
 
             <ul class="list-unstyled components">
                 <li>
-                    <a href="{{ route('dashboard') }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
                         <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
                     </a>
                 </li>
@@ -582,11 +559,10 @@
                             <p>NIM: 1234567890 | Teknik Informatika</p>
                         </div>
                     </div>
-
                     <!-- Informasi Akademik -->
                     <div class="info-section">
                         <h3 class="section-title"><i class="fas fa-info-circle"></i> Informasi Akademik</h3>
-
+                        
                         <div class="info-grid">
                             <div class="info-item">
                                 <span class="info-label">Fakultas</span>
@@ -607,7 +583,6 @@
                                 <span class="info-label">Angkatan</span>
                                 <span class="info-value">2019</span>
                             </div>
-
                             <div class="info-item">
                                 <span class="info-label">Semester</span>
                                 <span class="info-value">8 (Delapan)</span>
@@ -638,7 +613,7 @@
                     <!-- Grafik Perkembangan IPK -->
                     <div class="info-section">
                         <h3 class="section-title"><i class="fas fa-chart-line"></i> Perkembangan IPK</h3>
-
+                        
                         <div class="chart-container">
                             <h4 class="chart-title"><i class="fas fa-graduation-cap"></i> Perkembangan IPK per Semester</h4>
                             <canvas id="ipkChart"></canvas>
@@ -796,11 +771,10 @@
             const content = $('#content');
             const navbar = $('.navbar');
             const sidebarCollapse = $('#sidebarCollapse');
-
             sidebarCollapse.on('click', function() {
                 sidebar.toggleClass('collapsed');
                 content.toggleClass('collapsed');
-
+               
                 // Toggle icon
                 const icon = $(this).find('i');
                 if (sidebar.hasClass('collapsed')) {
@@ -809,21 +783,18 @@
                     icon.removeClass('fa-chevron-right').addClass('fa-bars');
                 }
             });
-
             // Initialize tooltips when sidebar is collapsed
             function initTooltips() {
                 $('[data-bs-toggle="tooltip"]').tooltip();
             }
-
             function destroyTooltips() {
                 $('.tooltip').remove();
             }
-
+            
             // Check sidebar state and init tooltips
             if (sidebar.hasClass('collapsed')) {
                 initTooltips();
             }
-
             // Re-init tooltips when sidebar state changes
             sidebarCollapse.on('click', function() {
                 if (sidebar.hasClass('collapsed')) {
@@ -832,7 +803,6 @@
                     destroyTooltips();
                 }
             });
-
             // Initialize charts
             function initializeCharts() {
                 // IPK Chart
@@ -890,7 +860,6 @@
                         }
                     }
                 });
-
                 // Grade Distribution Chart
                 const gradeCtx = document.getElementById('gradeChart').getContext('2d');
                 const gradeChart = new Chart(gradeCtx, {

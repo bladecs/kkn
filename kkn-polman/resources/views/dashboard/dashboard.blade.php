@@ -64,7 +64,6 @@
         }
 
         #sidebar ul.components {
-            padding: 20px 0;
             transition: all 0.3s ease;
             flex-grow: 1;
         }
@@ -385,7 +384,7 @@
     </style>
 </head>
 <body>
-    <div class="wrapper d-flex align-items-stretch">
+    <div class="wrapper d-flex align-items-stretch ">
         <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -397,16 +396,6 @@
                 <li class="active">
                     <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
                         <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Pendaftaran">
-                        <i class="fas fa-user-plus"></i> <span>Pendaftaran</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Pembekalan">
-                        <i class="fas fa-chalkboard-teacher"></i> <span>Pembekalan</span>
                     </a>
                 </li>
                 <li>
@@ -501,10 +490,6 @@
                                         Pendaftaran
                                     </div>
                                     <div class="phase">
-                                        <i class="fas fa-chalkboard-teacher"></i>
-                                        Pembekalan
-                                    </div>
-                                    <div class="phase">
                                         <i class="fas fa-rocket"></i>
                                         Penerjunan
                                     </div>
@@ -563,9 +548,9 @@
                 </div>
 
                 <!-- Menu Grid -->
-                <div class="row">
+                <div class="d-flex flex-grow gap-4 justify-content-between">
                     <!-- Tahap Persiapan -->
-                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="flex-fill mb-4">
                         <div class="card h-100">
                             <div class="card-body">
                                 <div class="section-header">
@@ -578,7 +563,6 @@
                                     <a href="#" class="menu-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="fas fa-user-plus"></i>
                                         <span>Pendaftaran KKN</span>
-                                        <i class="fas fa-chevron-right ms-auto"></i>
                                     </a>
                                     <div class="dropdown-menu-custom">
                                         <a href="{{ route('formulir') }}" class="menu-item dropdown-menu-item">
@@ -608,36 +592,8 @@
                         </div>
                     </div>
 
-                    <!-- Tahap Pembekalan -->
-                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="section-header">
-                                    <i class="fas fa-chalkboard-teacher section-icon"></i>
-                                    <h5 class="section-title">Tahap Pembekalan</h5>
-                                </div>
-                                <a href="#" class="menu-item">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>Jadwal Pembekalan</span>
-                                </a>
-                                <a href="#" class="menu-item">
-                                    <i class="fas fa-book-open"></i>
-                                    <span>Materi Pembekalan</span>
-                                </a>
-                                <a href="#" class="menu-item">
-                                    <i class="fas fa-clipboard-check"></i>
-                                    <span>Tes Pembekalan</span>
-                                </a>
-                                <a href="#" class="menu-item">
-                                    <i class="fas fa-certificate"></i>
-                                    <span>Sertifikat Pembekalan</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Tahap Pelaksanaan -->
-                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="flex-fill mb-4">
                         <div class="card h-100">
                             <div class="card-body">
                                 <div class="section-header">
@@ -665,7 +621,7 @@
                     </div>
 
                     <!-- Tahap Pelaporan -->
-                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="flex-fill mb-4">
                         <div class="card h-100">
                             <div class="card-body">
                                 <div class="section-header">
