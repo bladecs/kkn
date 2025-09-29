@@ -71,7 +71,6 @@
         }
 
         #sidebar ul.components {
-            padding: 20px 0;
             transition: all 0.3s ease;
             flex-grow: 1;
         }
@@ -416,19 +415,9 @@
             </div>
 
             <ul class="list-unstyled components">
-                <li>
-                    <a href="{{ route('dashboard') }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
-                        <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
-                    </a>
-                </li>
                 <li class="active">
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Pendaftaran">
-                        <i class="fas fa-user-plus"></i> <span>Pendaftaran</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Pembekalan">
-                        <i class="fas fa-chalkboard-teacher"></i> <span>Pembekalan</span>
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+                        <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
@@ -474,6 +463,7 @@
 
         <!-- Page Content -->
         <div id="content">
+            <!-- Navbar -->
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container-fluid">

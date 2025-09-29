@@ -14,3 +14,9 @@ Route::get('/form',function(){
 Route::get('/data-diri',function(){
     return view('dashboard.data_diri');
 })->name('data-diri');
+Route::get('/data-akademik',function(){
+    return view('dashboard.data_akademik');
+})->name('data-akademik');
+Route::get('/pengelompokan-mhs',function(){
+    return view('dashboard.pengelompokan_mhs');
+})->name('pengelompokan-mhs');
