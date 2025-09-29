@@ -19,20 +19,17 @@
             --sidebar-width: 250px;
             --sidebar-collapsed-width: 70px;
         }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
             color: #333;
             overflow-x: hidden;
         }
-        
         /* Sidebar Styles */
         #sidebar {
             position: fixed;
@@ -46,11 +43,9 @@
             display: flex;
             flex-direction: column;
         }
-        
         #sidebar.collapsed {
             width: var(--sidebar-collapsed-width);
         }
-        
         #sidebar .sidebar-header {
             padding: 20px;
             background: var(--dark-color);
@@ -59,7 +54,6 @@
             white-space: nowrap;
             overflow: hidden;
         }
-        
         #sidebar.collapsed .sidebar-header {
             padding: 20px 10px;
         }
@@ -76,7 +70,6 @@
             transition: all 0.3s ease;
             flex-grow: 1;
         }
-        
         #sidebar ul li a {
             padding: 15px 25px;
             display: block;
@@ -87,44 +80,37 @@
             white-space: nowrap;
             overflow: hidden;
         }
-        
         #sidebar.collapsed ul li a {
             padding: 15px;
             text-align: center;
         }
-        
         #sidebar.collapsed ul li a span {
             display: none;
         }
-        
         #sidebar ul li a:hover {
             background: var(--secondary-color);
             color: white;
         }
-        
         #sidebar ul li a i {
             margin-right: 10px;
             width: 20px;
             text-align: center;
             transition: all 0.3s ease;
         }
-        
         #sidebar.collapsed ul li a i {
             margin-right: 0;
             font-size: 1.3rem;
         }
-        
         #sidebar ul li.active > a {
             background: var(--secondary-color);
             color: white;
         }
-        
         /* Sidebar footer */
         #sidebar .sidebar-footer {
             padding: 15px;
             margin-top: auto;
         }
-        
+
         #sidebar.collapsed .sidebar-footer {
             padding: 15px 5px;
         }
@@ -136,7 +122,6 @@
         #sidebar.collapsed .sidebar-footer .btn i {
             margin-right: 0;
         }
-        
         /* Navbar Styles */
         .navbar {
             background-color: white;
@@ -149,7 +134,7 @@
             z-index: 999;
             transition: all 0.3s ease;
         }
-        
+
         #content.collapsed .navbar {
             left: var(--sidebar-collapsed-width);
         }
@@ -162,19 +147,19 @@
             transition: all 0.3s ease;
             padding-top: 80px;
         }
-        
+
         #content.collapsed {
             width: calc(100% - var(--sidebar-collapsed-width));
             margin-left: var(--sidebar-collapsed-width);
         }
-        
+
         /* Academic Container */
         .academic-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 30px 20px;
         }
-        
+
         .academic-header {
             background: white;
             border-radius: 15px;
@@ -183,18 +168,18 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             text-align: center;
         }
-        
+
         .academic-header h1 {
             color: var(--primary-color);
             font-weight: 700;
             margin-bottom: 10px;
         }
-        
+
         .academic-header p {
             color: #6c757d;
             margin-bottom: 0;
         }
-        
+
         /* Academic Card */
         .academic-card {
             background: white;
@@ -203,7 +188,7 @@
             margin-bottom: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
-        
+
         .student-info {
             display: flex;
             align-items: center;
@@ -211,7 +196,7 @@
             padding-bottom: 20px;
             border-bottom: 2px solid var(--light-color);
         }
-        
+
         .student-avatar {
             width: 80px;
             height: 80px;
@@ -220,17 +205,17 @@
             border: 3px solid var(--light-color);
             margin-right: 20px;
         }
-        
+
         .student-details h3 {
             color: var(--dark-color);
             margin-bottom: 5px;
         }
-        
+
         .student-details p {
             color: #6c757d;
             margin-bottom: 0;
         }
-        
+
         .info-section {
             margin-bottom: 30px;
         }
@@ -244,18 +229,18 @@
             display: flex;
             align-items: center;
         }
-        
+
         .section-title i {
             margin-right: 10px;
             font-size: 1.2rem;
         }
-        
+
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
-        
+
         .info-item {
             background: var(--light-color);
             border-radius: 10px;
@@ -263,20 +248,20 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .info-label {
             font-weight: 600;
             color: var(--dark-color);
             margin-bottom: 5px;
             font-size: 0.9rem;
         }
-        
+
         .info-value {
             color: #495057;
             font-size: 1.1rem;
             font-weight: 500;
         }
-        
+
         /* Chart Container */
         .chart-container {
             background: white;
@@ -287,7 +272,7 @@
             position: relative;
             height: 400px;
         }
-        
+
         .chart-title {
             color: var(--primary-color);
             font-weight: 600;
@@ -295,7 +280,7 @@
             display: flex;
             align-items: center;
         }
-        
+
         .chart-title i {
             margin-right: 10px;
         }
@@ -306,49 +291,49 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
-        
+
         .transcript-table th,
         .transcript-table td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #eaeaea;
         }
-        
+
         .transcript-table th {
             background-color: var(--light-color);
             color: var(--dark-color);
             font-weight: 600;
         }
-        
+
         .transcript-table tr:hover {
             background-color: #f8f9fa;
         }
-        
+
         .grade-a {
             color: #28a745;
             font-weight: 600;
         }
-        
+
         .grade-b {
             color: #17a2b8;
             font-weight: 600;
         }
-        
+
         .grade-c {
             color: #ffc107;
             font-weight: 600;
         }
-        
+
         .grade-d {
             color: #fd7e14;
             font-weight: 600;
         }
-        
+
         .grade-e {
             color: #dc3545;
             font-weight: 600;
         }
-        
+
         /* Action Buttons */
         .academic-actions {
             background: white;
@@ -359,7 +344,7 @@
             justify-content: center;
             gap: 15px;
         }
-        
+
         .btn-primary {
             background: var(--primary-color);
             border: none;
@@ -368,12 +353,12 @@
             font-weight: 600;
             transition: all 0.3s;
         }
-        
+
         .btn-primary:hover {
             background: var(--dark-color);
             transform: translateY(-2px);
         }
-        
+
         .btn-outline-primary {
             border: 2px solid var(--primary-color);
             color: var(--primary-color);
@@ -382,19 +367,18 @@
             font-weight: 600;
             transition: all 0.3s;
         }
-        
         .btn-outline-primary:hover {
             background: var(--primary-color);
             color: white;
         }
-        
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             #sidebar {
                 margin-left: -var(--sidebar-width);
                 width: var(--sidebar-width);
             }
-            
+
             #sidebar.active {
                 margin-left: 0;
             }
@@ -404,27 +388,22 @@
                 margin-left: 0;
                 padding-top: 0;
             }
-            
             #content.active {
                 width: calc(100% - var(--sidebar-width));
                 margin-left: var(--sidebar-width);
             }
-            
             #sidebar.collapsed {
                 margin-left: -var(--sidebar-collapsed-width);
                 width: var(--sidebar-collapsed-width);
             }
-            
             #content.collapsed {
                 width: 100%;
                 margin-left: 0;
             }
-            
             .navbar {
                 left: 0;
                 right: 0;
             }
-            
             #content.collapsed .navbar {
                 left: 0;
             }
@@ -437,7 +416,6 @@
                 flex-direction: column;
                 text-align: center;
             }
-            
             .student-avatar {
                 margin-right: 0;
                 margin-bottom: 15px;
@@ -455,7 +433,7 @@
                 display: block;
                 overflow-x: auto;
             }
-            
+
             .chart-container {
                 height: 300px;
             }
@@ -546,7 +524,7 @@
                     <button type="button" id="sidebarCollapse" class="btn btn-primary">
                         <i class="fas fa-bars"></i>
                     </button>
-                    
+
                     <div class="d-flex align-items-center ms-auto">
                         <div class="dropdown">
                             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
@@ -571,7 +549,7 @@
                     <h1><i class="fas fa-graduation-cap me-2"></i> Data Akademik Mahasiswa</h1>
                     <p>Informasi lengkap mengenai prestasi dan perkembangan akademik Anda</p>
                 </div>
-                
+
                 <!-- Academic Card -->
                 <div class="academic-card">
                     <div class="student-info">
@@ -581,7 +559,6 @@
                             <p>NIM: 1234567890 | Teknik Informatika</p>
                         </div>
                     </div>
-                    
                     <!-- Informasi Akademik -->
                     <div class="info-section">
                         <h3 class="section-title"><i class="fas fa-info-circle"></i> Informasi Akademik</h3>
@@ -591,49 +568,48 @@
                                 <span class="info-label">Fakultas</span>
                                 <span class="info-value">Fakultas Ilmu Komputer</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">Program Studi</span>
                                 <span class="info-value">Teknik Informatika</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">Jenjang</span>
                                 <span class="info-value">Strata 1 (S1)</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">Angkatan</span>
                                 <span class="info-value">2019</span>
                             </div>
-                            
                             <div class="info-item">
                                 <span class="info-label">Semester</span>
                                 <span class="info-value">8 (Delapan)</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">Status</span>
                                 <span class="info-value">Aktif</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">IPK</span>
                                 <span class="info-value">3.75</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">Total SKS</span>
                                 <span class="info-value">144</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">SKS Semester Ini</span>
                                 <span class="info-value">18</span>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Grafik Perkembangan IPK -->
                     <div class="info-section">
                         <h3 class="section-title"><i class="fas fa-chart-line"></i> Perkembangan IPK</h3>
@@ -643,21 +619,21 @@
                             <canvas id="ipkChart"></canvas>
                         </div>
                     </div>
-                    
+
                     <!-- Distribusi Nilai -->
                     <div class="info-section">
                         <h3 class="section-title"><i class="fas fa-chart-pie"></i> Distribusi Nilai</h3>
-                        
+
                         <div class="chart-container">
                             <h4 class="chart-title"><i class="fas fa-chart-bar"></i> Persentase Grade Nilai</h4>
                             <canvas id="gradeChart"></canvas>
                         </div>
                     </div>
-                    
+
                     <!-- Transkrip Nilai -->
                     <div class="info-section">
                         <h3 class="section-title"><i class="fas fa-file-alt"></i> Transkrip Nilai</h3>
-                        
+
                         <div class="table-responsive">
                             <table class="transcript-table">
                                 <thead>
@@ -739,27 +715,27 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <!-- Prestasi Akademik -->
                     <div class="info-section">
                         <h3 class="section-title"><i class="fas fa-trophy"></i> Prestasi Akademik</h3>
-                        
+
                         <div class="info-grid">
                             <div class="info-item">
                                 <span class="info-label">Peringkat</span>
                                 <span class="info-value">5 dari 120 mahasiswa</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">Beasiswa</span>
                                 <span class="info-value">Beasiswa Prestasi 2022</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">Mata Kuliah Favorit</span>
                                 <span class="info-value">Pemrograman Web</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="info-label">Rata-rata Nilai</span>
                                 <span class="info-value">86.5</span>
@@ -767,7 +743,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Action Buttons -->
                 <div class="academic-actions">
                     <button class="btn btn-outline-primary">
@@ -787,7 +763,7 @@
     <!-- Bootstrap & jQuery JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         $(document).ready(function() {
             // Sidebar toggle
@@ -795,11 +771,10 @@
             const content = $('#content');
             const navbar = $('.navbar');
             const sidebarCollapse = $('#sidebarCollapse');
-            
             sidebarCollapse.on('click', function() {
                 sidebar.toggleClass('collapsed');
                 content.toggleClass('collapsed');
-                
+               
                 // Toggle icon
                 const icon = $(this).find('i');
                 if (sidebar.hasClass('collapsed')) {
@@ -808,12 +783,10 @@
                     icon.removeClass('fa-chevron-right').addClass('fa-bars');
                 }
             });
-            
             // Initialize tooltips when sidebar is collapsed
             function initTooltips() {
                 $('[data-bs-toggle="tooltip"]').tooltip();
             }
-            
             function destroyTooltips() {
                 $('.tooltip').remove();
             }
@@ -822,7 +795,6 @@
             if (sidebar.hasClass('collapsed')) {
                 initTooltips();
             }
-            
             // Re-init tooltips when sidebar state changes
             sidebarCollapse.on('click', function() {
                 if (sidebar.hasClass('collapsed')) {
@@ -831,7 +803,6 @@
                     destroyTooltips();
                 }
             });
-            
             // Initialize charts
             function initializeCharts() {
                 // IPK Chart
@@ -889,7 +860,6 @@
                         }
                     }
                 });
-                
                 // Grade Distribution Chart
                 const gradeCtx = document.getElementById('gradeChart').getContext('2d');
                 const gradeChart = new Chart(gradeCtx, {
@@ -929,7 +899,6 @@
                     }
                 });
             }
-            
             // Initialize charts when page is loaded
             initializeCharts();
         });

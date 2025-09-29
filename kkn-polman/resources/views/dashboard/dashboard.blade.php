@@ -573,14 +573,14 @@
                                             <i class="fas fa-id-card"></i>
                                             <span>Data Pribadi</span>
                                         </a>
-                                        <a href="#" class="menu-item dropdown-menu-item">
+                                        <a href="{{ route('data-akademik') }}" class="menu-item dropdown-menu-item">
                                             <i class="fas fa-university"></i>
                                             <span>Data Akademik</span>
                                         </a>
                                     </div>
                                 </div>
 
-                                <a href="#" class="menu-item">
+                                <a href="{{ route('pengelompokan') }}" class="menu-item">
                                     <i class="fas fa-users-cog"></i>
                                     <span>Pengelompokan Mahasiswa</span>
                                 </a>
