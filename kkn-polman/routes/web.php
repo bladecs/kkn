@@ -19,4 +19,16 @@ Route::get('/data-akademik',function(){
 })->name('data-akademik');
 Route::get('/pengelompokan-mhs',function(){
     return view('dashboard.pengelompokan_mhs');
-})->name('pengelompokan-mhs');
+})->name('pengelompokan');
+Route::get('/pelaporan-harian',function(){
+    return view('dashboard.form_daily_pelaporan');
+})->name('pelaporan-harian');
+Route::get('/pelaporan-akhir',function(){
+    return view('dashboard.form_pelaporan_akhir');
+})->name('pelaporan-akhir');
+Route::get('/penilaian-logbook',function(){
+    return view('dashboard.dashboard_penilaian_logbook');
+})->name('penilaian-logbook');
+Route::get('/penilaian-laporan-akhir',function(){
+    return view('dashboard.dashboard_penilaian_laporan_akhir');
+})->name('penilaian-laporan-akhir');
