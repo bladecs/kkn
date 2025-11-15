@@ -6,7 +6,7 @@ Route::get('/', function () {
     return view('auth_register.auth');
 });
 Route::get('/dashboard',function(){
-    return view('dashboard.dashboard');
+    return view('dashboard.mahasiswa.dashboard');
 })->name('dashboard');
 Route::get('/form',function(){
     return view('dashboard.formulir_pendaftaran');
