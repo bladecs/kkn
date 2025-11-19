@@ -14,8 +14,17 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('nim')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone', 15);
+            $table->enum('gender', ['male', 'female']);
+            $table->date('tgl_lahir');
+            $table->string('tmp_lahir', 100);
+            $table->string('role', 20);
+            $table->text('alamat');
+            $table->string('jurusan', 100);
+            $table->string('study_program', 100);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
@@ -37,9 +46,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');

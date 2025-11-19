@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\pendaftaraModel;
 
 class User extends Authenticatable
 {
@@ -20,7 +21,16 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'nim',
+        'phone',
+        'jurusan',
+        'study_program',
+        'tmp_lahir',
+        'tgl_lahir',
+        'alamat',
+        'gender',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +54,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function pendaftaran()
+    {
+        return $this->hasOne(pendaftaraModel::class, 'nim', 'nim');
     }
 }

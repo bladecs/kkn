@@ -1,4 +1,4 @@
-@extends('dashboard.mahasiswa.layouts.app')
+@extends('dashboard.koordinator.layouts.app')
 
 @section('title', 'Dashboard - Sistem Informasi KKN')
 
@@ -149,9 +149,9 @@
             opacity: 0;
         }
 
-        .phase-step.complete:not(:last-child)::after {
+        .phase-step.completed:not(:last-child)::after {
             opacity: 1;
-            background: linear-gradient(90deg, rgb(87, 255, 87) 0%, green 100%);
+            background: linear-gradient(90deg, var(--success-color) 0%, var(--success-color) 100%);
         }
 
         .phase-step.active:not(:last-child)::after {
@@ -176,8 +176,8 @@
             color: #6c757d;
         }
 
-        .phase-step.complete .phase-indicator-circle {
-            background: linear-gradient(135deg, rgb(87, 255, 87) 0%, #34ce57 100%);
+        .phase-step.completed .phase-indicator-circle {
+            background: linear-gradient(135deg, var(--success-color) 0%, #34ce57 100%);
             color: white;
             box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
         }
@@ -241,6 +241,80 @@
             color: #6c757d;
         }
 
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Activity Timeline */
+        .activity-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .activity-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e9ecef;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            z-index: 2;
+        }
+
+        .timeline-item.recent::before {
+            background-color: var(--success-color);
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .timeline-item.recent .timeline-content {
+            border-left-color: var(--success-color);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
         @media (max-width: 768px) {
             .phase-steps {
                 flex-wrap: wrap;
@@ -297,149 +371,88 @@
         </div>
     </div>
 
-    <!-- Modern Phase Indicator -->
+    <!-- Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
+        <div class="col-md-3">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">Status KKN</h5>
-                    <div class="phase-indicator">
-                        <div class="phase-steps">
-                            <!-- Pendaftaran -->
-                            <div class="phase-step" data-phase="pendaftaran">
-                                <div class="phase-indicator-circle">
-                                    <i class="fas fa-user-check"></i>
-                                </div>
-                                <div class="phase-label">Pendaftaran</div>
-                                <div class="phase-status">Menunggu</div>
-                            </div>
-                            <!-- Penerjunan -->
-                            <div class="phase-step" data-phase="penerjunan">
-                                <div class="phase-indicator-circle">
-                                    <i class="fas fa-rocket"></i>
-                                </div>
-                                <div class="phase-label">Penerjunan</div>
-                                <div class="phase-status">Menunggu</div>
-                            </div>
-                            <!-- Pelaksanaan -->
-                            <div class="phase-step" data-phase="pelaksanaan">
-                                <div class="phase-indicator-circle">
-                                    <i class="fas fa-cogs"></i>
-                                </div>
-                                <div class="phase-label">Pelaksanaan</div>
-                                <div class="phase-status">Menunggu</div>
-                            </div>
-                            <!-- Pelaporan -->
-                            <div class="phase-step" data-phase="pelaporan">
-                                <div class="phase-indicator-circle">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                                <div class="phase-label">Pelaporan</div>
-                                <div class="phase-status">Menunggu</div>
-                            </div>
-                        </div>
-                    </div>
+                    <i class="fas fa-users stat-icon"></i>
+                    <div class="stat-number">{{ $daily_pendaftaran ?? 0 }}</div>
+                    <div class="stat-label">Jumlah Pendaftar</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <i class="fas fa-clock stat-icon" style="color: var(--warning-color);"></i>
+                    <div class="stat-number">{{ $count_not_verif ?? 0 }}</div>
+                    <div class="stat-label">Belum Diverifikasi</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <i class="fas fa-tasks stat-icon" style="color: var(--info-color);"></i>
+                    <div class="stat-number">{{ $project_belum_diperiksa ?? 0 }}</div>
+                    <div class="stat-label">Project Belum Diperiksa</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <i class="fas fa-chart-line stat-icon" style="color: var(--success-color);"></i>
+                    <div class="stat-number">{{ $count_pendaftaran  ?? 0 }}</div>
+                    <div class="stat-label">Total Pendaftaran</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Menu Grid -->
-    <div class="d-flex flex-grow gap-4 justify-content-between">
-        <!-- Tahap Persiapan -->
-        <div class="flex-fill mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="section-header">
-                        <i class="fas fa-clipboard-list section-icon"></i>
-                        <h5 class="section-title">Tahap Persiapan</h5>
-                    </div>
-
-                    <a href="{{ route('formulir') }}" class="menu-item"
-                        @if ($status_pendaftaran) onclick="return false;" style="pointer-events: none; opacity: 0.8;" @endif>
-                        <i class="fas fa-file-medical"></i>
-                        <span>{{ $status_pendaftaran ? 'Sudah Mendaftar' : 'Formulir Pendaftaran' }}</span>
-                    </a>
-
-                    <a href="{{ route('data-diri') }}" class="menu-item">
-                        <i class="fas fa-id-card"></i>
-                        <span>Data Diri</span>
-                    </a>
-
-                    <a href="{{ route('form-pengajuan-kkn') }}" class="menu-item"
-                        @if ($status_pendaftaran != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @endif>
-                        <i class="fas fa-book"></i>
-                        <span>Pendaftaran Project</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tahap Pelaporan -->
-        <div class="flex-fill mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="section-header">
-                        <i class="fas fa-file-alt section-icon"></i>
-                        <h5 class="section-title">Pelaporan & Evaluasi</h5>
-                    </div>
-                    <a href="{{ route('pelaporan-harian') }}" class="menu-item">
-                        <i class="fas fa-file-invoice"></i>
-                        <span>Laporan Harian</span>
-                    </a>
-                    <a href="#" class="menu-item">
-                        <i class="fas fa-file-contract"></i>
-                        <span>Laporan Akhir</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Additional content to enable scrolling -->
+    <!-- Chart and Timeline Row -->
     <div class="row mb-4">
-        <div class="col-12">
+        <!-- Chart -->
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Informasi Tambahan</h5>
-                    <p>Berikut adalah beberapa informasi tambahan untuk mengisi konten halaman:</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Jadwal Penting</h6>
-                            <ul class="list-group">
-                                <li class="list-group-item">Pendaftaran KKN: 1 Januari - 31 Januari 2023</li>
-                                <li class="list-group-item">Pembekalan: 15 Februari 2023</li>
-                                <li class="list-group-item">Penerjunan: 1 Maret 2023</li>
-                                <li class="list-group-item">Pelaksanaan: 1 Maret - 30 Juni 2023</li>
-                                <li class="list-group-item">Pelaporan: 1 Juli - 15 Juli 2023</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Pengumuman Terbaru</h6>
-                            <div class="list-group">
-                                <a href="#" class="list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">Panduan KKN 2023</h6>
-                                        <small>3 hari yang lalu</small>
+                    <div class="section-header">
+                        <i class="fas fa-chart-bar section-icon"></i>
+                        <h5 class="section-title">Statistik Pendaftaran Harian</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pendaftaranChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Coordinator Activity Timeline -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="section-header">
+                        <i class="fas fa-history section-icon"></i>
+                        <h5 class="section-title">Aktivitas Terbaru Koordinator</h5>
+                    </div>
+                    <div class="activity-timeline">
+                        @if(isset($aktivitas_koordinator) && count($aktivitas_koordinator) > 0)
+                            @foreach($aktivitas_koordinator as $aktivitas)
+                                <div class="timeline-item {{ $loop->first ? 'recent' : '' }}">
+                                    <div class="timeline-date">{{ $aktivitas['tanggal'] }}</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">{{ $aktivitas['judul'] }}</div>
+                                        <p class="timeline-desc">{{ $aktivitas['deskripsi'] }}</p>
                                     </div>
-                                    <p class="mb-1">Panduan lengkap KKN tahun 2023 telah tersedia.</p>
-                                </a>
-                                <a href="#" class="list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">Pembagian Kelompok</h6>
-                                        <small>1 minggu yang lalu</small>
-                                    </div>
-                                    <p class="mb-1">Pembagian kelompok KKN telah diumumkan.</p>
-                                </a>
-                                <a href="#" class="list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">Seminar KKN</h6>
-                                        <small>2 minggu yang lalu</small>
-                                    </div>
-                                    <p class="mb-1">Jadwal seminar hasil KKN telah ditetapkan.</p>
-                                </a>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="text-center py-3">
+                                <i class="fas fa-info-circle text-muted mb-2" style="font-size: 2rem;"></i>
+                                <p class="text-muted">Belum ada aktivitas koordinator</p>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -448,36 +461,62 @@
 @endsection
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
-        const statusPendaftaran = @json($status_pendaftaran ?? 'verifikasi');
-
-        (function() {
-            const el = document.querySelector('.phase-step[data-phase="pendaftaran"]');
-            if (!el) return;
-
-            el.classList.remove('complete', 'active');
-
-            function setStatus(el, statusClass, text) {
-                el.classList.add(statusClass);
-                const statusEl = el.querySelector('.phase-status');
-                if (statusEl) {
-                    statusEl.className = 'phase-status ' +
-                        (statusClass === 'complete' ? 'status-completed' :
-                            (statusClass === 'active' ? 'status-active' : 'status-pending'));
-                    statusEl.textContent = text;
+        // Initialize Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('pendaftaranChart').getContext('2d');
+            
+            const chartData = {
+                labels: @json($data['chart_labels']),
+                datasets: [{
+                    label: 'Jumlah Pendaftaran',
+                    data: @json($data['chart_data']),
+                    backgroundColor: 'rgba(30, 79, 190, 0.2)',
+                    borderColor: 'rgba(30, 79, 190, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            };
+            
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        },
+                        ticks: {
+                            stepSize: 5
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
                 }
-            }
-
-            const s = (statusPendaftaran || '').toLowerCase().trim();
-
-            if (['complete', 'selesai', 'done'].includes(s)) {
-                setStatus(el, 'complete', 'Selesai');
-            } else if (['active', 'berjalan', 'ongoing', 'verifikasi'].includes(s)) {
-                setStatus(el, 'active', 'Berjalan');
-            } else {
-                setStatus(el, '', 'Menunggu');
-            }
-        })();
+            };
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: chartOptions
+            });
+        });
     </script>
 
     <script>

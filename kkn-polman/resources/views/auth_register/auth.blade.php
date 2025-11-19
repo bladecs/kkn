@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -200,14 +201,40 @@
                 padding: 10px;
             }
 
-            .auth-header, .auth-body {
+            .auth-header,
+            .auth-body {
                 padding: 20px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="auth-wrapper">
+        @if (session('success'))
+            <div class="alert alert-success server-notif alert-dismissible fade show" role="alert" aria-live="polite">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger server-notif alert-dismissible fade show" role="alert" aria-live="polite">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger server-notif alert-dismissible fade show" role="alert" aria-live="polite">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="auth-container">
             <div class="auth-header">
                 <div class="university-logo">
@@ -218,12 +245,14 @@
             </div>
 
             <!-- Login Form -->
-            <form id="login-form" class="auth-body">
+            <form method="post" action="{{ route('login') }}" id="login-form" class="auth-body">
+                @csrf
                 <div class="form-group">
                     <label for="login-email" class="form-label">Email</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                        <input type="email" class="form-control" id="login-email" placeholder="Masukkan email Anda" required>
+                        <input type="email" class="form-control" id="login-email" name="email"
+                            placeholder="Masukkan email Anda" required>
                     </div>
                 </div>
 
@@ -231,7 +260,8 @@
                     <label for="login-password" class="form-label">Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" class="form-control" id="login-password" placeholder="Masukkan password" required>
+                        <input type="password" class="form-control" id="login-password" name="password"
+                            placeholder="Masukkan password" required>
                         <span class="input-group-text password-toggle" id="login-password-toggle">
                             <i class="fas fa-eye"></i>
                         </span>
@@ -239,12 +269,16 @@
                 </div>
 
                 <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="remember-me">
+                    <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
                     <label class="form-check-label" for="remember-me">Ingat saya</label>
                 </div>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary w-100">Masuk</button>
+                </div>
+
+                <div class="form-group">
+                    <a href="{{ route('login-dosen') }}" class="btn btn-primary w-100">Saya Dosen</a>
                 </div>
 
                 <div class="text-center">
@@ -253,14 +287,17 @@
             </form>
 
             <!-- Register Form -->
-            <form id="register-form" class="auth-body" style="display: none;">
+            <form method="post" action="{{ route('register') }}" id="register-form" class="auth-body"
+                style="display: none;">
+                @csrf
                 <div class="register-columns">
                     <div class="register-column">
                         <div class="form-group">
                             <label for="register-name" class="form-label">Nama Lengkap</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                <input type="text" class="form-control" id="register-name" placeholder="Masukkan nama lengkap" required>
+                                <input type="text" class="form-control" id="register-name" name="register-name"
+                                    placeholder="Masukkan nama lengkap" required>
                             </div>
                         </div>
 
@@ -268,7 +305,8 @@
                             <label for="register-nim" class="form-label">NIM</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                <input type="text" class="form-control" id="register-nim" placeholder="Masukkan NIM" required>
+                                <input type="text" class="form-control" id="register-nim" name="register-nim"
+                                    placeholder="Masukkan NIM" required>
                             </div>
                         </div>
 
@@ -276,7 +314,8 @@
                             <label for="register-email" class="form-label">Email</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                <input type="email" class="form-control" id="register-email" placeholder="Masukkan email Anda" required>
+                                <input type="email" class="form-control" id="register-email" name="register-email"
+                                    placeholder="Masukkan email Anda" required>
                             </div>
                         </div>
 
@@ -284,24 +323,23 @@
                             <label for="register-phone" class="form-label">Nomor Telepon</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                <input type="tel" class="form-control" id="register-phone" placeholder="Masukkan nomor telepon" required>
+                                <input type="tel" class="form-control" id="register-phone" name="register-phone"
+                                    placeholder="Masukkan nomor telepon" required>
                             </div>
                         </div>
                     </div>
 
                     <div class="register-column">
                         <div class="form-group">
-                            <label for="register-faculty" class="form-label">Fakultas</label>
+                            <label for="register-faculty" class="form-label">Jurusan</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                <select class="form-control" id="register-faculty" required>
-                                    <option value="">Pilih Fakultas</option>
-                                    <option value="teknik">Teknik</option>
-                                    <option value="ekonomi">Ekonomi dan Bisnis</option>
-                                    <option value="hukum">Hukum</option>
-                                    <option value="kedokteran">Kedokteran</option>
-                                    <option value="pertanian">Pertanian</option>
-                                    <option value="ilmu-komputer">Ilmu Komputer</option>
+                                <select class="form-control" id="register-jurusan" name="register-jurusan" required>
+                                    <option value="">Pilih Jurusan</option>
+                                    <option value="ae">Automation Engineering</option>
+                                    <option value="de">Desing Engineering</option>
+                                    <option value="fe">Foundry Engineering</option>
+                                    <option value="me">Manufactur Engineering</option>
                                 </select>
                             </div>
                         </div>
@@ -310,7 +348,8 @@
                             <label for="register-study-program" class="form-label">Program Studi</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
-                                <input type="text" class="form-control" id="register-study-program" placeholder="Masukkan program studi" required>
+                                <input type="text" class="form-control" id="register-study-program"
+                                    name="register-study-program" placeholder="Masukkan program studi" required>
                             </div>
                         </div>
 
@@ -318,7 +357,8 @@
                             <label for="register-password" class="form-label">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                <input type="password" class="form-control" id="register-password" placeholder="Buat password" required>
+                                <input type="password" class="form-control" id="register-password"
+                                    name="password" placeholder="Buat password" required>
                                 <span class="input-group-text password-toggle" id="register-password-toggle">
                                     <i class="fas fa-eye"></i>
                                 </span>
@@ -326,18 +366,28 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="register-confirm-password" class="form-label">Konfirmasi Password</label>
+                            <label for="password-confirmation" class="form-label">Konfirmasi Password</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                <input type="password" class="form-control" id="register-confirm-password" placeholder="Konfirmasi password" required>
+                                <input type="password"
+                                    class="form-control @error('password_confirmation') is-invalid @enderror"
+                                    id="password-confirmation" name="password_confirmation"
+                                    placeholder="Konfirmasi password" required autocomplete="new-password">
+                                <span class="input-group-text password-toggle" id="register-confirm-password-toggle">
+                                    <i class="fas fa-eye"></i>
+                                </span>
                             </div>
+                            @error('password_confirmation')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group form-check mt-3">
-                    <input type="checkbox" class="form-check-input" id="agree-terms" required>
-                    <label class="form-check-label" for="agree-terms">Saya menyetujui <a href="#">syarat dan ketentuan</a></label>
+                    <input type="checkbox" class="form-check-input" id="agree-terms" name="agree-terms" required>
+                    <label class="form-check-label" for="agree-terms">Saya menyetujui <a href="#">syarat dan
+                            ketentuan</a></label>
                 </div>
 
                 <div class="form-group mt-4">
@@ -346,8 +396,10 @@
             </form>
 
             <div class="auth-footer">
-                <p id="login-footer">Belum punya akun? <a href="#" id="switch-to-register">Daftar di sini</a></p>
-                <p id="register-footer" style="display: none;">Sudah punya akun? <a href="#" id="switch-to-login">Masuk di sini</a></p>
+                <p id="login-footer">Belum punya akun? <a href="#" id="switch-to-register">Daftar di sini</a>
+                </p>
+                <p id="register-footer" style="display: none;">Sudah punya akun? <a href="#"
+                        id="switch-to-login">Masuk di sini</a></p>
             </div>
         </div>
 
@@ -358,21 +410,24 @@
                 <i class="fas fa-info-circle"></i>
                 <div>
                     <strong>Persyaratan Pendaftaran</strong>
-                    <p>Pastikan Anda telah memenuhi semua persyaratan sebelum mendaftar, termasuk memiliki IPK minimal 2.75 dan telah menyelesaikan minimal 100 SKS.</p>
+                    <p>Pastikan Anda telah memenuhi semua persyaratan sebelum mendaftar, termasuk memiliki IPK minimal
+                        2.75 dan telah menyelesaikan minimal 100 SKS.</p>
                 </div>
             </div>
             <div class="info-item">
                 <i class="fas fa-calendar-alt"></i>
                 <div>
                     <strong>Jadwal Pendaftaran</strong>
-                    <p>Pendaftaran KKN dibuka dari 1 Januari hingga 31 Januari 2023. Pastikan Anda mendaftar sebelum batas waktu berakhir.</p>
+                    <p>Pendaftaran KKN dibuka dari 1 Januari hingga 31 Januari 2023. Pastikan Anda mendaftar sebelum
+                        batas waktu berakhir.</p>
                 </div>
             </div>
             <div class="info-item">
                 <i class="fas fa-file-alt"></i>
                 <div>
                     <strong>Dokumen yang Diperlukan</strong>
-                    <p>Siapkan dokumen-dokumen berikut: Transkrip nilai, pas foto, fotokopi KTM, dan sertifikat kesehatan.</p>
+                    <p>Siapkan dokumen-dokumen berikut: Transkrip nilai, pas foto, fotokopi KTM, dan sertifikat
+                        kesehatan.</p>
                 </div>
             </div>
         </div>
@@ -430,59 +485,26 @@
                     registerPasswordToggle.innerHTML = '<i class="fas fa-eye"></i>';
                 }
             });
-
-            // Form submission
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-
-                // Simulate login process
-                console.log('Login attempt:', { email, password });
-
-                // Redirect to dashboard (simulated)
-                alert('Login berhasil! Mengarahkan ke dashboard...');
-                // window.location.href = 'dashboard.html'; // Uncomment in real implementation
-            });
-
-            registerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const name = document.getElementById('register-name').value;
-                const nim = document.getElementById('register-nim').value;
-                const email = document.getElementById('register-email').value;
-                const phone = document.getElementById('register-phone').value;
-                const faculty = document.getElementById('register-faculty').value;
-                const studyProgram = document.getElementById('register-study-program').value;
-                const password = document.getElementById('register-password').value;
-                const confirmPassword = document.getElementById('register-confirm-password').value;
-
-                // Simple validation
-                if (password !== confirmPassword) {
-                    alert('Password dan konfirmasi password tidak cocok!');
-                    return;
-                }
-
-                if (!document.getElementById('agree-terms').checked) {
-                    alert('Anda harus menyetujui syarat dan ketentuan!');
-                    return;
-                }
-
-                // Simulate registration process
-                console.log('Registration attempt:', {
-                    name, nim, email, phone, faculty, studyProgram, password
-                });
-
-                // Show success message and switch to login
-                alert('Pendaftaran berhasil! Silakan login dengan akun Anda.');
-                registerForm.style.display = 'none';
-                loginForm.style.display = 'block';
-                registerFooter.style.display = 'none';
-                loginFooter.style.display = 'block';
-
-                // Clear form
-                registerForm.reset();
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.server-notif').forEach(function(el) {
+                // Auto-hide after 5 seconds
+                setTimeout(function() {
+                    if (window.bootstrap && bootstrap.Alert) {
+                        bootstrap.Alert.getOrCreateInstance(el).close();
+                    } else {
+                        // Fallback if Bootstrap JS isn't loaded
+                        el.classList.remove('show');
+                        el.style.transition = 'opacity .3s';
+                        el.style.opacity = '0';
+                        setTimeout(function() {
+                            el.remove();
+                        }, 300);
+                    }
+                }, 5000);
             });
         });
     </script>
 </body>
+
 </html>
