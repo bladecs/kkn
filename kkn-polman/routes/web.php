@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\dosen\DosenDashboardController;
 use App\Http\Controllers\koordinator\KoordinatorDashboarController;
 use App\Http\Controllers\koordinator\KoordinatorController;
 use App\Http\Controllers\mahasiswa\DashboardController;
@@ -36,6 +37,13 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
 Route::middleware('auth:dosen', 'role:koordinator')->group(function () {
     Route::get('/dashboard-koordinator', [KoordinatorDashboarController::class, 'index'])->name('dashboard_koordinator');
+    Route::get('/pendaftaran-kkn', [KoordinatorDashboarController::class, 'pendaftaranKKN'])->name('pendaftaran-kkn');
+    Route::put('/verifikasi-pendaftaran', [KoordinatorController::class, 'verifikasiPendaftaran'])->name('verifikasi-pendaftaran');
+    Route::delete('/hapus-pendaftaran/{nim}', [KoordinatorController::class, 'deletePendaftaran'])->name('hapus-pendaftaran');
+});
+Route::middleware('auth:dosen', 'role:dosen')->group(function () {
+    Route::get('/dashboard-dosen', [DosenDashboardController::class, 'index'])->name('dashboard_dosen');
+    Route::get('/form-pengajuan-kkn-dosen', [DosenDashboardController::class, 'formPengajuanProject'])->name('form-pengajuan-kkn-dosen');
     Route::get('/pendaftaran-kkn', [KoordinatorDashboarController::class, 'pendaftaranKKN'])->name('pendaftaran-kkn');
     Route::put('/verifikasi-pendaftaran', [KoordinatorController::class, 'verifikasiPendaftaran'])->name('verifikasi-pendaftaran');
     Route::delete('/hapus-pendaftaran/{nim}', [KoordinatorController::class, 'deletePendaftaran'])->name('hapus-pendaftaran');
