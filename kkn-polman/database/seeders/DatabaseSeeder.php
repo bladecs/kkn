@@ -18,12 +18,12 @@ class DatabaseSeeder extends Seeder
 
         dosenModel::factory()->create([
             'name' => 'koor1',
-            'email' => 'koordinator@gmail.com',
+            'email' => 'dosen@gmail.com',
             'nip' => '1234567890',
             'phone' => '081234567890',
             'jurusan' => 'ae',
             'study_program' => 'Teknik Rekayasa Informatika Industri',
-            'role' => 'koordinator',
+            'role' => 'dosen',
             'password' => bcrypt('password'),
         ]);
     }
