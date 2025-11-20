@@ -51,7 +51,7 @@ class KoordinatorDashboarController extends Controller
 
     public function pengelompokanMhs(Request $request)
     {
-        $mahasiswa = pendaftaraModel::where('status', 'complete')->get();
+        $mahasiswa = pendaftaraModel::whereIn('status', ['complete','grouped'])->get();
         $dosen = dosenModel::where('role', 'dosen')->get();
         $lokasi = lokasiModel::all();
         $project = projectModel::where('status', 'complete')->get();

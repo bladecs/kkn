@@ -9,6 +9,7 @@ class lokasiModel extends Model
 {
     use HasFactory;
     protected $table = 'lokasi';
+    public $incrementing = false;
     protected $fillable = [
         'id',
         'nama_lokasi',

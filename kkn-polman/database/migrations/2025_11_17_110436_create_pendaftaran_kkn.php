@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nim')->unique();
             $table->string('name');
+            $tablea->string('id_pengelompokan');
             $table->decimal('ipk', 3, 2);
             $table->integer('sks');
             $table->integer('semester');

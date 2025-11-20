@@ -9,6 +9,7 @@ class projectModel extends Model
 {
     use HasFactory;
     protected $table = 'project';
+    public $incrementing = false;
     protected $fillable = [
         'id',
         'nim',

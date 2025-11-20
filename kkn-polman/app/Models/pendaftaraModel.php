@@ -19,6 +19,8 @@ class pendaftaraModel extends Model
         'jurusan',
         'study_program',
         'status',
+        'status_mhs',
+        'id_pengelompokan',
         'ktm_path',
         'photo_path',
         'proposal_path',

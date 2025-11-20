@@ -177,20 +177,6 @@
             width: 100%;
         }
 
-        .btn-primary {
-            background: var(--primary-color);
-            border: none;
-            border-radius: 10px;
-            padding: 12px 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            background: var(--dark-color);
-            transform: translateY(-2px);
-        }
-
         .btn-outline-secondary {
             border: 2px solid #6c757d;
             color: #6c757d;

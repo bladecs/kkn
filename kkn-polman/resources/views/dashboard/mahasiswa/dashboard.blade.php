@@ -375,7 +375,7 @@
                     </a>
 
                     <a href="{{ route('form-pengajuan-kkn') }}" class="menu-item"
-                        @if ($status_pendaftaran != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @elseif ($status_project != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @elseif ($status_project == 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @endif>
+                        @if ($status_pendaftaran != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;"@elseif ($status_pendaftaran == 'complete' && $status_project != 'pending') onclick="return true;" @elseif ($status_project != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @elseif ($status_project == 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @endif>
                         <i class="fas fa-book"></i>
                         <span>Pendaftaran Project</span>
                     </a>
@@ -457,8 +457,8 @@
 
 @section('scripts')
     <script>
-        const statusPendaftaran = @json($status_pendaftaran ?? 'verifikasi');
-        const statusProject = @json($status_project ?? 'pending');
+        const statusPendaftaran = @json($status_pendaftaran ?? '-');
+        const statusProject = @json($status_project ?? '-');
 
         (function() {
             const el = document.querySelector('.phase-step[data-phase="pendaftaran"]');

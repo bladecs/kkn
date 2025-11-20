@@ -8,6 +8,7 @@ use App\Models\pendaftaraModel;
 use App\Models\projectModel;
 use App\Models\pengelompokanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class KoordinatorController extends Controller
 {
@@ -92,36 +93,45 @@ class KoordinatorController extends Controller
     {
         $request->validate([
             'nip' => 'required|exists:dosen,nip',
-            'id_lokasi' => 'required|exists:lokasi,id',
             'id_project' => 'required|exists:project,id',
             'nama_kelompok' => 'required|string|max:255',
-            'jumlah_anggota' => 'required|integer|min:1',
-            'koordinator' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'status' => 'required|in:active,completed',
             'anggota' => 'required|array|min:1',
             'anggota.*' => 'exists:pendaftaran_kkn,nim',
         ]);
 
+        // Unique ID untuk pengelompokan
         $uniqIdPengelompokan = uniqid('KLG-');
 
-        pendaftaraModel::whereIn('nim', $request->input('anggota'))->update([
+        // Ambil project + relasi lokasi
+        $data_project = projectModel::where('id', $request->id_project)
+            ->first();
+
+        $data_lokasi = lokasiModel::where('nama_lokasi', $data_project->lokasi)->first();
+
+        if (! $data_project) {
+            return back()->with('error', 'Project tidak ditemukan.');
+        }
+
+        // Update semua anggota yang dipilih
+        pendaftaraModel::whereIn('nim', $request->anggota)->update([
             'id_pengelompokan' => $uniqIdPengelompokan,
             'status' => 'grouped',
         ]);
 
+        // Simpan data pengelompokan
         pengelompokanModel::create([
             'id' => $uniqIdPengelompokan,
-            'nip' => $request->input('nip'),
-            'id_lokasi' => $request->input('id_lokasi'),
-            'id_project' => $request->input('id_project'),
-            'nama_kelompok' => $request->input('nama_kelompok'),
-            'jumlah_anggota' => $request->input('jumlah_anggota'),
-            'koordinator' => $request->input('koordinator'),
-            'tanggal_mulai' => $request->input('tanggal_mulai'),
-            'tanggal_selesai' => $request->input('tanggal_selesai'),
-            'status' => $request->input('status'),
+            'nip' => $request->nip,
+            'id_lokasi' => $data_lokasi->id,
+            'id_project' => $request->id_project,
+            'nama_kelompok' => $request->nama_kelompok,
+            'jumlah_anggota' => count($request->anggota), // otomatis
+            'koordinator' => 'Koordinator',
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'status' => 'pending',
         ]);
 
         return redirect()->back()->with('success', 'Pengelompokan mahasiswa berhasil disimpan.');

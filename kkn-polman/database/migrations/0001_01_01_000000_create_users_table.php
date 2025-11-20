@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone', 15);
-            $table->enum('gender', ['male', 'female']);
-            $table->date('tgl_lahir');
-            $table->string('tmp_lahir', 100);
+            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->date('tgl_lahir')->nullable();
+            $table->string('tmp_lahir', 100)->nullable();
             $table->string('role', 20);
-            $table->text('alamat');
+            $table->text('alamat')->nullable();
             $table->string('jurusan', 100);
             $table->string('study_program', 100);
             $table->string('password');

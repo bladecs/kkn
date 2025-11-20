@@ -769,9 +769,9 @@
                                                 <img src="https://via.placeholder.com/40" class="member-avatar">
 
                                                 <div class="member-details">
-                                                    <div class="member-name">{{ $member->nama }}
+                                                    <div class="member-name">{{ $member->name }}
                                                         {{ $member->is_ketua ? '(Ketua)' : '' }}</div>
-                                                    <div class="member-faculty">{{ $member->prodi }}</div>
+                                                    <div class="member-faculty">{{ $member->study_program }}</div>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -825,10 +825,10 @@
                                     <label for="id_dosen" class="form-label">
                                         <i class="fas fa-user-tie"></i> Dosen Pembimbing
                                     </label>
-                                    <select class="form-select" id="id_dosen" name="id_dosen" required>
+                                    <select class="form-select" id="id_dosen" name="nip" required>
                                         <option value="" selected disabled>Pilih Dosen Pembimbing</option>
                                         @foreach ($dosen as $dosenItem)
-                                            <option value="{{ $dosenItem->id }}">{{ $dosenItem->name }} -
+                                            <option value="{{ $dosenItem->nip }}">{{ $dosenItem->name }} -
                                                 {{ $dosenItem->nip }}</option>
                                         @endforeach
                                     </select>
@@ -844,7 +844,7 @@
                                         <i class="fas fa-project-diagram"></i> Project KKN
                                     </label>
                                     <select class="form-select" id="id_project" name="id_project">
-                                        <option value="" selected>Pilih Project (Opsional)</option>
+                                        <option value="" disabled selected>Pilih Project (Opsional)</option>
                                         @foreach ($project as $projectItem)
                                             <option value="{{ $projectItem->id }}">{{ $projectItem->judul_project }}
                                             </option>

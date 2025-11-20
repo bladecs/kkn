@@ -24,7 +24,7 @@
                 @endphp
                 <li>
                     <a href="{{ route('formulir') }}"
-                        class="dropdown-menu-item {{ $status === 'complete' ? '' : 'disabled' }}"
+                        class="dropdown-menu-item {{ $status === 'complete' ? 'disabled' : '' }}"
                         {{ $status !== 'complete' ? 'onclick=return false;' : '' }}>
                         <i class="fas fa-file-alt"></i> <span>Formulir Pendaftaran</span>
                     </a>
@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="dropdown-menu-item {{ $status === 'complete' ? '' : 'disabled' }}"
+                    <a href="{{ route('form-pengajuan-kkn') }}" class="dropdown-menu-item {{ $status === 'complete' ? '' : 'disabled' }}"
                         {{ $status !== 'complete' ? 'onclick=return false;' : '' }}>
                         <i class="fas fa-project-diagram"></i>
                         <span>Pendaftaran Project</span>

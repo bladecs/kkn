@@ -374,6 +374,30 @@
     <div class="wrapper d-flex align-items-stretch">
         <!-- Main Content -->
         <div class="registration-container">
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <!-- Header -->
             <div class="registration-header">
                 <h1><i class="fas fa-file-alt me-2"></i> Formulir Pendaftaran KKN</h1>
@@ -715,7 +739,7 @@
                 checkFormCompletion();
                 alert(
                     'File dari folder berhasil diproses! Silakan periksa apakah semua file sudah terupload dengan benar.'
-                    );
+                );
             }
 
             // File upload functionality untuk semua card individual - FIXED
@@ -784,5 +808,21 @@
             checkFolderUploadSupport();
             updateProgressBar();
         });
+    </script>
+    <script>
+        (function() {
+            const alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(a => {
+                setTimeout(() => {
+                    try {
+                        const bsAlert = bootstrap?.Alert?.getInstance(a) ?? new bootstrap.Alert(a);
+                        bsAlert.close();
+                    } catch (e) {
+                        a.classList.remove('show');
+                        a.style.display = 'none';
+                    }
+                }, 4000);
+            });
+        })();
     </script>
 @endsection

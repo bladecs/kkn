@@ -9,6 +9,7 @@ class pengelompokanModel extends Model
 {
     use HasFactory;
     protected $table = 'pengelompokan';
+    public $incrementing = false;
     protected $fillable = [
         'id',
         'nip',
