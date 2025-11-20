@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(pendaftaraModel::class, 'nim', 'nim');
     }
+
+    public function project()
+    {
+        return $this->hasOne(projectModel::class, 'nim', 'nim');
+    }
 }

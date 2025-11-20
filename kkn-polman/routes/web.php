@@ -23,6 +23,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     })->name('formulir');
     Route::get('/data-diri', [DashboardController::class, 'dataDiri'])->name('data-diri');
     Route::get('/form-pengajuan-kkn', [DashboardController::class, 'formPengajuanProject'])->name('form-pengajuan-kkn');
+    Route::post('/submit-project', [MahasiswaController::class, 'pengajuanProject'])->name('submit-project');
     Route::get('/pelaporan-harian', function () {
         return view('dashboard.mahasiswa.form_daily_pelaporan');
     })->name('pelaporan-harian');
@@ -37,15 +38,15 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 Route::middleware('auth:dosen', 'role:koordinator')->group(function () {
     Route::get('/dashboard-koordinator', [KoordinatorDashboarController::class, 'index'])->name('dashboard_koordinator');
     Route::get('/pendaftaran-kkn', [KoordinatorDashboarController::class, 'pendaftaranKKN'])->name('pendaftaran-kkn');
+    Route::get('/pendaftaran-project', [KoordinatorDashboarController::class, 'pendaftaranProject'])->name('pendaftaran-project');
+    Route::get('/pengelompokan-mhs', [KoordinatorDashboarController::class,'pengelompokanMhs'])->name('pengelompokan');
+    Route::post('/buat-pengelompokan', [KoordinatorController::class, 'buatPengelompokan'])->name('buat-pengelompokan');
     Route::put('/verifikasi-pendaftaran', [KoordinatorController::class, 'verifikasiPendaftaran'])->name('verifikasi-pendaftaran');
+    Route::put('/verifikasi-project', [KoordinatorController::class, 'verifikasiProject'])->name('verifikasi-project');
     Route::delete('/hapus-pendaftaran/{nim}', [KoordinatorController::class, 'deletePendaftaran'])->name('hapus-pendaftaran');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::get('/pengelompokan-mhs', function () {
-    return view('dashboard.pengelompokan_mhs');
-})->name('pengelompokan');
 Route::get('/penilaian-logbook', function () {
     return view('dashboard.dashboard_penilaian_logbook');
 })->name('penilaian-logbook');

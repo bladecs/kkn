@@ -279,7 +279,7 @@
 
             <!-- Form Card -->
             <div class="form-card">
-                <form id="projectForm" action="#" method="POST" enctype="multipart/form-data">
+                <form id="projectForm" action="{{ route('submit-project') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Data Mahasiswa -->

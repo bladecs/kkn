@@ -651,7 +651,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Status Indicators -->
     <div class="row mb-4">
         <div class="col-12">
@@ -679,7 +679,7 @@
                         </div>
                         <div class="status-item" style="border-left: 4px solid #17a2b8;">
                             <i class="fas fa-flag-checkered status-icon" style="color: #17a2b8;"></i>
-                            <div class="status-count">{{ $status_counts['completed'] ?? 0 }}</div>
+                            <div class="status-count">{{ $status_counts['complete'] ?? 0 }}</div>
                             <div class="status-label">Selesai</div>
                         </div>
                     </div>
@@ -702,32 +702,33 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Mahasiswa</th>
                                     <th>NIM</th>
-                                    <th>Program Studi</th>
-                                    <th>Tanggal Pendaftaran</th>
+                                    <th>NIP</th>
+                                    <th>Judul Project</th>
+                                    <th>Lokasi</th>
+                                    <th>Jumlah Anggota</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (isset($data_pendaftaran) && count($data_pendaftaran) > 0)
-                                    @foreach ($data_pendaftaran as $index => $mahasiswa)
+                                @if (isset($data_project) && count($data_project) > 0)
+                                    @foreach ($data_project as $index => $project)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $mahasiswa['name'] }}</td>
-                                            <td>{{ $mahasiswa['nim'] }}</td>
-                                            <td>{{ $mahasiswa['study_program'] }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($mahasiswa['created_at'])->format('d M Y H:i') }}
-                                            </td>
+                                            <td>{{ $project['nim'] }}</td>
+                                            <td>{{ $project['nip'] }}</td>
+                                            <td>{{ $project['judul_project'] }}</td>
+                                            <td>{{ $project['lokasi'] }}</td>
+                                            <td>{{ $project['jumlah_anggota'] }}</td>
                                             <td>
-                                                @if ($mahasiswa['status'] == 'verifikasi')
+                                                @if ($project['status'] == 'verifikasi')
                                                     <span class="status-badge status-pending">Pending</span>
-                                                @elseif($mahasiswa['status'] == 'verified')
+                                                @elseif($project['status'] == 'verified')
                                                     <span class="status-badge status-verified">Terverifikasi</span>
-                                                @elseif($mahasiswa['status'] == 'rejected')
+                                                @elseif($project['status'] == 'rejected')
                                                     <span class="status-badge status-rejected">Ditolak</span>
-                                                @elseif($mahasiswa['status'] == 'complete')
+                                                @elseif($project['status'] == 'complete')
                                                     <span class="status-badge status-completed">Selesai</span>
                                                 @endif
                                             </td>
@@ -735,11 +736,11 @@
                                                 <div class="action-buttons">
                                                     <button class="btn btn-sm btn-primary view-detail"
                                                         data-bs-toggle="modal" data-bs-target="#detailModal"
-                                                        data-mahasiswa='@json($mahasiswa)'
+                                                        data-project='@json($project)'
                                                         title="Lihat Detail">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
-                                                    <form action="{{ route('hapus-pendaftaran', $mahasiswa['nim']) }}"
+                                                    <form action="{{ route('hapus-pendaftaran', $project['nim']) }}"
                                                         method="post" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
@@ -754,7 +755,7 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="7" class="text-center py-4">
+                                        <td colspan="8" class="text-center py-4">
                                             <i class="fas fa-info-circle text-muted mb-2" style="font-size: 2rem;"></i>
                                             <p class="text-muted">Belum ada data mahasiswa pendaftar KKN</p>
                                         </td>
@@ -806,83 +807,95 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="detailModalLabel">
-                        <i class="fas fa-user-graduate me-2"></i>
-                        Detail Data Mahasiswa
+                        <i class="fas fa-project-diagram me-2"></i>
+                        Detail Project KKN
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('verifikasi-pendaftaran') }}" method="post">
+                <form action="{{ route('verifikasi-project') }}" method="post">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
                         <input type="text" name="nim" id="nim" hidden value="">
-                        <!-- Student Photo -->
-                        <div class="photo-container">
-                            <img id="modalPhoto" src="" alt="Foto Mahasiswa" class="student-photo"
-                                onerror="this.style.display='none'">
-                            <div class="info-label mt-2">Foto Profil</div>
-                        </div>
+                        <input type="text" name="nip" id="nip" hidden value="">
 
-                        <!-- Personal Information -->
+                        <!-- Project Information -->
                         <div class="student-info-section">
                             <div class="section-title">
-                                <i class="fas fa-id-card me-2"></i>
-                                Informasi Pribadi
+                                <i class="fas fa-info-circle me-2"></i>
+                                Informasi Project
                             </div>
                             <div class="info-grid">
-                                <div class="info-item">
-                                    <span class="info-label">Nama Lengkap</span>
-                                    <span class="info-value" id="modalName">-</span>
-                                </div>
                                 <div class="info-item">
                                     <span class="info-label">NIM</span>
                                     <span class="info-value" id="modalNim">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Program Studi</span>
-                                    <span class="info-value" id="modalStudyProgram">-</span>
+                                    <span class="info-label">NIP</span>
+                                    <span class="info-value" id="modalNip">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Email</span>
-                                    <span class="info-value" id="modalEmail">-</span>
+                                    <span class="info-label">Judul Project</span>
+                                    <span class="info-value" id="modalJudulProject">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">No. Telepon</span>
-                                    <span class="info-value" id="modalPhone">-</span>
+                                    <span class="info-label">Jumlah Anggota</span>
+                                    <span class="info-value" id="modalJumlahAnggota">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Alamat</span>
-                                    <span class="info-value" id="modalAddress">-</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Registration Information -->
-                        <div class="student-info-section">
-                            <div class="section-title">
-                                <i class="fas fa-calendar-alt me-2"></i>
-                                Informasi Pendaftaran
-                            </div>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <span class="info-label">Tanggal Pendaftaran</span>
-                                    <span class="info-value" id="modalCreatedAt">-</span>
+                                    <span class="info-label">Penyetuju</span>
+                                    <span class="info-value" id="modalPenyetuju">-</span>
                                 </div>
                                 <div class="info-item">
                                     <span class="info-label">Status</span>
                                     <span class="status-display" id="modalStatus">-</span>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Description -->
+                        <div class="student-info-section">
+                            <div class="section-title">
+                                <i class="fas fa-align-left me-2"></i>
+                                Deskripsi Project
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Deskripsi Lengkap</span>
+                                <div class="info-value" id="modalDeskripsiProject" style="white-space: pre-line;">-</div>
+                            </div>
+                        </div>
+
+                        <!-- Location Information -->
+                        <div class="student-info-section">
+                            <div class="section-title">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                Informasi Lokasi
+                            </div>
+                            <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">Lokasi KKN</span>
-                                    <span class="info-value" id="modalLocation">-</span>
+                                    <span class="info-label">Lokasi</span>
+                                    <span class="info-value" id="modalLokasi">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Kelompok KKN</span>
-                                    <span class="info-value" id="modalGroup">-</span>
+                                    <span class="info-label">Kota</span>
+                                    <span class="info-value" id="modalKota">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Provinsi</span>
+                                    <span class="info-value" id="modalProvinsi">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Jalan</span>
+                                    <span class="info-value" id="modalJalan">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Alamat Lengkap</span>
+                                    <span class="info-value" id="modalAlamat">-</span>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Verification Status -->
                         <div class="student-info-section">
                             <div class="section-title">
                                 <i class="fas fa-calendar-alt me-2"></i>
@@ -911,27 +924,10 @@
                         <div class="student-info-section">
                             <div class="section-title">
                                 <i class="fas fa-paperclip me-2"></i>
-                                Dokumen Pendaftaran
+                                Dokumen Project
                             </div>
                             <div class="file-section">
                                 <div class="file-grid">
-                                    <!-- KTM -->
-                                    <div class="file-item" data-file-type="ktm" id="ktmFileItem">
-                                        <i class="fas fa-id-card file-icon"></i>
-                                        <div class="file-name" id="modalKtmName">Kartu Tanda Mahasiswa</div>
-                                        <div class="file-status" id="modalKtmStatus"></div>
-                                        <div class="file-actions">
-                                            <button class="btn btn-primary btn-sm btn-file view-file"
-                                                data-file-type="ktm">
-                                                <i class="fas fa-eye me-1"></i> Lihat
-                                            </button>
-                                            <button class="btn btn-success btn-sm btn-file download-file"
-                                                data-file-type="ktm">
-                                                <i class="fas fa-download me-1"></i> Unduh
-                                            </button>
-                                        </div>
-                                    </div>
-
                                     <!-- Proposal -->
                                     <div class="file-item pdf-only-download" data-file-type="proposal"
                                         id="proposalFileItem">
@@ -946,19 +942,16 @@
                                         </div>
                                     </div>
 
-                                    <!-- Photo -->
-                                    <div class="file-item" data-file-type="photo" id="photoFileItem">
-                                        <i class="fas fa-camera file-icon"></i>
-                                        <div class="file-name" id="modalPhotoName">Foto Profil</div>
-                                        <div class="file-status" id="modalPhotoStatus"></div>
+                                    <!-- RAB -->
+                                    <div class="file-item pdf-only-download" data-file-type="rab"
+                                        id="rabFileItem">
+                                        <i class="fas fa-file-invoice-dollar file-icon"></i>
+                                        <div class="file-name" id="modalRabName">RAB KKN</div>
+                                        <div class="file-status" id="modalRabStatus"></div>
                                         <div class="file-actions">
-                                            <button class="btn btn-primary btn-sm btn-file view-file"
-                                                data-file-type="photo">
-                                                <i class="fas fa-eye me-1"></i> Lihat
-                                            </button>
                                             <button class="btn btn-success btn-sm btn-file download-file"
-                                                data-file-type="photo">
-                                                <i class="fas fa-download me-1"></i> Unduh
+                                                data-file-type="rab">
+                                                <i class="fas fa-download me-1"></i> Unduh PDF
                                             </button>
                                         </div>
                                     </div>
@@ -1027,8 +1020,8 @@
                 }, 4000);
             });
 
-            // Current student data for file preview
-            let currentStudentData = null;
+            // Current project data for file preview
+            let currentProjectData = null;
             let currentFileUrl = null;
             let currentFileName = null;
             let currentFileType = null;
@@ -1038,70 +1031,38 @@
 
             viewButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    const mahasiswaData = JSON.parse(this.getAttribute('data-mahasiswa'));
-                    console.log('Mahasiswa Data:', mahasiswaData);
-                    currentStudentData = mahasiswaData;
-                    populateModal(mahasiswaData);
+                    const projectData = JSON.parse(this.getAttribute('data-project'));
+                    console.log('Project Data:', projectData);
+                    currentProjectData = projectData;
+                    populateModal(projectData);
                 });
             });
 
             function populateModal(data) {
-                // Basic information
+                // Basic project information
                 document.getElementById('nim').value = data.nim || '';
-                document.getElementById('modalName').textContent = data.name || '-';
                 document.getElementById('modalNim').textContent = data.nim || '-';
-                document.getElementById('modalStudyProgram').textContent = data.study_program || '-';
-                document.getElementById('modalEmail').textContent = data.user.email || '-';
-                document.getElementById('modalPhone').textContent = data.user.phone || '-';
-                document.getElementById('modalAddress').textContent = data.user.alamat || '-';
+                document.getElementById('modalNip').textContent = data.nip || '-';
+                document.getElementById('modalJudulProject').textContent = data.judul_project || '-';
+                document.getElementById('modalJumlahAnggota').textContent = data.jumlah_anggota || '-';
+                document.getElementById('modalPenyetuju').textContent = data.penyetuju || '-';
+                document.getElementById('modalDeskripsiProject').textContent = data.deskripsi_project || '-';
 
-                // Registration information
-                document.getElementById('modalCreatedAt').textContent = data.created_at ?
-                    new Date(data.created_at).toLocaleDateString('id-ID', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }) : '-';
-
-                document.getElementById('modalLocation').textContent = data.kkn_location || '-';
-                document.getElementById('modalGroup').textContent = data.kkn_group || '-';
+                // Location information
+                document.getElementById('modalLokasi').textContent = data.lokasi || '-';
+                document.getElementById('modalKota').textContent = data.kota || '-';
+                document.getElementById('modalProvinsi').textContent = data.provinsi || '-';
+                document.getElementById('modalJalan').textContent = data.jalan || '-';
+                document.getElementById('modalAlamat').textContent = data.alamat || '-';
 
                 // Status
                 const statusElement = document.getElementById('modalStatus');
                 statusElement.textContent = getStatusText(data.status);
                 statusElement.className = 'status-display ' + getStatusClass(data.status);
 
-                // Photo
-                const photoElement = document.getElementById('modalPhoto');
-                if (data.photo_path) {
-                    photoElement.src = generateStorageUrl(data.photo_path);
-                    photoElement.style.display = 'block';
-                } else {
-                    photoElement.style.display = 'none';
-                }
-
                 // File names and status
-                updateFileStatus('ktm', data.ktm_path);
-                updateFileStatus('proposal', data.proposal_path);
-                updateFileStatus('photo', data.photo_path);
-
-                // Tentukan apakah file adalah PDF dan sesuaikan tampilan
-                adjustFileDisplay(data);
-            }
-
-            function adjustFileDisplay(data) {
-                // Untuk proposal (PDF), sembunyikan tombol view
-                if (data.proposal_path && isPdfFile(data.proposal_path)) {
-                    document.getElementById('proposalFileItem').classList.add('pdf-only-download');
-                }
-
-                // Untuk KTM, tampilkan tombol view hanya jika bukan PDF
-                if (data.ktm_path && isPdfFile(data.ktm_path)) {
-                    document.getElementById('ktmFileItem').classList.add('pdf-only-download');
-                }
+                updateFileStatus('proposal', data.proposal_kkn_path);
+                updateFileStatus('rab', data.rab_kkn_path);
             }
 
             function updateFileStatus(fileType, filePath) {
@@ -1153,7 +1114,7 @@
                     'verifikasi': 'Pending',
                     'verified': 'Terverifikasi',
                     'rejected': 'Ditolak',
-                    'completed': 'Selesai'
+                    'complete': 'Selesai'
                 };
                 return statusMap[status] || 'Unknown';
             }
@@ -1163,7 +1124,7 @@
                     'verifikasi': 'status-pending',
                     'verified': 'status-verified',
                     'rejected': 'status-rejected',
-                    'completed': 'status-completed'
+                    'complete': 'status-completed'
                 };
                 return classMap[status] || 'status-pending';
             }
@@ -1213,12 +1174,12 @@
             });
 
             function previewFile(fileType) {
-                if (!currentStudentData) {
-                    showAlert('Data mahasiswa tidak tersedia', 'error');
+                if (!currentProjectData) {
+                    showAlert('Data project tidak tersedia', 'error');
                     return;
                 }
 
-                const filePath = currentStudentData[`${fileType}_path`];
+                const filePath = currentProjectData[`${fileType}_kkn_path`];
                 if (!filePath) {
                     showAlert('File tidak ditemukan dalam database', 'warning');
                     return;
@@ -1280,19 +1241,19 @@
             }
 
             function downloadFileDirect(fileType) {
-                if (!currentStudentData) {
-                    showAlert('Data mahasiswa tidak tersedia', 'error');
+                if (!currentProjectData) {
+                    showAlert('Data project tidak tersedia', 'error');
                     return;
                 }
 
-                const filePath = currentStudentData[`${fileType}_path`];
+                const filePath = currentProjectData[`${fileType}_kkn_path`];
                 if (!filePath) {
                     showAlert('File tidak ditemukan', 'warning');
                     return;
                 }
 
                 const fileUrl = generateStorageUrl(filePath);
-                const fileName = getFileName(filePath) || `${fileType}_${currentStudentData.nim}`;
+                const fileName = getFileName(filePath) || `${fileType}_${currentProjectData.nim}`;
 
                 triggerDownload(fileUrl, fileName);
             }
@@ -1311,9 +1272,8 @@
 
             function getFileTypeName(fileType) {
                 const typeMap = {
-                    'ktm': 'Kartu Tanda Mahasiswa',
                     'proposal': 'Proposal KKN',
-                    'photo': 'Foto Profil'
+                    'rab': 'RAB KKN'
                 };
                 return typeMap[fileType] || 'Dokumen';
             }
@@ -1378,15 +1338,15 @@
             // Verification Modal Functionality
             document.querySelectorAll('.verify-student').forEach(button => {
                 button.addEventListener('click', function() {
-                    const mahasiswaData = JSON.parse(this.getAttribute('data-mahasiswa'));
-                    openVerificationModal(mahasiswaData);
+                    const projectData = JSON.parse(this.getAttribute('data-project'));
+                    openVerificationModal(projectData);
                 });
             });
 
             // Verification from detail modal
             document.querySelector('.verify-from-detail').addEventListener('click', function() {
-                if (currentStudentData) {
-                    openVerificationModal(currentStudentData);
+                if (currentProjectData) {
+                    openVerificationModal(currentProjectData);
                 }
             });
 

@@ -20,6 +20,7 @@
             <ul class="dropdown-menu-custom">
                 @php
                     $status = auth()->user()->pendaftaran->status ?? null;
+                    $statusProject = auth()->user()->project->status ?? null;
                 @endphp
                 <li>
                     <a href="{{ route('formulir') }}"

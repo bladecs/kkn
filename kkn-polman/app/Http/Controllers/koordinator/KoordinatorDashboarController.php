@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\koordinator;
 
 use App\Http\Controllers\Controller;
+use App\Models\dosenModel;
+use App\Models\lokasiModel;
 use App\Models\pendaftaraModel;
+use App\Models\projectModel;
+use App\Models\pengelompokanModel;
 use Illuminate\Http\Request;
 
 class KoordinatorDashboarController extends Controller
@@ -37,5 +41,28 @@ class KoordinatorDashboarController extends Controller
     {
         $data_pendaftaran = pendaftaraModel::with('user')->get();
         return view('dashboard.koordinator.pendaftaran_kkn', compact('data_pendaftaran'));
+    }
+
+    public function pendaftaranProject(Request $request)
+    {
+        $data_project = projectModel::all();
+        return view('dashboard.koordinator.pendaftaran_project', compact('data_project'));
+    }
+
+    public function pengelompokanMhs(Request $request)
+    {
+        $mahasiswa = pendaftaraModel::where('status', 'complete')->get();
+        $dosen = dosenModel::where('role', 'dosen')->get();
+        $lokasi = lokasiModel::all();
+        $project = projectModel::where('status', 'complete')->get();
+        $pengelompokan = pengelompokanModel::with(['lokasi','project','dosen'])->get();
+
+        return view('dashboard.koordinator.pengelompokan_mahasiswa',compact(
+            'mahasiswa',
+            'dosen',
+            'lokasi',
+            'project',
+            'pengelompokan'
+        ));
     }
 }

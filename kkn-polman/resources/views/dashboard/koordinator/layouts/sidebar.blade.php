@@ -25,7 +25,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="dropdown-menu-item">
+                    <a href="{{ route('pendaftaran-project') }}" class="dropdown-menu-item">
                         <i class="fas fa-project-diagram"></i>
                         <span>Pendaftaran Project</span>
                     </a>
@@ -57,6 +57,12 @@
                     </a>
                 </li>
             </ul>
+        </li>
+
+        <li>
+            <a href="{{ route('pengelompokan') }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Pengelompokan">
+                <i class="fas fa-cog"></i> <span>Pengelompokan</span>
+            </a>
         </li>
 
         <li>

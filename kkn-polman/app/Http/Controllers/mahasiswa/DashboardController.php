@@ -4,6 +4,7 @@ namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\pendaftaraModel;
+use App\Models\projectModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,15 +14,18 @@ class DashboardController extends Controller
     {
         $nim = $request->session()->get('nim');
         $pendaftaran = pendaftaraModel::where('nim', $nim)->first();
+        $project = projectModel::where('nim', $nim)->first();
 
         $status_pendaftaran = $pendaftaran ? $pendaftaran->status : null;
+        $status_project = $project ? $project->status : null;
         $tanggal_daftar = $pendaftaran ? $pendaftaran->created_at->format('d M Y') : '-';
         $tanggal_update = $pendaftaran ? $pendaftaran->updated_at->format('d M Y') : '-';
 
         return view('dashboard.mahasiswa.dashboard', compact(
             'status_pendaftaran',
             'tanggal_daftar',
-            'tanggal_update'
+            'tanggal_update',
+            'status_project'
         ));
     }
 

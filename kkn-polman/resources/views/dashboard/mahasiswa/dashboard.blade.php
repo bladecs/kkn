@@ -192,7 +192,7 @@
         .phase-label {
             font-size: 0.85rem;
             text-align: center;
-            max-width: 100px;
+            max-width: 120px;
             margin-top: 5px;
             font-weight: 500;
             color: #6c757d;
@@ -313,12 +313,20 @@
                                 <div class="phase-label">Pendaftaran</div>
                                 <div class="phase-status">Menunggu</div>
                             </div>
-                            <!-- Penerjunan -->
+                            <!-- Project-->
                             <div class="phase-step" data-phase="penerjunan">
                                 <div class="phase-indicator-circle">
                                     <i class="fas fa-rocket"></i>
                                 </div>
-                                <div class="phase-label">Penerjunan</div>
+                                <div class="phase-label">Project</div>
+                                <div class="phase-status">Menunggu</div>
+                            </div>
+                            <!-- Pengelompokan-->
+                            <div class="phase-step" data-phase="penerjunan">
+                                <div class="phase-indicator-circle">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="phase-label">Pengelompokan</div>
                                 <div class="phase-status">Menunggu</div>
                             </div>
                             <!-- Pelaksanaan -->
@@ -367,7 +375,7 @@
                     </a>
 
                     <a href="{{ route('form-pengajuan-kkn') }}" class="menu-item"
-                        @if ($status_pendaftaran != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @endif>
+                        @if ($status_pendaftaran != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @elseif ($status_project != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @elseif ($status_project == 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @endif>
                         <i class="fas fa-book"></i>
                         <span>Pendaftaran Project</span>
                     </a>
@@ -450,6 +458,7 @@
 @section('scripts')
     <script>
         const statusPendaftaran = @json($status_pendaftaran ?? 'verifikasi');
+        const statusProject = @json($status_project ?? 'pending');
 
         (function() {
             const el = document.querySelector('.phase-step[data-phase="pendaftaran"]');
@@ -473,6 +482,33 @@
             if (['complete', 'selesai', 'done'].includes(s)) {
                 setStatus(el, 'complete', 'Selesai');
             } else if (['active', 'berjalan', 'ongoing', 'verifikasi'].includes(s)) {
+                setStatus(el, 'active', 'Berjalan');
+            } else {
+                setStatus(el, '', 'Menunggu');
+            }
+        })();
+        (function() {
+            const el = document.querySelector('.phase-step[data-phase="penerjunan"]');
+            if (!el) return;
+
+            el.classList.remove('complete', 'active');
+
+            function setStatus(el, statusClass, text) {
+                el.classList.add(statusClass);
+                const statusEl = el.querySelector('.phase-status');
+                if (statusEl) {
+                    statusEl.className = 'phase-status ' +
+                        (statusClass === 'complete' ? 'status-completed' :
+                            (statusClass === 'active' ? 'status-active' : 'status-pending'));
+                    statusEl.textContent = text;
+                }
+            }
+
+            const s = (statusProject || '').toLowerCase().trim();
+
+            if (['complete', 'selesai', 'done'].includes(s)) {
+                setStatus(el, 'complete', 'Selesai');
+            } else if (['active', 'berjalan', 'ongoing', 'pending'].includes(s)) {
                 setStatus(el, 'active', 'Berjalan');
             } else {
                 setStatus(el, '', 'Menunggu');
