@@ -16,16 +16,16 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-            dosenModel::factory()->create([
-                'name' => 'koor1',
-                'email' => 'koordinator@gmail.com',
-                'nip' => '1234567890',
-                'phone' => '081234567890',
-                'jurusan' => 'ae',
-                'study_program' => 'Teknik Rekayasa Informatika Industri',
-                'role' => 'koordinator',
-                'password' => bcrypt('password'),
-            ]);
+        dosenModel::factory()->create([
+            'name' => 'koor1',
+            'email' => 'koordinator@gmail.com',
+            'nip' => '1234567890',
+            'phone' => '081234567890',
+            'jurusan' => 'ae',
+            'study_program' => 'Teknik Rekayasa Informatika Industri',
+            'role' => 'koordinator',
+            'password' => bcrypt('password'),
+        ]);
 
         dosenModel::factory()->create([
             'name' => 'dosen1',

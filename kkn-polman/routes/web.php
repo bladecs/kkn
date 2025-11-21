@@ -5,6 +5,7 @@ use App\Http\Controllers\koordinator\KoordinatorDashboarController;
 use App\Http\Controllers\koordinator\KoordinatorController;
 use App\Http\Controllers\mahasiswa\DashboardController;
 use App\Http\Controllers\mahasiswa\MahasiswaController;
+use App\Http\Controllers\dosen\DosenDashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -46,10 +47,10 @@ Route::middleware('auth:dosen', 'role:koordinator')->group(function () {
     Route::delete('/hapus-pendaftaran/{nim}', [KoordinatorController::class, 'deletePendaftaran'])->name('hapus-pendaftaran');
 });
 
+Route::middleware('auth:dosen','role:dosen')->group(function () {
+    Route::get('/dashboard-dosen', [DosenDashboardController::class,'index'])->name('dashboard_dosen');
+    Route::get('/form-pengajuan-kkn-dosen', [DosenDashboardController::class, 'formPengajuanProject'])->name('form-pengajuan-kkn-dosen');
+    Route::get('/penilaian-logbook',[DosenDashboardController::class,'penilaianLogbook'])->name('penilaian-logbook');
+});
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/penilaian-logbook', function () {
-    return view('dashboard.dashboard_penilaian_logbook');
-})->name('penilaian-logbook');
-Route::get('/penilaian-laporan-akhir', function () {
-    return view('dashboard.dashboard_penilaian_laporan_akhir');
-})->name('penilaian-laporan-akhir');

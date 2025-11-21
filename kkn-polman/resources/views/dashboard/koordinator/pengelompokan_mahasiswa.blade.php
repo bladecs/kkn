@@ -1171,4 +1171,20 @@
             updateSelectedCounter();
         });
     </script>
+    <script>
+        (function() {
+            const alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(a => {
+                setTimeout(() => {
+                    try {
+                        const bsAlert = bootstrap?.Alert?.getInstance(a) ?? new bootstrap.Alert(a);
+                        bsAlert.close();
+                    } catch (e) {
+                        a.classList.remove('show');
+                        a.style.display = 'none';
+                    }
+                }, 4000);
+            });
+        })();
+    </script>
 @endsection

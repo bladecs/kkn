@@ -18,21 +18,36 @@
                 <i class="fas fa-chevron-right dropdown-arrow"></i>
             </a>
             <ul class="dropdown-menu-custom">
+                @php
+                    $status = auth()->guard('dosen')->user()->project->status ?? null;
+                    $disabled = !($status == null || $status === 'complete');
+                @endphp
                 <li>
-                    <a href="{{ route('pendaftaran-kkn') }}"class="dropdown-menu-item">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Pendaftaran KKN</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('pendaftaran-project') }}" class="dropdown-menu-item">
+                    <a href="{{ route('form-pengajuan-kkn-dosen') }}"
+                        class="dropdown-menu-item {{ $disabled ? 'disabled' : '' }}"
+                        {{ $disabled ? 'onclick=return false;' : '' }}>
                         <i class="fas fa-project-diagram"></i>
                         <span>Pendaftaran Project</span>
                     </a>
                 </li>
+            </ul>
+        </li>
+
+        <!-- Pelaporan Dropdown -->
+        <li class="dropdown-menu-container {{ request()->routeIs('pelaporan-harian') ? 'active' : '' }}">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-file-alt"></i> <span>Penilaian</span>
+                <i class="fas fa-chevron-right dropdown-arrow"></i>
+            </a>
+            <ul class="dropdown-menu-custom">
                 <li>
-                    <a href="{{ route('pengelompokan') }}" class="dropdown-menu-item">
-                        <i class="fas fa-users"></i> <span>Pengelompokan</span>
+                    <a href="{{ route('penilaian-logbook') }}" class="dropdown-menu-item">
+                        <i class="fas fa-file-invoice"></i> <span>Penilaian Logbook</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="dropdown-menu-item">
+                        <i class="fas fa-file-contract"></i> <span>Penilaian Laporan</span>
                     </a>
                 </li>
             </ul>

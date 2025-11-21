@@ -20,4 +20,9 @@ class dosenModel extends Authenticatable
         'role',
         'password',
     ];
+
+    public function project()
+    {
+        return $this->hasOne(projectModel::class, 'nip', 'nip');
+    }
 }
