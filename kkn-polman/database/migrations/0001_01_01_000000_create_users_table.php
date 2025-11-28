@@ -12,20 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('nim')->unique();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('phone', 15);
-            $table->enum('gender', ['male', 'female'])->nullable();
-            $table->date('tgl_lahir')->nullable();
-            $table->string('tmp_lahir', 100)->nullable();
-            $table->string('role', 20);
-            $table->text('alamat')->nullable();
-            $table->string('jurusan', 100);
-            $table->string('study_program', 100);
-            $table->string('password');
+            $table->string('id')->primary();
+            $table->string('email', 150)->unique();
+            $table->string('password', 255);
+            $table->string('role', 50)->default('mahasiswa');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -38,7 +28,7 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->string('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');

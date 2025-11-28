@@ -313,14 +313,6 @@
                                 <div class="phase-label">Pendaftaran</div>
                                 <div class="phase-status">Menunggu</div>
                             </div>
-                            <!-- Project-->
-                            <div class="phase-step" data-phase="penerjunan">
-                                <div class="phase-indicator-circle">
-                                    <i class="fas fa-rocket"></i>
-                                </div>
-                                <div class="phase-label">Project</div>
-                                <div class="phase-status">Menunggu</div>
-                            </div>
                             <!-- Pengelompokan-->
                             <div class="phase-step" data-phase="penerjunan">
                                 <div class="phase-indicator-circle">
@@ -372,12 +364,6 @@
                     <a href="{{ route('data-diri') }}" class="menu-item">
                         <i class="fas fa-id-card"></i>
                         <span>Data Diri</span>
-                    </a>
-
-                    <a href="{{ route('form-pengajuan-kkn') }}" class="menu-item"
-                        @if ($status_pendaftaran != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;"@elseif ($status_pendaftaran == 'complete' && $status_project != 'pending') onclick="return true;" @elseif ($status_project != 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @elseif ($status_project == 'complete') onclick="return false;" style="pointer-events: none; opacity: 0.8;" @endif>
-                        <i class="fas fa-book"></i>
-                        <span>Pendaftaran Project</span>
                     </a>
                 </div>
             </div>
@@ -482,33 +468,6 @@
             if (['complete', 'selesai', 'done'].includes(s)) {
                 setStatus(el, 'complete', 'Selesai');
             } else if (['active', 'berjalan', 'ongoing', 'verifikasi'].includes(s)) {
-                setStatus(el, 'active', 'Berjalan');
-            } else {
-                setStatus(el, '', 'Menunggu');
-            }
-        })();
-        (function() {
-            const el = document.querySelector('.phase-step[data-phase="penerjunan"]');
-            if (!el) return;
-
-            el.classList.remove('complete', 'active');
-
-            function setStatus(el, statusClass, text) {
-                el.classList.add(statusClass);
-                const statusEl = el.querySelector('.phase-status');
-                if (statusEl) {
-                    statusEl.className = 'phase-status ' +
-                        (statusClass === 'complete' ? 'status-completed' :
-                            (statusClass === 'active' ? 'status-active' : 'status-pending'));
-                    statusEl.textContent = text;
-                }
-            }
-
-            const s = (statusProject || '').toLowerCase().trim();
-
-            if (['complete', 'selesai', 'done'].includes(s)) {
-                setStatus(el, 'complete', 'Selesai');
-            } else if (['active', 'berjalan', 'ongoing', 'pending'].includes(s)) {
                 setStatus(el, 'active', 'Berjalan');
             } else {
                 setStatus(el, '', 'Menunggu');

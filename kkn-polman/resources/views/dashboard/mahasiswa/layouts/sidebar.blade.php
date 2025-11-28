@@ -34,13 +34,6 @@
                         <i class="fas fa-id-card"></i> <span>Data Pribadi</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('form-pengajuan-kkn') }}" class="dropdown-menu-item {{ $status === 'complete' ? '' : 'disabled' }}"
-                        {{ $status !== 'complete' ? 'onclick=return false;' : '' }}>
-                        <i class="fas fa-project-diagram"></i>
-                        <span>Pendaftaran Project</span>
-                    </a>
-                </li>
             </ul>
         </li>
 

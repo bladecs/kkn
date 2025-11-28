@@ -10,7 +10,10 @@
                     id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="https://via.placeholder.com/40" alt="User" width="40" height="40"
                         class="rounded-circle me-2">
-                    <span class="d-none d-md-inline">Nama Mahasiswa</span>
+                        @php
+                            $data_diri = auth()->user()->name;
+                        @endphp
+                    <span class="d-none d-md-inline">{{ $data_diri }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
                     <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profil</a></li>

@@ -6,12 +6,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\pendaftaraModel;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -19,16 +24,8 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'id',
         'email',
-        'nim',
-        'phone',
-        'jurusan',
-        'study_program',
-        'tmp_lahir',
-        'tgl_lahir',
-        'alamat',
-        'gender',
         'password',
         'role',
     ];
@@ -56,13 +53,28 @@ class User extends Authenticatable
         ];
     }
 
-    public function pendaftaran()
+    public function schedulesCreated()
     {
-        return $this->hasOne(pendaftaraModel::class, 'nim', 'nim');
+        return $this->hasMany(Schedule::class, 'created_by');
     }
 
-    public function project()
+    public function schemasApproved()
     {
-        return $this->hasOne(projectModel::class, 'nim', 'nim');
+        return $this->hasMany(SchemaModel::class, 'approved_by');
+    }
+
+    public function schemasCreated()
+    {
+        return $this->hasMany(SchemaModel::class, 'created_by');
+    }
+
+    public function projectsApproved()
+    {
+        return $this->hasMany(ProjectKkn::class, 'approved_by');
+    }
+
+    public function kelompokCreated()
+    {
+        return $this->hasMany(KelompokKkn::class, 'created_by');
     }
 }

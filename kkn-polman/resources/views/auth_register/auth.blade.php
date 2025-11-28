@@ -277,10 +277,6 @@
                     <button type="submit" class="btn btn-primary w-100">Masuk</button>
                 </div>
 
-                <div class="form-group">
-                    <a href="{{ route('login-dosen') }}" class="btn btn-primary w-100">Saya Dosen</a>
-                </div>
-
                 <div class="text-center">
                     <a href="#" class="text-muted">Lupa password?</a>
                 </div>
@@ -318,47 +314,42 @@
                                     placeholder="Masukkan email Anda" required>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="register-phone" class="form-label">Nomor Telepon</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                <input type="tel" class="form-control" id="register-phone" name="register-phone"
-                                    placeholder="Masukkan nomor telepon" required>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="register-column">
+                        <input type="hidden" id="route-get-prodi"
+                            value="{{ route('get.prodi', ['jurusan_id' => 'JURID']) }}">
+
                         <div class="form-group">
-                            <label for="register-faculty" class="form-label">Jurusan</label>
+                            <label class="form-label">Jurusan</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-building"></i></span>
                                 <select class="form-control" id="register-jurusan" name="register-jurusan" required>
                                     <option value="">Pilih Jurusan</option>
-                                    <option value="ae">Automation Engineering</option>
-                                    <option value="de">Desing Engineering</option>
-                                    <option value="fe">Foundry Engineering</option>
-                                    <option value="me">Manufactur Engineering</option>
+                                    @foreach ($jurusan as $jur)
+                                        <option value="{{ $jur->id_jurusan }}">{{ $jur->nama_jurusan }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="register-study-program" class="form-label">Program Studi</label>
+                            <label class="form-label">Program Studi</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
-                                <input type="text" class="form-control" id="register-study-program"
-                                    name="register-study-program" placeholder="Masukkan program studi" required>
+                                <select class="form-control" id="register-prodi" name="register-prodi" required>
+                                    <option value="">Pilih Prodi</option>
+                                </select>
                             </div>
                         </div>
+
 
                         <div class="form-group">
                             <label for="register-password" class="form-label">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                <input type="password" class="form-control" id="register-password"
-                                    name="password" placeholder="Buat password" required>
+                                <input type="password" class="form-control" id="register-password" name="password"
+                                    placeholder="Buat password" required>
                                 <span class="input-group-text password-toggle" id="register-password-toggle">
                                     <i class="fas fa-eye"></i>
                                 </span>
@@ -503,6 +494,31 @@
                     }
                 }, 5000);
             });
+        });
+    </script>
+    <script>
+        document.getElementById('register-jurusan').addEventListener('change', function() {
+
+            let jurusanId = this.value;
+            let prodiDropdown = document.getElementById('register-prodi');
+
+            // Ambil URL dari route name (yang punya placeholder)
+            let routeUrl = document.getElementById('route-get-prodi').value;
+
+            // Replace placeholder dengan jurusan yg dipilih
+            routeUrl = routeUrl.replace('JURID', jurusanId);
+
+            prodiDropdown.innerHTML = '<option value="">Loading...</option>';
+
+            fetch(routeUrl)
+                .then(response => response.json())
+                .then(data => {
+                    prodiDropdown.innerHTML = '<option value="">Pilih Prodi</option>';
+                    data.forEach(function(prodi) {
+                        prodiDropdown.innerHTML +=
+                            `<option value="${prodi.id_prodi}">${prodi.nama_prodi}</option>`;
+                    });
+                });
         });
     </script>
 </body>

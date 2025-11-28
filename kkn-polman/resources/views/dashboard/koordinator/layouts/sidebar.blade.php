@@ -6,9 +6,31 @@
 
     <ul class="list-unstyled components">
         <li class="{{ request()->routeIs('dashboard_mhs') ? 'active' : '' }}">
-            <a href="{{ route('dashboard_mhs') }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+            <a href="{{ route('dashboard_koordinator') }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
                 <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
             </a>
+        </li>
+
+        <!-- Schedule Dropdown -->
+        <li class="dropdown-menu-container {{ request()->routeIs('formulir') ? 'active' : '' }}">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-route"></i> <span>Alur Kegiatan</span>
+                <i class="fas fa-chevron-right dropdown-arrow"></i>
+            </a>
+            <ul class="dropdown-menu-custom">
+                <li>
+                    <a href="{{ route('form_schedule') }}"class="dropdown-menu-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Pembuatan Schedule</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('form_schema') }}" class="dropdown-menu-item">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Pembuatan Schema</span>
+                    </a>
+                </li>
+            </ul>
         </li>
 
         <!-- Pendaftaran Dropdown -->
