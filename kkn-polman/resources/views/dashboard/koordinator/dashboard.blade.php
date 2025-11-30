@@ -102,232 +102,175 @@
             font-weight: 600;
         }
 
-        /* Modern Progress Indicator Styles */
-        .phase-indicator {
-            padding: 20px 0;
+        /* Quick Actions Styles */
+        .quick-actions {
+            margin-top: 30px;
         }
 
-        .phase-steps {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin: 30px 0;
-        }
-
-        .phase-steps::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background-color: #e9ecef;
-            border-radius: 3px;
-            z-index: 1;
-        }
-
-        .phase-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            flex: 1;
-        }
-
-        .phase-step:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            width: 100%;
-            height: 6px;
-            background-color: var(--primary-color);
-            z-index: 2;
-            transform: translateY(-50%);
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-
-        .phase-step.completed:not(:last-child)::after {
-            opacity: 1;
-            background: linear-gradient(90deg, var(--success-color) 0%, var(--success-color) 100%);
-        }
-
-        .phase-step.active:not(:last-child)::after {
-            opacity: 1;
-            background: linear-gradient(90deg, var(--success-color) 0%, var(--primary-color) 50%, #e9ecef 100%);
-        }
-
-        .phase-indicator-circle {
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            background-color: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 3;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 1.1rem;
-            color: #6c757d;
-        }
-
-        .phase-step.completed .phase-indicator-circle {
-            background: linear-gradient(135deg, var(--success-color) 0%, #34ce57 100%);
-            color: white;
-            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-        }
-
-        .phase-step.active .phase-indicator-circle {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #4d8aff 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(30, 79, 190, 0.4);
-            transform: scale(1.1);
-        }
-
-        .phase-label {
-            font-size: 0.85rem;
+        .action-card {
             text-align: center;
-            max-width: 100px;
-            margin-top: 5px;
-            font-weight: 500;
-            color: #6c757d;
+            padding: 25px 15px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid #eaeaea;
         }
 
-        .phase-step.completed .phase-label {
-            color: var(--success-color);
-            font-weight: 600;
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary-color);
         }
 
-        .phase-step.active .phase-label {
+        .action-icon {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
             color: var(--primary-color);
-            font-weight: 700;
         }
 
-        .phase-date {
-            font-size: 0.75rem;
-            color: #adb5bd;
-            margin-top: 5px;
-            text-align: center;
+        .action-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 10px;
         }
 
-        .phase-status {
-            margin-top: 10px;
-            padding: 8px 15px;
+        .action-desc {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .btn-action {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
             border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            background: #1a3ea5;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(30, 79, 190, 0.3);
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 15px;
             font-size: 0.75rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-completed {
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(52, 206, 87, 0.15) 100%);
-            color: var(--success-color);
         }
 
         .status-active {
-            background: linear-gradient(135deg, rgba(30, 79, 190, 0.15) 0%, rgba(77, 138, 255, 0.15) 100%);
-            color: var(--primary-color);
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
         }
 
         .status-pending {
-            background-color: rgba(108, 117, 125, 0.1);
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .status-inactive {
+            background: rgba(108, 117, 125, 0.15);
             color: #6c757d;
         }
 
-        /* Chart Container */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
+        /* Recent Activity */
+        .recent-activity {
+            max-height: 400px;
+            overflow-y: auto;
         }
 
-        /* Activity Timeline */
-        .activity-timeline {
-            position: relative;
-            padding-left: 30px;
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
         }
 
-        .activity-timeline::before {
-            content: '';
-            position: absolute;
-            left: 15px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background-color: #e9ecef;
+        .activity-item:hover {
+            background-color: #f8f9fa;
         }
 
-        .timeline-item {
-            position: relative;
-            margin-bottom: 25px;
+        .activity-item:last-child {
+            border-bottom: none;
         }
 
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -33px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
+        .activity-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background-color: var(--primary-color);
-            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
         }
 
-        .timeline-item.recent::before {
-            background-color: var(--success-color);
-            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+        .activity-icon.primary {
+            background: rgba(30, 79, 190, 0.1);
+            color: var(--primary-color);
         }
 
-        .timeline-date {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-bottom: 5px;
+        .activity-icon.success {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
         }
 
-        .timeline-content {
-            background: #f8f9fa;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border-left: 3px solid var(--primary-color);
+        .activity-icon.warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
         }
 
-        .timeline-item.recent .timeline-content {
-            border-left-color: var(--success-color);
+        .activity-icon.info {
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
         }
 
-        .timeline-title {
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
             font-weight: 600;
-            margin-bottom: 5px;
             color: var(--dark-color);
+            margin-bottom: 5px;
         }
 
-        .timeline-desc {
+        .activity-desc {
             font-size: 0.9rem;
             color: #6c757d;
-            margin: 0;
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #adb5bd;
         }
 
         @media (max-width: 768px) {
-            .phase-steps {
-                flex-wrap: wrap;
+            .stat-number {
+                font-size: 1.5rem;
             }
-
-            .phase-step {
+            
+            .stat-icon {
+                font-size: 2rem;
+            }
+            
+            .action-card {
                 margin-bottom: 15px;
-                flex: 1;
-                min-width: 120px;
-            }
-
-            .phase-step:not(:last-child)::after {
-                display: none;
             }
         }
     </style>
@@ -336,6 +279,7 @@
 @section('content')
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -343,6 +287,7 @@
 
     @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
             {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -350,7 +295,9 @@
 
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <ul class="mb-0">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Terjadi kesalahan:</strong>
+            <ul class="mb-0 mt-2">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -364,8 +311,16 @@
         <div class="col-12">
             <div class="card bg-primary text-white">
                 <div class="card-body py-4">
-                    <h1 class="card-title"><i class="fas fa-graduation-cap me-2"></i> Sistem Informasi KKN</h1>
-                    <p class="card-text mb-0">Kuliah Kerja Nyata - Universitas</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="card-title mb-2"><i class="fas fa-graduation-cap me-2"></i> Sistem Informasi KKN</h1>
+                            <p class="card-text mb-0">Dashboard Koordinator - Manajemen KKN Terpadu</p>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-light">Selamat Datang</div>
+                            <div class="h5 mb-0">{{ auth()->user()->name ?? 'Koordinator' }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -373,86 +328,196 @@
 
     <!-- Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <!-- Pendaftaran Mahasiswa -->
+        <div class="col-md-3 col-sm-6">
             <div class="card stat-card">
                 <div class="card-body">
-                    <i class="fas fa-users stat-icon"></i>
-                    <div class="stat-number">{{ $daily_pendaftaran ?? 0 }}</div>
-                    <div class="stat-label">Jumlah Pendaftar</div>
+                    <i class="fas fa-user-graduate stat-icon" style="color: var(--primary-color);"></i>
+                    <div class="stat-number">{{ $count_pendaftaran ?? 0 }}</div>
+                    <div class="stat-label">Pendaftaran Mahasiswa</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-active">
+                            <i class="fas fa-circle me-1" style="font-size: 6px;"></i>
+                            Total
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+
+        <!-- Pendaftaran Project -->
+        <div class="col-md-3 col-sm-6">
             <div class="card stat-card">
                 <div class="card-body">
-                    <i class="fas fa-clock stat-icon" style="color: var(--warning-color);"></i>
-                    <div class="stat-number">{{ $count_not_verif ?? 0 }}</div>
-                    <div class="stat-label">Belum Diverifikasi</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <i class="fas fa-tasks stat-icon" style="color: var(--info-color);"></i>
+                    <i class="fas fa-project-diagram stat-icon" style="color: var(--info-color);"></i>
                     <div class="stat-number">{{ $project_belum_diperiksa ?? 0 }}</div>
-                    <div class="stat-label">Project Belum Diperiksa</div>
+                    <div class="stat-label">Pendaftaran Project</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-pending">
+                            <i class="fas fa-clock me-1" style="font-size: 6px;"></i>
+                            Perlu Verifikasi
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+
+        <!-- Pendaftaran Proposal -->
+        <div class="col-md-3 col-sm-6">
             <div class="card stat-card">
                 <div class="card-body">
-                    <i class="fas fa-chart-line stat-icon" style="color: var(--success-color);"></i>
-                    <div class="stat-number">{{ $count_pendaftaran  ?? 0 }}</div>
-                    <div class="stat-label">Total Pendaftaran</div>
+                    <i class="fas fa-file-alt stat-icon" style="color: var(--warning-color);"></i>
+                    <div class="stat-number">{{ $count_not_verif ?? 0 }}</div>
+                    <div class="stat-label">Pendaftaran Proposal</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-pending">
+                            <i class="fas fa-clock me-1" style="font-size: 6px;"></i>
+                            Menunggu Review
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jumlah Schedule -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <i class="fas fa-calendar-alt stat-icon" style="color: var(--success-color);"></i>
+                    <div class="stat-number">{{ $jumlah_schedule ?? 0 }}</div>
+                    <div class="stat-label">Jumlah Schedule</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-active">
+                            <i class="fas fa-check-circle me-1" style="font-size: 6px;"></i>
+                            Aktif
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Chart and Timeline Row -->
+    <!-- Additional Statistics Row -->
     <div class="row mb-4">
-        <!-- Chart -->
-        <div class="col-md-8">
-            <div class="card">
+        <!-- Jumlah Schema -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <div class="section-header">
-                        <i class="fas fa-chart-bar section-icon"></i>
-                        <h5 class="section-title">Statistik Pendaftaran Harian</h5>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="pendaftaranChart"></canvas>
+                    <i class="fas fa-layer-group stat-icon" style="color: #6f42c1;"></i>
+                    <div class="stat-number">{{ $jumlah_schema ?? 0 }}</div>
+                    <div class="stat-label">Jumlah Schema</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-active">
+                            <i class="fas fa-check-circle me-1" style="font-size: 6px;"></i>
+                            Terkonfigurasi
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Coordinator Activity Timeline -->
-        <div class="col-md-4">
+
+        <!-- Mahasiswa Terverifikasi -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <i class="fas fa-user-check stat-icon" style="color: #20c997;"></i>
+                    <div class="stat-number">{{ $daily_pendaftaran ?? 0 }}</div>
+                    <div class="stat-label">Mahasiswa Terverifikasi</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-active">
+                            <i class="fas fa-check-circle me-1" style="font-size: 6px;"></i>
+                            Aktif
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Selesai -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <i class="fas fa-check-double stat-icon" style="color: #28a745;"></i>
+                    <div class="stat-number">{{ $project_selesai ?? 0 }}</div>
+                    <div class="stat-label">Project Selesai</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-active">
+                            <i class="fas fa-check-circle me-1" style="font-size: 6px;"></i>
+                            Completed
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Proposal Disetujui -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <i class="fas fa-thumbs-up stat-icon" style="color: #17a2b8;"></i>
+                    <div class="stat-number">{{ $proposal_disetujui ?? 0 }}</div>
+                    <div class="stat-label">Proposal Disetujui</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-active">
+                            <i class="fas fa-check-circle me-1" style="font-size: 6px;"></i>
+                            Approved
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="section-header">
-                        <i class="fas fa-history section-icon"></i>
-                        <h5 class="section-title">Aktivitas Terbaru Koordinator</h5>
+                        <i class="fas fa-bolt section-icon"></i>
+                        <h5 class="section-title">Aksi Cepat</h5>
                     </div>
-                    <div class="activity-timeline">
-                        @if(isset($aktivitas_koordinator) && count($aktivitas_koordinator) > 0)
-                            @foreach($aktivitas_koordinator as $aktivitas)
-                                <div class="timeline-item {{ $loop->first ? 'recent' : '' }}">
-                                    <div class="timeline-date">{{ $aktivitas['tanggal'] }}</div>
-                                    <div class="timeline-content">
-                                        <div class="timeline-title">{{ $aktivitas['judul'] }}</div>
-                                        <p class="timeline-desc">{{ $aktivitas['deskripsi'] }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="text-center py-3">
-                                <i class="fas fa-info-circle text-muted mb-2" style="font-size: 2rem;"></i>
-                                <p class="text-muted">Belum ada aktivitas koordinator</p>
+                    <div class="row quick-actions">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="action-card">
+                                <i class="fas fa-plus-circle action-icon"></i>
+                                <div class="action-title">Buat Schedule</div>
+                                <p class="action-desc">Buat jadwal KKN baru untuk periode berikutnya</p>
+                                <a href="{{ route('form_schedule') }}" class="btn btn-action">
+                                    <i class="fas fa-plus me-1"></i> Buat
+                                </a>
                             </div>
-                        @endif
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="action-card">
+                                <i class="fas fa-project-diagram action-icon"></i>
+                                <div class="action-title">Kelola Schema</div>
+                                <p class="action-desc">Atur schema dan kategori kegiatan KKN</p>
+                                <a href="{{ route('form_schema') }}" class="btn btn-action">
+                                    <i class="fas fa-cog me-1"></i> Kelola
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="action-card">
+                                <i class="fas fa-users action-icon"></i>
+                                <div class="action-title">Verifikasi Mahasiswa</div>
+                                <p class="action-desc">Verifikasi pendaftaran mahasiswa KKN</p>
+                                <a href="{{ route('pendaftaran-kkn') }}" class="btn btn-action">
+                                    <i class="fas fa-check me-1"></i> Verifikasi
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="action-card">
+                                <i class="fas fa-tasks action-icon"></i>
+                                <div class="action-title">Review Project</div>
+                                <p class="action-desc">Periksa dan review project mahasiswa</p>
+                                <a href="{{ route('pendaftaran-project') }}" class="btn btn-action">
+                                    <i class="fas fa-search me-1"></i> Review
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -461,64 +526,6 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        // Initialize Chart
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('pendaftaranChart').getContext('2d');
-            
-            const chartData = {
-                labels: @json($data['chart_labels']),
-                datasets: [{
-                    label: 'Jumlah Pendaftaran',
-                    data: @json($data['chart_data']),
-                    backgroundColor: 'rgba(30, 79, 190, 0.2)',
-                    borderColor: 'rgba(30, 79, 190, 1)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    fill: true
-                }]
-            };
-            
-            const chartOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            drawBorder: false
-                        },
-                        ticks: {
-                            stepSize: 5
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            };
-            
-            new Chart(ctx, {
-                type: 'line',
-                data: chartData,
-                options: chartOptions
-            });
-        });
-    </script>
-
     <script>
         (function() {
             const alerts = document.querySelectorAll('.alert-dismissible');
@@ -531,8 +538,17 @@
                         a.classList.remove('show');
                         a.style.display = 'none';
                     }
-                }, 4000);
+                }, 5000);
             });
         })();
+
+        // Add animation to stat cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('animate__animated', 'animate__fadeInUp');
+            });
+        });
     </script>
 @endsection

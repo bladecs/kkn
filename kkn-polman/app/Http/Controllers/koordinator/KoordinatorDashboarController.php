@@ -61,55 +61,6 @@ class KoordinatorDashboarController extends Controller
         return view('dashboard.koordinator.form_schema',compact('kategoriSchemas','schedules'));
     }
 
-    public function submitSchema(Request $request)
-    {
-        try {
-            $validated = $request->validate([
-                'schedule_id' => 'required|exists:detail_schedule,schedule_id',
-                'kategori_id' => 'required|exists:kategori_schema,id_kategori',
-                'kuota' => 'required|integer|min:1',
-                'tgl_mulai' => 'required|date',
-                'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai',
-                'created_by' => 'required|exists:users,id'
-            ]);
-
-            // Validasi tanggal terhadap schedule
-            $schedule = DetailSchedule::find($validated['schedule_id']);
-            if ($validated['tgl_mulai'] < $schedule->tgl_mulai || $validated['tgl_selesai'] > $schedule->tgl_selesai) {
-                return redirect()->back()->withErrors([
-                    'tgl_mulai' => 'Tanggal schema harus berada dalam periode schedule yang dipilih.'
-                ])->withInput();
-            }
-
-            // Validasi kategori belum digunakan di schedule ini
-            $existingSchema = DetailSchema::where('schedule_id', $validated['schedule_id'])
-                ->where('kategori_id', $validated['kategori_id'])
-                ->first();
-
-            if ($existingSchema) {
-                return redirect()->back()->withErrors([
-                    'kategori_id' => 'Kategori schema ini sudah digunakan pada schedule yang dipilih.'
-                ])->withInput();
-            }
-
-            // Create schema
-            $schema = DetailSchema::create([
-                'schedule_id' => $validated['schedule_id'],
-                'kategori_id' => $validated['kategori_id'],
-                'kuota' => $validated['kuota'],
-                'tgl_mulai' => $validated['tgl_mulai'],
-                'tgl_selesai' => $validated['tgl_selesai'],
-                'created_by' => $validated['created_by']
-            ]);
-
-            return redirect()->route('dashboard_koordinator')->with('success', 'Schema berhasil dibuat!');
-
-        } catch (\Exception $e) {
-            Log::error('Error creating schema: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat schema: ' . $e->getMessage())->withInput();
-        }
-    }
-
     public function getAvailableKategori(Request $request)
     {
         try {
@@ -151,7 +102,8 @@ class KoordinatorDashboarController extends Controller
                 ->get()
                 ->map(function($schema) {
                     return [
-                        'id_schema' => $schema->id_schema,
+                        'id_detail_schema' => $schema->id_detail_schema,
+                        'id_schema' => $schema->schedule_id,
                         'kategori_id' => $schema->kategori_id,
                         'nama_kategori' => $schema->kategori->deskripsi ?? '-',
                         'kuota' => $schema->kuota,
@@ -176,7 +128,7 @@ class KoordinatorDashboarController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error in getAvailableKategori: ' . $e->getMessage());
+            \Log::error('Error in getAvailableKategori: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan server: ' . $e->getMessage()
@@ -187,7 +139,7 @@ class KoordinatorDashboarController extends Controller
      public function checkDateConflicts(Request $request)
     {
         $request->validate([
-            'schedule_id' => 'required|exists:schedules,schedule_id',
+            'schedule_id' => 'required|exists:detail_schedule,schedule_id',
             'tgl_mulai' => 'required|date',
             'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai'
         ]);
@@ -273,7 +225,7 @@ class KoordinatorDashboarController extends Controller
     public function validateDates(Request $request)
     {
         $request->validate([
-            'schedule_id' => 'required|exists:schedules,schedule_id',
+            'schedule_id' => 'required|exists:detail_schedule,schedule_id',
             'tgl_mulai' => 'required|date',
             'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai'
         ]);
@@ -284,7 +236,7 @@ class KoordinatorDashboarController extends Controller
             $tglSelesai = $request->tgl_selesai;
 
             // Validasi range schedule
-            $schedule = Schedule::find($scheduleId);
+            $schedule = DetailSchedule::where('schedule_id',$scheduleId);
             if ($tglMulai < $schedule->tgl_mulai || $tglSelesai > $schedule->tgl_selesai) {
                 return response()->json([
                     'valid' => false,
@@ -294,7 +246,7 @@ class KoordinatorDashboarController extends Controller
             }
 
             // Cek tabrakan dengan schema lain
-            $conflictingSchemas = Schema::where('schedule_id', $scheduleId)
+            $conflictingSchemas = Schema::where('id_kegiatan', $scheduleId)
                 ->where(function($query) use ($tglMulai, $tglSelesai) {
                     $query->whereBetween('tgl_mulai', [$tglMulai, $tglSelesai])
                           ->orWhereBetween('tgl_selesai', [$tglMulai, $tglSelesai])

@@ -3,25 +3,20 @@
 namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use App\Models\pendaftaraModel;
 use App\Models\projectModel;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MahasiswaController extends Controller
 {
     public function pendaftaran(Request $request)
     {
         $request->validate([
-            'ipk' => 'required|numeric|min:0|max:4',
-            'sks' => 'required|integer|min:0',
-            'semester' => 'required|integer|min:1|max:14',
-            'status-mhs' => 'required|string',
-            'ktm' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-            'proposal' => 'required|file|mimes:pdf|max:5120',
-            'rab' => 'nullable|file|mimes:pdf|max:2048',
+            'kloter' => 'required',
+            'ipk' => 'required',
+            'semester' => 'required',
         ]);
 
         $nim = session('nim');
@@ -29,46 +24,10 @@ class MahasiswaController extends Controller
         $data_diri = User::where('nim', $nim)->first();
 
         try {
-            $ktm_path = $request->file('ktm')->store('ktm_files', 'public');
-            $photo_path = $request->file('photo')->store('photo_files', 'public');
-            $proposal_path = $request->file('proposal')->store('proposal_files', 'public');
-            $rab_path = $request->hasFile('rab') ? $request->file('rab')->store('rab_files', 'public') : null;
-
-            pendaftaraModel::create([
-                'nim' => $nim,
-                'name' => $data_diri->name,
-                'ipk' => $request->input('ipk'),
-                'sks' => $request->input('sks'),
-                'semester' => $request->input('semester'),
-                'status_mhs' => $request->input('status-mhs'),
-                'jurusan' => $data_diri->jurusan,
-                'study_program' => $data_diri->study_program,
-                'ktm_path' => $ktm_path,
-                'photo_path' => $photo_path,
-                'proposal_path' => $proposal_path,
-                'rab_path' => $rab_path,
-            ]);
 
             return redirect()->route('dashboard_mhs')->with('success', 'Pendaftaran KKN berhasil diajukan.');
         } catch (\Exception $e) {
             \Log::error('Pendaftaran KKN gagal for nim '.$nim.': '.$e->getMessage(), ['exception' => $e]);
-
-            try {
-                if (! empty($ktm_path)) {
-                    Storage::disk('public')->delete($ktm_path);
-                }
-                if (! empty($photo_path)) {
-                    Storage::disk('public')->delete($photo_path);
-                }
-                if (! empty($proposal_path)) {
-                    Storage::disk('public')->delete($proposal_path);
-                }
-                if (! empty($rab_path)) {
-                    Storage::disk('public')->delete($rab_path);
-                }
-            } catch (\Exception $cleanupEx) {
-                \Log::warning('Gagal membersihkan file setelah error pendaftaran: '.$cleanupEx->getMessage());
-            }
 
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat mengajukan pendaftaran. Silakan coba lagi atau hubungi admin.');
         }

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailSchedule;
 use App\Models\Mahasiswa;
 use App\Models\pendaftaranKkn;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schedule;
 
 class DashboardController extends Controller
 {
@@ -25,6 +27,17 @@ class DashboardController extends Controller
         $data_akademik = pendaftaranKkn::where('nim', $nim)->first();
 
         return view('dashboard.mahasiswa.data_akademik', compact('data_akademik'));
+    }
+
+    public function pendaftaran(Request $request){
+        $session = $request->session()->get('id');
+        $data_diri = Mahasiswa::where('id',$session)->first();
+        $kloter = DetailSchedule::all();
+        if($data_diri){
+            return view('dashboard.mahasiswa.formulir_pendaftaran',compact('data_diri','kloter'));
+        }else{
+            return redirect()->back()->with('error','data tidak terdaftar');
+        }
     }
 
     public function dataDiri(Request $request)

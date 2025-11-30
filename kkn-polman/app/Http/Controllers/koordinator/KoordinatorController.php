@@ -132,43 +132,179 @@ class KoordinatorController extends Controller
         }
     }
 
+    // public function createSchema(Request $request)
+    // {
+    //     $request->validate([
+    //         'created_by' => 'required',
+    //         'schedule_id' => 'required',
+    //         'kategori_id' => 'required',
+    //         'kuota' => 'nullable',
+    //         'tgl_mulai' => 'required',
+    //         'tgl_selesai' => 'required',
+    //     ]);
+
+    //     $id_schema = uniqid('SCM', $request->input('schedule_id'));
+    //     try {
+    //         DB::beginTransaction();
+
+    //         Schema::create([
+    //             'id_schema' => $id_schema,
+    //             'schedule_id' => $request->input('schedule_id'),
+    //             'created_by' => $request->input('created_by'),
+    //         ]);
+
+    //         DetailSchema::create([
+    //             'id_detail_schema' => uniqid('DTSM'),
+    //             'schema_id' => $id_schema,
+    //             'kategori_id' => $request->input('kategori_id'),
+    //             'kuota' => $request->input('kuota'),
+    //             'tgl_mulai' => $request->input('tgl_mulai'),
+    //             'tgl_selesai' => $request->input('tgl_selesai'),
+    //         ]);
+
+    //         DB::commit();
+
+    //         return redirect()->route('dashboard_koordinator')->with('success', 'Berhasil membuat schema');
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         \Log::error('Registration failed: '.$e->getMessage());
+
+    //         return redirect()->back()->with('error', 'Registration failed: '.$e->getMessage());
+    //     }
+    // }
+
     public function createSchema(Request $request)
     {
-        $request->validate([
-            'created_by' => 'required',
-            'schedule_id' => 'required',
-            'kategori_id' => 'required',
-            'kuota' => 'nullable',
-            'tgl_mulai' => 'required',
-            'tgl_selesai' => 'required',
-        ]);
-
-        $id_schema = uniqid('SCM', $request->input('schedule_id'));
         try {
+            $validated = $request->validate([
+                'schedule_id' => 'required|exists:detail_schedule,schedule_id',
+                'kategori_id' => 'required|exists:kategori_schema,id_kategori',
+                'kuota' => 'nullable|integer',
+                'tgl_mulai' => 'required|date',
+                'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai',
+                'created_by' => 'required|exists:users,id',
+            ]);
+
+            // Validasi tanggal terhadap schedule
+            $schedule = DetailSchedule::where('schedule_id', $validated['schedule_id'])->first();
+            if ($validated['tgl_mulai'] < $schedule->tgl_mulai || $validated['tgl_selesai'] > $schedule->tgl_selesai) {
+                return redirect()->back()->withErrors([
+                    'tgl_mulai' => 'Tanggal schema harus berada dalam periode schedule yang dipilih.',
+                ])->withInput();
+            }
+
+            // Validasi kategori belum digunakan di schedule ini
+            $existingSchema = DetailSchema::where('schedule_id', $validated['schedule_id'])
+                ->where('kategori_id', $validated['kategori_id'])
+                ->first();
+
+            if ($existingSchema) {
+                return redirect()->back()->withErrors([
+                    'kategori_id' => 'Kategori schema ini sudah digunakan pada schedule yang dipilih.',
+                ])->withInput();
+            }
+
+            $id_schema = uniqid('SCM', $request->input('schedule_id'));
             DB::beginTransaction();
 
             Schema::create([
                 'id_schema' => $id_schema,
                 'schedule_id' => $request->input('schedule_id'),
-                'created_by' => $request->input('created_by')
+                'created_by' => $request->input('created_by'),
             ]);
 
             DetailSchema::create([
                 'id_detail_schema' => uniqid('DTSM'),
+                'schedule_id' => $request->input('schedule_id'),
                 'schema_id' => $id_schema,
                 'kategori_id' => $request->input('kategori_id'),
                 'kuota' => $request->input('kuota'),
                 'tgl_mulai' => $request->input('tgl_mulai'),
-                'tgl_selesai' => $request->input('tgl_selesai')
+                'tgl_selesai' => $request->input('tgl_selesai'),
             ]);
 
             DB::commit();
-            return redirect()->route('dashboard_koordinator')->with('success','Berhasil membuat schema');
-        } catch (\Exception $e) {
-            DB::rollback();
-            \Log::error('Registration failed: '.$e->getMessage());
 
-            return redirect()->back()->with('error', 'Registration failed: '.$e->getMessage());
+            return redirect()->route('dashboard_koordinator')->with('success', 'Schema berhasil dibuat!');
+
+        } catch (\Exception $e) {
+
+            \Log::error('Error creating schema: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat schema: '.$e->getMessage())->withInput();
+        }
+    }
+
+    public function updateSchema(Request $request)
+    {
+        $request->validate([
+            'detail_id' => 'required|exists:detail_schemas,id_detail_schema',
+            'kategori_id' => 'required',
+            'kuota' => 'nullable|numeric',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'required|date',
+        ]);
+
+        try {
+            // Ambil data detail schema berdasarkan primary key
+            $detail = DetailSchema::where('id_detail_schema', $request->detail_id)->first();
+
+            if (! $detail) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Detail schema tidak ditemukan',
+                ], 404);
+            }
+
+            // Update semua field
+            $detail->update([
+                'kategori_id' => $request->kategori_id,
+                'kuota' => $request->kuota ?? null,
+                'tgl_mulai' => $request->tgl_mulai,
+                'tgl_selesai' => $request->tgl_selesai,
+            ]);
+
+            return redirect()->back()->with('success', 'Schema berhasil diperbarui!');
+
+        } catch (\Exception $e) {
+
+            \Log::error('Update failed: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Update gagal: '.$e->getMessage());
+        }
+    }
+
+    public function deleteSchema(Request $request)
+    {
+        $request->validate([
+            'detail_id' => 'required|exists:detail_schemas,id_detail_schema',
+        ]);
+
+        try {
+            $detail = DetailSchema::where('id_detail_schema', $request->detail_id)->first();
+
+            if (! $detail) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Detail schema tidak ditemukan',
+                ], 404);
+            }
+
+            $detail->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Schema berhasil dihapus!',
+            ]);
+
+        } catch (\Exception $e) {
+
+            \Log::error('Delete failed: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus schema: '.$e->getMessage(),
+            ], 500);
         }
     }
 

@@ -17,17 +17,21 @@
             margin-bottom: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             text-align: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1e4bbe 100%);
+            color: white;
         }
 
         .registration-header h1 {
-            color: var(--primary-color);
+            color: white;
             font-weight: 700;
             margin-bottom: 10px;
+            font-size: 2.2rem;
         }
 
         .registration-header p {
-            color: #6c757d;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 0;
+            font-size: 1.1rem;
         }
 
         .registration-progress {
@@ -51,7 +55,7 @@
             top: 0;
             left: 0;
             height: 100%;
-            background-color: var(--primary-color);
+            background: linear-gradient(90deg, var(--primary-color) 0%, #1e4bbe 100%);
             width: 0%;
             transition: width 0.8s ease-in-out;
         }
@@ -72,8 +76,8 @@
         }
 
         .step-number {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             background-color: #e9ecef;
             display: flex;
@@ -83,6 +87,7 @@
             margin-bottom: 5px;
             transition: all 0.3s ease;
             z-index: 2;
+            border: 2px solid transparent;
         }
 
         .step-label {
@@ -90,11 +95,14 @@
             text-align: center;
             color: #6c757d;
             transition: all 0.3s ease;
+            font-weight: 500;
         }
 
         .progress-step.active .step-number {
             background-color: var(--primary-color);
             color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 5px rgba(30, 79, 190, 0.2);
         }
 
         .progress-step.active .step-label {
@@ -105,6 +113,7 @@
         .progress-step.completed .step-number {
             background-color: #28a745;
             color: white;
+            border-color: #28a745;
         }
 
         .progress-step.completed .step-label {
@@ -141,6 +150,7 @@
             border-bottom: 2px solid var(--light-color);
             display: flex;
             align-items: center;
+            font-size: 1.3rem;
         }
 
         .section-title i {
@@ -160,6 +170,7 @@
             padding: 12px 15px;
             border: 2px solid #e2e8f0;
             transition: all 0.3s;
+            font-size: 1rem;
         }
 
         .form-control:focus,
@@ -169,24 +180,27 @@
         }
 
         .btn-primary-custom {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1e4bbe 100%);
             border: none;
             border-radius: 10px;
             padding: 12px 25px;
             font-weight: 600;
             transition: all 0.3s;
             color: white;
+            box-shadow: 0 4px 6px rgba(30, 79, 190, 0.2);
         }
 
         .btn-primary-custom:hover {
-            background: var(--dark-color);
+            background: linear-gradient(135deg, #1e4bbe 0%, #163a8c 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(30, 79, 190, 0.3);
         }
 
         .btn-outline-secondary {
             border-radius: 10px;
             padding: 12px 25px;
             font-weight: 600;
+            border: 2px solid #6c757d;
         }
 
         .form-check-input:checked {
@@ -209,148 +223,155 @@
             color: #dc3545;
         }
 
-        .file-upload-card {
-            border: 2px dashed #e2e8f0;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: #f8f9fa;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .input-group {
             position: relative;
         }
 
-        .file-upload-card:hover {
+        .input-group-text {
+            background-color: #f8f9fa;
+            border: 2px solid #e2e8f0;
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+        }
+
+        .input-group .form-control {
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .input-group .form-control:focus {
+            border-color: #e2e8f0;
+            box-shadow: none;
+        }
+
+        .input-group .form-control:focus+.input-group-text {
+            border-color: var(--primary-color);
+        }
+
+        .schedule-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .schedule-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+
+        .schedule-card:hover {
             border-color: var(--primary-color);
             background-color: var(--light-color);
+            transform: translateY(-3px);
         }
 
-        .file-upload-card.uploaded {
-            border-color: #28a745;
-            background-color: #f8fff9;
+        .schedule-card.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(30, 79, 190, 0.05);
+            box-shadow: 0 5px 15px rgba(30, 79, 190, 0.1);
         }
 
-        .file-upload-card i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .file-upload-card.uploaded i {
-            color: #28a745;
-        }
-
-        .file-upload-card h6 {
-            color: var(--dark-color);
-            margin-bottom: 8px;
-        }
-
-        .file-upload-card p {
-            color: #6c757d;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
-        }
-
-        .file-upload-card .badge {
-            font-size: 0.7rem;
-        }
-
-        .file-input-hidden {
+        .schedule-card.selected::before {
+            content: "✓";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
+            top: -10px;
+            right: -10px;
+            width: 25px;
+            height: 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
 
-        .uploaded-file-info {
-            margin-top: 10px;
-            padding: 8px;
-            background: white;
-            border-radius: 5px;
-            width: 100%;
-        }
-
-        .uploaded-file-name {
-            font-size: 0.8rem;
-            font-weight: 500;
+        .schedule-title {
+            font-weight: 600;
+            color: var(--dark-color);
             margin-bottom: 5px;
-            word-break: break-word;
+            font-size: 1.1rem;
         }
 
-        .uploaded-file-size {
-            font-size: 0.75rem;
-            color: #6c757d;
-        }
-
-        .remove-file {
-            color: #dc3545;
-            cursor: pointer;
+        .schedule-kloter {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 8px;
             font-size: 0.9rem;
         }
 
-        .optional-badge {
-            background-color: #6c757d;
-        }
-
-        .folder-upload-section {
-            border: 2px dashed #e2e8f0;
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: #f8f9fa;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .folder-upload-section:hover {
-            border-color: var(--primary-color);
-            background-color: var(--light-color);
-        }
-
-        .folder-upload-section i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .folder-upload-section h5 {
-            color: var(--dark-color);
-            margin-bottom: 10px;
-        }
-
-        .folder-upload-section p {
+        .schedule-dates {
             color: #6c757d;
-            margin-bottom: 0;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
         }
 
-        .folder-input-hidden {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .browser-warning {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 10px;
+        .schedule-description {
+            color: #6c757d;
+            font-size: 0.85rem;
             margin-top: 10px;
-            font-size: 0.8rem;
-            color: #856404;
+            line-height: 1.4;
+        }
+
+        .schedule-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .info-card i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .form-feedback {
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .valid-feedback {
+            color: #28a745;
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @media (max-width: 768px) {
@@ -363,9 +384,46 @@
                 width: 100%;
             }
 
-            .file-upload-card {
-                margin-bottom: 15px;
+            .schedule-options {
+                grid-template-columns: 1fr;
             }
+        }
+
+        /* Animasi untuk transisi section */
+        .form-section {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Styling untuk input yang valid */
+        .form-control.is-valid {
+            border-color: #28a745;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        /* Styling untuk input yang tidak valid */
+        .form-control.is-invalid {
+            border-color: #dc3545;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
         }
     </style>
 @endsection
@@ -398,187 +456,62 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
+
             <!-- Header -->
             <div class="registration-header">
                 <h1><i class="fas fa-file-alt me-2"></i> Formulir Pendaftaran KKN</h1>
                 <p>Isi formulir berikut dengan data yang benar dan lengkap</p>
             </div>
 
-            <!-- Progress -->
-            <div class="registration-progress">
-                <div class="progress-container">
-                    <div class="progress-bar" id="progress-bar"></div>
-                </div>
-                <div class="progress-label">
-                    <div class="progress-step active" id="step-1">
-                        <div class="step-number">1</div>
-                        <div class="step-label">Data Akademik</div>
-                    </div>
-                    <div class="progress-step" id="step-2">
-                        <div class="step-number">2</div>
-                        <div class="step-label">Upload Berkas</div>
-                    </div>
-                    <div class="progress-step" id="step-3">
-                        <div class="step-number">3</div>
-                        <div class="step-label">Konfirmasi</div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Form -->
-            <form class="registration-form" id="registration-form" method="post" action="{{ route('form-submit') }}"
-                enctype="multipart/form-data">
+            <form class="registration-form" id="registration-form" method="post" action="{{ route('form-submit') }}">
                 @csrf
                 <!-- Data Akademik -->
                 <div class="form-section" id="section-academic">
                     <h3 class="section-title"><i class="fas fa-graduation-cap"></i> Data Akademik</h3>
 
+                    <div class="info-card">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Informasi:</strong> Pastikan data akademik yang Anda masukkan sesuai dengan data di sistem
+                        akademik kampus.
+                    </div>
+
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="ipk" class="form-label required-field">IPK Terakhir</label>
-                            <input type="number" class="form-control" id="ipk" name="ipk" step="0.01"
-                                min="0" max="4" placeholder="Contoh: 3.75" required>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" id="ipk" name="ipk" step="0.01"
+                                    min="0" max="4" placeholder="Contoh: 3.75" required
+                                    value="{{ old('ipk') }}">
+                            </div>
+                            <div class="form-feedback" id="ipk-feedback"></div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="sks" class="form-label required-field">Jumlah SKS</label>
-                            <input type="number" class="form-control" id="sks" name="sks" min="0"
-                                placeholder="Masukkan jumlah SKS" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="semester" class="form-label required-field">Semester</label>
-                            <input type="number" class="form-control" id="semester" name="semester" min="1"
-                                max="14" placeholder="Masukkan semester" required>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                <input type="number" class="form-control" id="semester" name="semester"
+                                    min="1" max="14" placeholder="Masukkan semester" required
+                                    value="{{ old('semester') }}">
+                            </div>
+                            <div class="form-feedback" id="semester-feedback"></div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label required-field">Status Mahasiswa</label>
-                            <div class="d-flex flex-wrap gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="status-mhs" id="status-regular"
-                                        value="regular" checked>
-                                    <label class="form-check-label" for="status-regular">
-                                        Reguler
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="status-mhs" id="status-transfer"
-                                        value="transfer">
-                                    <label class="form-check-label" for="status-transfer">
-                                        Transfer
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="status-mhs" id="status-other"
-                                        value="other">
-                                    <label class="form-check-label" for="status-other">
-                                        Lainnya
-                                    </label>
-                                </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="semester" class="form-label required-field">Kloter</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                                <select name="kloter" id="kloter" class="form-control">
+                                    <option value="" disabled selected>--- Pilih Kloter ---</option>
+                                    @foreach ($kloter as $kl)
+                                        <option value="{{ $kl->schedule_id }}">{{ $kl->kloter }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Upload Berkas -->
-                <div class="form-section" id="section-files">
-                    <h3 class="section-title"><i class="fas fa-file-upload"></i> Upload Berkas</h3>
-
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Informasi:</strong> Upload berkas-berkas berikut sesuai dengan ketentuan yang
-                                berlaku.
-                                File KTM, Foto Formal, dan Proposal Pengajuan wajib diunggah.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" id="individual-uploads">
-                        <!-- KTM -->
-                        <div class="col-md-6 mb-4">
-                            <div class="file-upload-card" id="ktm-card">
-                                <i class="fas fa-id-card"></i>
-                                <h6>Kartu Tanda Mahasiswa (KTM)</h6>
-                                <span class="badge bg-danger">Wajib</span>
-                                <p>Scan KTM yang masih berlaku<br><small>Format: JPG/PNG/PDF (Maks. 2MB)</small></p>
-                                <input type="file" class="file-input-hidden" id="ktm-input" name="ktm"
-                                    accept="image/*,.pdf">
-                            </div>
-                            <div class="uploaded-file-info" id="ktm-info" style="display: none;">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="uploaded-file-name" id="ktm-name"></div>
-                                        <div class="uploaded-file-size" id="ktm-size"></div>
-                                    </div>
-                                    <i class="fas fa-times remove-file" data-target="ktm"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Foto Formal -->
-                        <div class="col-md-6 mb-4">
-                            <div class="file-upload-card" id="photo-card">
-                                <i class="fas fa-camera"></i>
-                                <h6>Foto Formal</h6>
-                                <span class="badge bg-danger">Wajib</span>
-                                <p>Foto formal latar belakang merah<br><small>Format: JPG/PNG (Maks. 2MB)</small></p>
-                                <input type="file" class="file-input-hidden" id="photo-input" name="photo"
-                                    accept="image/*">
-                            </div>
-                            <div class="uploaded-file-info" id="photo-info" style="display: none;">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="uploaded-file-name" id="photo-name"></div>
-                                        <div class="uploaded-file-size" id="photo-size"></div>
-                                    </div>
-                                    <i class="fas fa-times remove-file" data-target="photo"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Proposal Pengajuan -->
-                        <div class="col-md-6 mb-4">
-                            <div class="file-upload-card" id="proposal-card">
-                                <i class="fas fa-file-alt"></i>
-                                <h6>Proposal Pengajuan KKN</h6>
-                                <span class="badge bg-danger">Wajib</span>
-                                <p>Proposal kegiatan KKN<br><small>Format: PDF (Maks. 5MB)</small></p>
-                                <input type="file" class="file-input-hidden" id="proposal-input" name="proposal"
-                                    accept=".pdf">
-                            </div>
-                            <div class="uploaded-file-info" id="proposal-info" style="display: none;">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="uploaded-file-name" id="proposal-name"></div>
-                                        <div class="uploaded-file-size" id="proposal-size"></div>
-                                    </div>
-                                    <i class="fas fa-times remove-file" data-target="proposal"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- RAB (Opsional) -->
-                        <div class="col-md-6 mb-4">
-                            <div class="file-upload-card" id="rab-card">
-                                <i class="fas fa-calculator"></i>
-                                <h6>Rencana Anggaran Biaya (RAB)</h6>
-                                <span class="badge optional-badge">Opsional</span>
-                                <p>RAB kegiatan KKN<br><small>Format: PDF (Maks. 2MB)</small></p>
-                                <input type="file" class="file-input-hidden" id="rab-input" name="rab"
-                                    accept=".pdf">
-                            </div>
-                            <div class="uploaded-file-info" id="rab-info" style="display: none;">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="uploaded-file-name" id="rab-name"></div>
-                                        <div class="uploaded-file-size" id="rab-size"></div>
-                                    </div>
-                                    <i class="fas fa-times remove-file" data-target="rab"></i>
-                                </div>
-                            </div>
+                            <div class="form-feedback" id="semester-feedback"></div>
                         </div>
                     </div>
                 </div>
@@ -588,7 +521,8 @@
                     <h3 class="section-title"><i class="fas fa-check-circle"></i> Pernyataan</h3>
 
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="statement" required>
+                        <input class="form-check-input" type="checkbox" id="statement" required
+                            {{ old('statement') ? 'checked' : '' }}>
                         <label class="form-check-label" for="statement">
                             Saya menyatakan bahwa data yang diisi adalah benar dan dapat dipertanggungjawabkan. Saya
                             bersedia mengikuti seluruh kegiatan KKN sesuai dengan ketentuan yang berlaku.
@@ -598,6 +532,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Actions -->
                 <div class="registration-actions">
                     <button type="button" class="btn btn-outline-secondary" id="back-button">
@@ -624,16 +559,22 @@
             let currentStep = 1;
             const totalSteps = 3;
 
-            // Cek browser support untuk upload folder
-            function checkFolderUploadSupport() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                const isSupported = 'webkitdirectory' in input || 'directory' in input;
+            // Data kloter KKN (akan diambil dari server)
+            let scheduleOptions = [];
 
-                if (!isSupported) {
-                    $('#browser-warning').show();
-                }
-                return isSupported;
+            // Validasi IPK
+            function validateIPK(ipk) {
+                return ipk >= 0 && ipk <= 4;
+            }
+
+            // Validasi SKS
+            function validateSKS(sks) {
+                return sks >= 0 && sks <= 200;
+            }
+
+            // Validasi Semester
+            function validateSemester(semester) {
+                return semester >= 1 && semester <= 14;
             }
 
             // Update progress bar
@@ -656,145 +597,89 @@
             // Check form sections completion
             function checkFormCompletion() {
                 // Data Akademik
-                const academicDataComplete =
-                    $('#ipk').val() &&
-                    $('#sks').val() &&
-                    $('#semester').val();
+                const ipkValid = validateIPK(parseFloat($('#ipk').val()));
+                const sksValid = validateSKS(parseInt($('#sks').val()));
+                const semesterValid = validateSemester(parseInt($('#semester').val()));
 
-                // Upload Berkas (hanya yang wajib)
-                const ktmUploaded = $('#ktm-card').hasClass('uploaded');
-                const photoUploaded = $('#photo-card').hasClass('uploaded');
-                const proposalUploaded = $('#proposal-card').hasClass('uploaded');
-                const filesComplete = ktmUploaded && photoUploaded && proposalUploaded;
+                const academicDataComplete = ipkValid && sksValid && semesterValid;
+
+                // Pilihan Kloter
+                const scheduleSelected = $('#selected-schedule').val() !== '';
 
                 // Pernyataan
                 const statementComplete = $('#statement').is(':checked');
 
                 // Update current step berdasarkan kelengkapan data
-                if (statementComplete && filesComplete && academicDataComplete) {
+                if (statementComplete && scheduleSelected && academicDataComplete) {
                     currentStep = 3; // Konfirmasi
                 } else if (academicDataComplete) {
-                    currentStep = 2; // Berkas Persyaratan
+                    currentStep = 2; // Pilihan Kloter
                 } else {
                     currentStep = 1; // Data Akademik
                 }
 
                 updateProgressBar();
+
+                // Update UI untuk validasi
+                updateValidationUI();
             }
 
-            // Folder upload functionality - FIXED
-            $('#folder-input').on('change', function(e) {
-                const files = e.target.files;
-                if (files.length > 0) {
-                    processFolderFiles(files);
-                }
-            });
-
-            function processFolderFiles(files) {
-                // Reset semua upload sebelumnya
-                $('.file-upload-card').removeClass('uploaded');
-                $('.uploaded-file-info').hide();
-                $('.file-input-hidden').val('');
-
-                // Mapping nama file ke input yang sesuai
-                const fileMapping = {
-                    'ktm': ['ktm', 'kartu_mahasiswa', 'kartu_tanda_mahasiswa'],
-                    'photo': ['foto', 'photo', 'pas_foto', 'formal'],
-                    'proposal': ['proposal', 'pengajuan', 'kkn_proposal'],
-                    'rab': ['rab', 'anggaran', 'biaya', 'rincian']
-                };
-
-                // Proses setiap file
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const fileName = file.name.toLowerCase();
-
-                    // Cari input yang sesuai berdasarkan nama file
-                    let targetType = null;
-
-                    for (const [type, keywords] of Object.entries(fileMapping)) {
-                        if (keywords.some(keyword => fileName.includes(keyword))) {
-                            targetType = type;
-                            break;
-                        }
-                    }
-
-                    if (targetType) {
-                        // Update UI untuk file yang sesuai
-                        const card = $(`#${targetType}-card`);
-                        const info = $(`#${targetType}-info`);
-                        const nameElement = $(`#${targetType}-name`);
-                        const sizeElement = $(`#${targetType}-size`);
-
-                        card.addClass('uploaded');
-                        nameElement.text(file.name);
-                        sizeElement.text(formatFileSize(file.size));
-                        info.show();
-
-                        // Simpan file reference (dalam implementasi nyata, ini akan di-handle oleh form submission)
-                        console.log(`File ${targetType} ditemukan:`, file.name);
-                    }
+            // Update UI untuk validasi input
+            function updateValidationUI() {
+                // IPK
+                const ipk = parseFloat($('#ipk').val());
+                if (isNaN(ipk)) {
+                    $('#ipk').removeClass('is-valid is-invalid');
+                    $('#ipk-feedback').text('');
+                } else if (validateIPK(ipk)) {
+                    $('#ipk').removeClass('is-invalid').addClass('is-valid');
+                    $('#ipk-feedback').text('IPK valid').removeClass('invalid-feedback').addClass('valid-feedback');
+                } else {
+                    $('#ipk').removeClass('is-valid').addClass('is-invalid');
+                    $('#ipk-feedback').text('IPK harus antara 0.00 dan 4.00').removeClass('valid-feedback')
+                        .addClass('invalid-feedback');
                 }
 
-                checkFormCompletion();
-                alert(
-                    'File dari folder berhasil diproses! Silakan periksa apakah semua file sudah terupload dengan benar.'
-                );
-            }
-
-            // File upload functionality untuk semua card individual - FIXED
-            $('.file-input-hidden').on('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const inputId = $(this).attr('id');
-                    const fileType = inputId.replace('-input', '');
-
-                    const card = $(`#${fileType}-card`);
-                    const info = $(`#${fileType}-info`);
-                    const nameElement = $(`#${fileType}-name`);
-                    const sizeElement = $(`#${fileType}-size`);
-
-                    // Update card appearance
-                    card.addClass('uploaded');
-
-                    // Update file info
-                    nameElement.text(file.name);
-                    sizeElement.text(formatFileSize(file.size));
-                    info.show();
-
-                    checkFormCompletion();
+                // SKS
+                const sks = parseInt($('#sks').val());
+                if (isNaN(sks)) {
+                    $('#sks').removeClass('is-valid is-invalid');
+                    $('#sks-feedback').text('');
+                } else if (validateSKS(sks)) {
+                    $('#sks').removeClass('is-invalid').addClass('is-valid');
+                    $('#sks-feedback').text('Jumlah SKS valid').removeClass('invalid-feedback').addClass(
+                        'valid-feedback');
+                } else {
+                    $('#sks').removeClass('is-valid').addClass('is-invalid');
+                    $('#sks-feedback').text('Jumlah SKS harus antara 0 dan 200').removeClass('valid-feedback')
+                        .addClass('invalid-feedback');
                 }
-            });
 
-            // Remove file functionality - FIXED
-            $(document).on('click', '.remove-file', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+                // Semester
+                const semester = parseInt($('#semester').val());
+                if (isNaN(semester)) {
+                    $('#semester').removeClass('is-valid is-invalid');
+                    $('#semester-feedback').text('');
+                } else if (validateSemester(semester)) {
+                    $('#semester').removeClass('is-invalid').addClass('is-valid');
+                    $('#semester-feedback').text('Semester valid').removeClass('invalid-feedback').addClass(
+                        'valid-feedback');
+                } else {
+                    $('#semester').removeClass('is-valid').addClass('is-invalid');
+                    $('#semester-feedback').text('Semester harus antara 1 dan 14').removeClass('valid-feedback')
+                        .addClass('invalid-feedback');
+                }
 
-                const target = $(this).data('target');
-                const card = $(`#${target}-card`);
-                const info = $(`#${target}-info`);
-                const input = $(`#${target}-input`);
-
-                // Reset
-                card.removeClass('uploaded');
-                input.val('');
-                info.hide();
-
-                checkFormCompletion();
-            });
-
-            // Format ukuran file
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                // Jadwal
+                if ($('#selected-schedule').val() === '') {
+                    $('#schedule-feedback').show();
+                } else {
+                    $('#schedule-feedback').hide();
+                }
             }
 
             // Event listeners untuk input fields
-            $('input, select, textarea').on('input change', function() {
+            $('input, select').on('input change', function() {
                 $(this).removeClass('is-invalid');
                 checkFormCompletion();
             });
@@ -804,8 +689,101 @@
                 checkFormCompletion();
             });
 
+            // Tombol refresh kloter
+            $('#refresh-schedules').on('click', function() {
+                loadSchedules();
+            });
+
+            // Tombol kembali
+            $('#back-button').on('click', function() {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateProgressBar();
+
+                    // Scroll ke section yang sesuai
+                    $('html, body').animate({
+                        scrollTop: $(`#section-${getSectionName(currentStep)}`).offset().top - 100
+                    }, 500);
+                }
+            });
+
+            // Helper untuk mendapatkan nama section berdasarkan step
+            function getSectionName(step) {
+                switch (step) {
+                    case 1:
+                        return 'academic';
+                    case 2:
+                        return 'schedule';
+                    case 3:
+                        return 'statement';
+                    default:
+                        return 'academic';
+                }
+            }
+
+            // Simpan draft
+            $('#save-draft').on('click', function() {
+                // Dalam implementasi nyata, ini akan menyimpan data sementara
+                const formData = {
+                    ipk: $('#ipk').val(),
+                    sks: $('#sks').val(),
+                    semester: $('#semester').val(),
+                    schedule_id: $('#selected-schedule').val()
+                };
+
+                // Simpan ke localStorage (contoh sederhana)
+                localStorage.setItem('kkn_draft', JSON.stringify(formData));
+
+                alert(
+                    'Data berhasil disimpan sebagai draft. Anda dapat melanjutkan pengisian form lain waktu.');
+            });
+
+            // Load draft jika ada
+            function loadDraft() {
+                const draft = localStorage.getItem('kkn_draft');
+                if (draft) {
+                    const formData = JSON.parse(draft);
+                    $('#ipk').val(formData.ipk);
+                    $('#sks').val(formData.sks);
+                    $('#semester').val(formData.semester);
+                    $('#selected-schedule').val(formData.schedule_id);
+
+                    checkFormCompletion();
+                }
+            }
+
+            // Submit form
+            $('#registration-form').on('submit', function(e) {
+                // Validasi akhir sebelum submit
+                const ipkValid = validateIPK(parseFloat($('#ipk').val()));
+                const sksValid = validateSKS(parseInt($('#sks').val()));
+                const semesterValid = validateSemester(parseInt($('#semester').val()));
+                const scheduleSelected = $('#selected-schedule').val() !== '';
+                const statementChecked = $('#statement').is(':checked');
+
+                if (!ipkValid || !sksValid || !semesterValid || !scheduleSelected || !statementChecked) {
+                    e.preventDefault();
+                    alert('Harap lengkapi semua data dengan benar sebelum mengirim formulir.');
+                    return false;
+                }
+
+                // Tampilkan konfirmasi
+                if (!confirm('Apakah Anda yakin ingin mengirim formulir pendaftaran KKN?')) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Tampilkan loading state
+                $('#submit-form').html('<i class="fas fa-spinner fa-spin me-2"></i> Mengirim...').prop(
+                    'disabled', true);
+
+                // Hapus draft setelah submit berhasil
+                localStorage.removeItem('kkn_draft');
+            });
+
             // Initialize
-            checkFolderUploadSupport();
+            loadSchedules();
+            loadDraft();
             updateProgressBar();
         });
     </script>

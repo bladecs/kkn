@@ -551,8 +551,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .kategori-loading {
@@ -607,10 +612,84 @@
             animation: shake 0.5s ease-in-out;
         }
 
+        /* Style untuk tombol aksi */
+        .btn-group-sm>.btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-outline-primary,
+        .btn-outline-danger {
+            border-width: 1px;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+            color: white;
+        }
+
+        /* Hover effects untuk tombol aksi */
+        .btn-group .btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-group .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal styles */
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), #3b71ca);
+            color: white;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+        }
+
+        /* SweetAlert2 custom styles */
+        .swal2-popup {
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .swal2-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .swal2-html-container {
+            font-size: 1rem;
+        }
+
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
 
         @keyframes slideInDown {
@@ -618,6 +697,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -629,6 +709,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -648,6 +729,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -673,13 +755,16 @@
                 max-width: 100%;
                 padding: 20px 15px;
             }
+
             .schema-card {
                 padding: 30px;
             }
+
             .form-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+
             .kloter-grid {
                 grid-template-columns: 1fr;
             }
@@ -689,29 +774,37 @@
             .schema-header {
                 padding: 30px 20px;
             }
+
             .schema-header h1 {
                 font-size: 1.8rem;
             }
+
             .schema-card {
                 padding: 25px;
             }
+
             .card-title {
                 font-size: 1.3rem;
             }
+
             .schema-actions {
                 flex-direction: column;
                 gap: 15px;
                 padding: 25px;
             }
+
             .schema-actions .btn {
                 width: 100%;
             }
+
             .kategori-list {
                 grid-template-columns: 1fr;
             }
+
             .calendar-mini {
                 gap: 4px;
             }
+
             .calendar-mini-day {
                 font-size: 0.8rem;
                 min-height: 30px;
@@ -722,22 +815,28 @@
             .schema-container {
                 padding: 15px 10px;
             }
+
             .schema-card {
                 padding: 20px;
             }
+
             .schema-header {
                 padding: 25px 15px;
             }
+
             .schema-header h1 {
                 font-size: 1.5rem;
             }
+
             .schema-header p {
                 font-size: 1rem;
             }
+
             .form-control,
             .form-select {
                 padding: 12px 15px;
             }
+
             .btn-primary-custom,
             .btn-outline-secondary {
                 padding: 12px 20px;
@@ -907,8 +1006,7 @@
                             <i class="fas fa-users me-2"></i>Kuota Schema
                         </label>
                         <input type="number" class="form-control" id="kuota" name="kuota"
-                            placeholder="Contoh: 100" value="{{ old('kuota') }}"
-                            {{ $schedules->count() == 0 ? 'disabled' : 'required' }} min="1">
+                            placeholder="Contoh: 100" value="{{ old('kuota') }}">
                         <span class="form-hint">Masukkan jumlah kuota peserta untuk schema ini</span>
                         @error('kuota')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -920,7 +1018,7 @@
 
                 <div class="alert alert-info alert-custom">
                     <i class="fas fa-info-circle me-2"></i>
-                    <strong>Informasi:</strong> Tanggal yang sudah digunakan oleh schema lain tidak dapat dipilih. 
+                    <strong>Informasi:</strong> Tanggal yang sudah digunakan oleh schema lain tidak dapat dipilih.
                     Sistem akan menampilkan tanggal yang tersedia dalam range schedule.
                 </div>
 
@@ -993,9 +1091,95 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal Edit Schema -->
+    <div class="modal fade" id="editSchemaModal" tabindex="-1" aria-labelledby="editSchemaModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editSchemaModalLabel">
+                        <i class="fas fa-edit me-2"></i>Edit Schema
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form id="edit-schema-form" method="POST" action="{{ route('update_schema') }}">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <input type="text" name="detail_id" id="edit_schema_id" hidden>
+                                <label for="edit_kategori_id" class="form-label required-field">
+                                    <i class="fas fa-tag me-2"></i>Kategori Schema
+                                </label>
+                                <select class="form-select" id="edit_kategori_id" name="kategori_id" required>
+                                    <option value="">Pilih Kategori Schema</option>
+                                    @foreach ($kategoriSchemas as $kategori)
+                                        <option value="{{ $kategori->id_kategori }}">
+                                            {{ $kategori->id_kategori }} - {{ $kategori->deskripsi }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_kuota" class="form-label required-field">
+                                    <i class="fas fa-users me-2"></i>Kuota Schema
+                                </label>
+                                <input type="number" class="form-control" id="edit_kuota" name="kuota"
+                                    placeholder="Contoh: 100">
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="edit_tgl_mulai" class="form-label required-field">
+                                    <i class="fas fa-calendar-day me-2"></i>Tanggal Mulai
+                                </label>
+                                <div class="input-group">
+                                    <i class="fas fa-calendar-alt input-icon"></i>
+                                    <input type="date" class="form-control input-with-icon" id="edit_tgl_mulai"
+                                        name="tgl_mulai" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_tgl_selesai" class="form-label required-field">
+                                    <i class="fas fa-flag-checkered me-2"></i>Tanggal Selesai
+                                </label>
+                                <div class="input-group">
+                                    <i class="fas fa-calendar-alt input-icon"></i>
+                                    <input type="date" class="form-control input-with-icon" id="edit_tgl_selesai"
+                                        name="tgl_selesai" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info alert-custom mt-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Perhatian:</strong> Pastikan tanggal yang dipilih tidak bertabrakan dengan schema lain.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="fas fa-save me-2"></i>Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
+    <!-- Include SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         $(document).ready(function() {
             // Data schedule dari PHP
@@ -1085,6 +1269,7 @@
 
                             // Update existing schemas
                             if (response.existing_schemas && response.existing_schemas.length > 0) {
+                                console.log(response.existing_schemas);
                                 displayExistingSchemas(response.existing_schemas, response
                                     .schemas_count);
                             } else {
@@ -1132,7 +1317,7 @@
             // Function to load unavailable dates
             function loadUnavailableDates(scheduleId) {
                 const csrfToken = $('meta[name="csrf-token"]').attr('content');
-                
+
                 $.ajax({
                     url: '{{ route('schema.getUnavailableDates') }}',
                     type: 'POST',
@@ -1144,13 +1329,13 @@
                         if (response.success) {
                             unavailableDates = response.unavailable_dates;
                             console.log('Unavailable dates loaded:', unavailableDates);
-                            
+
                             // Update date inputs untuk disable unavailable dates
                             updateDateInputs();
-                            
+
                             // Update info text
                             updateDateInfoText();
-                            
+
                             // Update calendar preview jika sudah ada tanggal yang dipilih
                             if ($('#tgl_mulai').val() && $('#tgl_selesai').val()) {
                                 updateCalendarPreview();
@@ -1168,7 +1353,7 @@
             function updateDateInputs() {
                 // Reset previous event handlers
                 $('#tgl_mulai, #tgl_selesai').off('change.inputValidation');
-                
+
                 // Add new event handlers dengan validasi
                 $('#tgl_mulai, #tgl_selesai').on('change.inputValidation', function() {
                     validateDateInput($(this));
@@ -1185,9 +1370,13 @@
             function updateDateInfoText() {
                 const totalDates = calculateDateRange(selectedSchedule.tgl_mulai, selectedSchedule.tgl_selesai);
                 const availableDates = totalDates - unavailableDates.length;
-                
-                $('#tgl-mulai-info').html(`<i class="fas fa-calendar-check me-1"></i>${availableDates} dari ${totalDates} hari tersedia`);
-                $('#tgl-selesai-info').html(`<i class="fas fa-calendar-check me-1"></i>${availableDates} dari ${totalDates} hari tersedia`);
+
+                $('#tgl-mulai-info').html(
+                    `<i class="fas fa-calendar-check me-1"></i>${availableDates} dari ${totalDates} hari tersedia`
+                );
+                $('#tgl-selesai-info').html(
+                    `<i class="fas fa-calendar-check me-1"></i>${availableDates} dari ${totalDates} hari tersedia`
+                );
             }
 
             // Function to calculate date range
@@ -1201,13 +1390,13 @@
             function validateDateInput($input) {
                 const dateValue = $input.val();
                 const fieldName = $input.attr('id');
-                
+
                 // Reset previous states
                 $input.removeClass('is-invalid is-warning');
                 $input.next('.invalid-feedback').remove();
-                
+
                 if (!dateValue) return;
-                
+
                 // Check if date is unavailable
                 if (unavailableDates.includes(dateValue)) {
                     $input.addClass('is-invalid');
@@ -1219,12 +1408,12 @@
                     `);
                     return;
                 }
-                
+
                 // Additional validation for date range
                 if (fieldName === 'tgl_selesai' && $('#tgl_mulai').val()) {
                     const startDate = new Date($('#tgl_mulai').val());
                     const endDate = new Date(dateValue);
-                    
+
                     if (endDate < startDate) {
                         $input.addClass('is-invalid');
                         $input.after(`
@@ -1245,7 +1434,7 @@
                 }
 
                 const csrfToken = $('meta[name="csrf-token"]').attr('content');
-                
+
                 $.ajax({
                     url: '{{ route('schema.validateDates') }}',
                     type: 'POST',
@@ -1267,7 +1456,7 @@
             // Fungsi untuk memeriksa tabrakan tanggal
             function checkDateConflicts(startDate, endDate, scheduleId, callback) {
                 const csrfToken = $('meta[name="csrf-token"]').attr('content');
-                
+
                 $.ajax({
                     url: '{{ route('schema.checkDateConflicts') }}',
                     type: 'POST',
@@ -1305,22 +1494,26 @@
 
                 // Validasi terhadap schedule range
                 if (startDate < selectedSchedule.tgl_mulai) {
-                    showDateError('tgl_mulai', `Tanggal mulai tidak boleh sebelum ${formatDate(selectedSchedule.tgl_mulai)}`);
+                    showDateError('tgl_mulai',
+                        `Tanggal mulai tidak boleh sebelum ${formatDate(selectedSchedule.tgl_mulai)}`);
                     isValid = false;
                 }
 
                 if (startDate > selectedSchedule.tgl_selesai) {
-                    showDateError('tgl_mulai', `Tanggal mulai tidak boleh setelah ${formatDate(selectedSchedule.tgl_selesai)}`);
+                    showDateError('tgl_mulai',
+                        `Tanggal mulai tidak boleh setelah ${formatDate(selectedSchedule.tgl_selesai)}`);
                     isValid = false;
                 }
 
                 if (endDate < selectedSchedule.tgl_mulai) {
-                    showDateError('tgl_selesai', `Tanggal selesai tidak boleh sebelum ${formatDate(selectedSchedule.tgl_mulai)}`);
+                    showDateError('tgl_selesai',
+                        `Tanggal selesai tidak boleh sebelum ${formatDate(selectedSchedule.tgl_mulai)}`);
                     isValid = false;
                 }
 
                 if (endDate > selectedSchedule.tgl_selesai) {
-                    showDateError('tgl_selesai', `Tanggal selesai tidak boleh setelah ${formatDate(selectedSchedule.tgl_selesai)}`);
+                    showDateError('tgl_selesai',
+                        `Tanggal selesai tidak boleh setelah ${formatDate(selectedSchedule.tgl_selesai)}`);
                     isValid = false;
                 }
 
@@ -1333,12 +1526,12 @@
                 // Validasi tanggal unavailable
                 const startUnavailable = unavailableDates.includes(startDate);
                 const endUnavailable = unavailableDates.includes(endDate);
-                
+
                 if (startUnavailable) {
                     showDateError('tgl_mulai', 'Tanggal mulai sudah digunakan oleh schema lain');
                     isValid = false;
                 }
-                
+
                 if (endUnavailable) {
                     showDateError('tgl_selesai', 'Tanggal selesai sudah digunakan oleh schema lain');
                     isValid = false;
@@ -1346,7 +1539,8 @@
 
                 // Jika validasi dasar passed, cek tabrakan dengan schema lain
                 if (isValid && selectedSchedule) {
-                    checkDateConflicts(startDate, endDate, selectedSchedule.id, function(hasConflicts, conflictingSchemas) {
+                    checkDateConflicts(startDate, endDate, selectedSchedule.id, function(hasConflicts,
+                        conflictingSchemas) {
                         if (hasConflicts) {
                             showDateConflictWarning(conflictingSchemas);
                             isValid = false;
@@ -1377,12 +1571,12 @@
                     </div>
                 `;
                 $('#calendar-preview').before(warningHtml);
-                
+
                 $('#tgl_mulai').addClass('is-warning');
                 $('#tgl_selesai').addClass('is-warning');
             }
 
-            // Update calendar preview dengan unavailable dates
+            // Update calendar preview dengan unavailable dates - DIPERBAIKI
             function updateCalendarPreview() {
                 const startDate = $('#tgl_mulai').val();
                 const endDate = $('#tgl_selesai').val();
@@ -1396,17 +1590,17 @@
                 // Tampilkan preview
                 $('#calendar-preview').show();
 
-                // Hitung durasi
+                // Hitung durasi - DIPERBAIKI: Gunakan tanggal asli tanpa penambahan
                 const start = new Date(startDate);
                 const end = new Date(endDate);
                 const duration = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
                 $('#duration-display').text(`${duration} hari`);
 
-                // Generate mini calendar dengan highlight tanggal yang tidak tersedia
+                // Generate mini calendar dengan highlight tanggal yang tidak tersedia - DIPERBAIKI
                 generateMiniCalendar(start, end);
             }
 
-            // Update fungsi generateMiniCalendar dengan highlight tanggal unavailable
+            // Generate mini calendar - DIPERBAIKI
             function generateMiniCalendar(start, end) {
                 const calendarMini = $('#calendar-mini');
                 calendarMini.empty();
@@ -1419,32 +1613,45 @@
                     );
                 });
 
-                // Dapatkan bulan dari tanggal mulai
-                const firstDay = new Date(start.getFullYear(), start.getMonth(), 1);
-                const lastDay = new Date(end.getFullYear(), end.getMonth() + 1, 0);
+                // DIPERBAIKI: Gunakan tanggal yang sama persis tanpa penambahan
+                const firstDay = new Date(start);
+                const lastDay = new Date(end);
+
+                // Buat array semua tanggal dalam range
+                const allDatesInRange = [];
+                const current = new Date(firstDay);
+
+                while (current <= lastDay) {
+                    allDatesInRange.push(new Date(current));
+                    current.setDate(current.getDate() + 1);
+                }
+
+                // Dapatkan bulan pertama dan terakhir untuk kalender
+                const calendarFirstDay = new Date(firstDay.getFullYear(), firstDay.getMonth(), 1);
+                const calendarLastDay = new Date(lastDay.getFullYear(), lastDay.getMonth() + 1, 0);
 
                 // Tambahkan hari kosong sebelum bulan dimulai
-                for (let i = 0; i < firstDay.getDay(); i++) {
+                for (let i = 0; i < calendarFirstDay.getDay(); i++) {
                     calendarMini.append('<div class="calendar-mini-day outside"></div>');
                 }
 
-                // Tambahkan hari dalam bulan
-                const current = new Date(firstDay);
-                while (current <= lastDay) {
+                // Tambahkan hari dalam bulan - DIPERBAIKI: Gunakan logika yang benar
+                const calendarCurrent = new Date(calendarFirstDay);
+                while (calendarCurrent <= calendarLastDay) {
                     const dayElement = $('<div class="calendar-mini-day"></div>');
-                    const dateString = current.toISOString().split('T')[0];
-                    
-                    dayElement.text(current.getDate());
+                    const dateString = calendarCurrent.toISOString().split('T')[0];
 
-                    // Tandai jika hari dalam range yang dipilih
-                    if (current >= start && current <= end) {
+                    dayElement.text(calendarCurrent.getDate());
+
+                    // Tandai jika hari dalam range yang dipilih - DIPERBAIKI: Gunakan tanggal asli
+                    if (calendarCurrent >= firstDay && calendarCurrent <= lastDay) {
                         dayElement.addClass('selected');
                     }
 
                     // Tandai jika hari di luar schedule
                     if (selectedSchedule &&
-                        (current < new Date(selectedSchedule.tgl_mulai) || 
-                         current > new Date(selectedSchedule.tgl_selesai))) {
+                        (calendarCurrent < new Date(selectedSchedule.tgl_mulai) ||
+                            calendarCurrent > new Date(selectedSchedule.tgl_selesai))) {
                         dayElement.addClass('outside');
                     }
 
@@ -1455,7 +1662,7 @@
                     }
 
                     calendarMini.append(dayElement);
-                    current.setDate(current.getDate() + 1);
+                    calendarCurrent.setDate(calendarCurrent.getDate() + 1);
                 }
             }
 
@@ -1519,7 +1726,7 @@
                 infoText.html(infoText.html().replace(/<span.*?<\/span>/, ''));
             }
 
-            // Function to display existing schemas
+            // Function to display existing schemas - DIPERBAIKI dengan data attributes
             function displayExistingSchemas(schemas, count) {
                 const container = $('#schemas-content');
                 const countBadge = $('#schemas-count');
@@ -1538,13 +1745,15 @@
                                 <th>Periode</th>
                                 <th class="text-center">Durasi</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                 `;
 
-                // Add schema rows
+                // Add schema rows dengan data attributes
                 schemas.forEach(schema => {
+                    console.log(schema);
                     const startDate = new Date(schema.tgl_mulai);
                     const endDate = new Date(schema.tgl_selesai);
                     const duration = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
@@ -1552,7 +1761,11 @@
                     const kuota = schema.kuota ? schema.kuota : 'Tidak ada batas';
 
                     html += `
-                        <tr>
+                        <tr data-schema-id="${schema.id_schema}" 
+                            data-kategori-id="${schema.kategori_id}" 
+                            data-kuota="${schema.kuota}" 
+                            data-tgl-mulai="${schema.tgl_mulai}" 
+                            data-tgl-selesai="${schema.tgl_selesai}">
                             <td>
                                 <div class="fw-semibold">${schema.kategori_id}</div>
                                 <small class="text-muted">${schema.nama_kategori || schema.kategori?.deskripsi || '-'}</small>
@@ -1574,6 +1787,25 @@
                             <td class="text-center">
                                 <span class="badge ${status.class}">${status.text}</span>
                             </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-outline-primary btn-edit-schema" 
+                                            data-schema-id="${schema.id_detail_schema}"
+                                            data-kategori-id="${schema.kategori_id}"
+                                            data-kuota="${schema.kuota}"
+                                            data-tgl-mulai="${schema.tgl_mulai}"
+                                            data-tgl-selesai="${schema.tgl_selesai}"
+                                            title="Edit Schema">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-delete-schema" 
+                                            data-schema-id="${schema.id_detail_schema}"
+                                            data-kategori-id="${schema.kategori_id}"
+                                            title="Hapus Schema">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                     `;
                 });
@@ -1585,6 +1817,32 @@
                 `;
 
                 container.html(html);
+
+                // Attach event listeners untuk tombol aksi
+                attachSchemaActionListeners();
+            }
+
+            // Function untuk attach event listeners ke tombol aksi
+            function attachSchemaActionListeners() {
+                // Edit button click handler
+                $('.btn-edit-schema').on('click', function() {
+                    const schemaId = $(this).data('schema-id');
+                    const kategoriId = $(this).data('kategori-id');
+                    const kuota = $(this).data('kuota');
+                    const tglMulai = $(this).data('tgl-mulai');
+                    const tglSelesai = $(this).data('tgl-selesai');
+
+                    editSchemaWithData(schemaId, kategoriId, kuota, tglMulai, tglSelesai);
+                });
+
+                // Delete button click handler
+                $('.btn-delete-schema').on('click', function() {
+                    const schemaId = $(this).data('schema-id');
+                    const kategoriId = $(this).data('kategori-id');
+                    const scheduleId = $(this).data('schedule-id');
+
+                    deleteSchemaWithData(schemaId, kategoriId, scheduleId);
+                });
             }
 
             // Function to display no schemas message
@@ -1641,9 +1899,10 @@
                 $('#selected-kloter-info').show();
             }
 
-            // Format date function
+            // Format date function - DIPERBAIKI untuk konsistensi
             function formatDate(dateString) {
                 const date = new Date(dateString);
+                // Pastikan tidak ada penambahan hari
                 return date.toLocaleDateString('id-ID', {
                     day: '2-digit',
                     month: 'short',
@@ -1651,10 +1910,11 @@
                 });
             }
 
-            // Calculate duration function
+            // Calculate duration function - DIPERBAIKI
             function calculateDuration(startDate, endDate) {
                 const start = new Date(startDate);
                 const end = new Date(endDate);
+                // Hitung durasi berdasarkan tanggal asli
                 return Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
             }
 
@@ -1762,37 +2022,163 @@
         });
 
         // Global functions untuk aksi schema
-        function viewSchema(schemaId) {
-            window.open(`/schema/${schemaId}`, '_blank');
-        }
 
-        function editSchema(schemaId) {
-            if (confirm('Apakah Anda yakin ingin mengedit schema ini?')) {
-                // Redirect ke halaman edit atau tampilkan modal edit
-                window.open(`/schema/${schemaId}/edit`, '_blank');
-            }
-        }
+        // Fungsi edit schema menggunakan data dari atribut
+        function editSchemaWithData(schemaId, kategoriId, kuota, tglMulai, tglSelesai) {
+            console.log('Editing schema ID:', schemaId);
 
-        function deleteSchema(schemaId) {
-            if (confirm('Apakah Anda yakin ingin menghapus schema ini? Tindakan ini tidak dapat dibatalkan.')) {
-                // AJAX delete request
-                const csrfToken = $('meta[name="csrf-token"]').attr('content');
-                
-                $.ajax({
-                    url: `/schema/${schemaId}`,
-                    type: 'DELETE',
-                    data: {
-                        _token: csrfToken
-                    },
-                    success: function(response) {
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert('Gagal menghapus schema: ' + xhr.responseJSON?.message || 'Terjadi kesalahan');
-                    }
+            // Validasi schemaId
+            if (!schemaId || schemaId === 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'ID Schema tidak valid',
+                    confirmButtonColor: '#3b71ca'
                 });
+                return;
             }
+
+            // Isi form modal dengan data dari atribut
+            $('#edit_schema_id').val(schemaId);
+            $('#edit_kategori_id').val(kategoriId);
+            $('#edit_kuota').val(kuota);
+            $('#edit_tgl_mulai').val(tglMulai);
+            $('#edit_tgl_selesai').val(tglSelesai);
+
+            // Tampilkan modal
+            $('#editSchemaModal').modal('show');
         }
+
+        // Fungsi delete schema menggunakan data dari atribut
+        function deleteSchemaWithData(schemaId, kategoriId, scheduleId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: `Anda akan menghapus schema "${kategoriId}". Data yang dihapus tidak dapat dikembalikan!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan loading
+                    Swal.fire({
+                        title: 'Menghapus...',
+                        text: 'Sedang menghapus schema',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // AJAX delete request
+                    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                    $.ajax({
+                        url: `{{ route('delete_schema') }}`,
+                        type: 'DELETE',
+                        data: {
+                            _token: csrfToken,
+                            detail_id: schemaId
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: `Schema "${kategoriId}" berhasil dihapus`,
+                                confirmButtonColor: '#3b71ca'
+                            }).then(() => {
+                                // Reload data schemas jika ada schedule yang dipilih
+                                window.location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            const errorMessage = xhr.responseJSON?.message ||
+                                'Terjadi kesalahan saat menghapus schema';
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: errorMessage,
+                                confirmButtonColor: '#3b71ca'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        // Handle submit form edit
+        $('#edit-schema-form').on('submit', function(e) {
+            e.preventDefault();
+
+            const formData = $(this).serialize();
+            const url = $(this).attr('action');
+
+            // Tampilkan loading
+            Swal.fire({
+                title: 'Menyimpan...',
+                text: 'Sedang menyimpan perubahan',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Schema berhasil diperbarui',
+                        confirmButtonColor: '#3b71ca'
+                    }).then(() => {
+                        // Tutup modal
+                        $('#editSchemaModal').modal('hide');
+
+                        // Reload data schemas jika ada schedule yang dipilih
+                        if (window.selectedSchedule) {
+                            window.loadAllData(window.selectedSchedule.id);
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    let errorMessage = 'Terjadi kesalahan saat menyimpan perubahan';
+
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        errorMessage = Object.values(errors)[0][0];
+                    } else if (xhr.responseJSON?.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: errorMessage,
+                        confirmButtonColor: '#3b71ca'
+                    });
+                }
+            });
+        });
+
+        // Reset form modal ketika modal ditutup
+        $('#editSchemaModal').on('hidden.bs.modal', function() {
+            $('#edit-schema-form')[0].reset();
+        });
+
+        // Hapus fungsi global editSchema dan deleteSchema yang lama
+        window.editSchema = function(schemaId) {
+            console.warn('editSchema fallback called for ID:', schemaId);
+        };
+
+        window.deleteSchema = function(schemaId) {
+            console.warn('deleteSchema fallback called for ID:', schemaId);
+        };
     </script>
 
     <script>
