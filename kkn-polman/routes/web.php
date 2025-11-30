@@ -35,12 +35,12 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 Route::middleware('auth', 'role:koordinator')->group(function () {
     Route::get('/dashboard-koordinator', [KoordinatorDashboarController::class, 'index'])->name('dashboard_koordinator');
     Route::get('/form_schedule', [KoordinatorDashboarController::class, 'formSchedule'])->name('form_schedule');
-    Route::post('/submit-schedule',[KoordinatorController::class,'createSchedule'])->name('submit_schedule');
-    Route::get('/form_schema',[KoordinatorDashboarController::class,'formSchema'])->name('form_schema');
-    Route::post('/submit-schema',[KoordinatorController::class,'createSchema'])->name('submit_schema');
+    Route::post('/submit-schedule', [KoordinatorController::class, 'createSchedule'])->name('submit_schedule');
+    Route::get('/form_schema', [KoordinatorDashboarController::class, 'formSchema'])->name('form_schema');
+    Route::post('/submit-schema', [KoordinatorController::class, 'createSchema'])->name('submit_schema');
     Route::get('/pendaftaran-kkn', [KoordinatorDashboarController::class, 'pendaftaranKKN'])->name('pendaftaran-kkn');
     Route::get('/pendaftaran-project', [KoordinatorDashboarController::class, 'pendaftaranProject'])->name('pendaftaran-project');
-    Route::get('/pengelompokan-mhs', [KoordinatorDashboarController::class,'pengelompokanMhs'])->name('pengelompokan');
+    Route::get('/pengelompokan-mhs', [KoordinatorDashboarController::class, 'pengelompokanMhs'])->name('pengelompokan');
     Route::post('/buat-pengelompokan', [KoordinatorController::class, 'buatPengelompokan'])->name('buat-pengelompokan');
     Route::put('/verifikasi-pendaftaran', [KoordinatorController::class, 'verifikasiPendaftaran'])->name('verifikasi-pendaftaran');
     Route::put('/verifikasi-project', [KoordinatorController::class, 'verifikasiProject'])->name('verifikasi-project');
@@ -52,5 +52,11 @@ Route::middleware('auth', 'role:koordinator')->group(function () {
 //     Route::get('/form-pengajuan-kkn-dosen', [DosenDashboardController::class, 'formPengajuanProject'])->name('form-pengajuan-kkn-dosen');
 //     Route::get('/penilaian-logbook',[DosenDashboardController::class,'penilaianLogbook'])->name('penilaian-logbook');
 // });
+
+Route::post('/schema/get-available-kategori', [KoordinatorDashboarController::class, 'getAvailableKategori'])
+    ->name('schema.getAvailableKategori');
+Route::post('/check-date-conflicts', [KoordinatorDashboarController::class, 'checkDateConflicts'])->name('schema.checkDateConflicts');
+Route::post('/get-unavailable-dates', [KoordinatorDashboarController::class, 'getUnavailableDates'])->name('schema.getUnavailableDates');
+Route::post('/validate-dates', [KoordinatorDashboarController::class, 'validateDates'])->name('schema.validateDates');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

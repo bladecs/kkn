@@ -31,6 +31,6 @@ class DetailSchedule extends Model
     // Relationships
     public function schedule()
     {
-        return $this->belongsTo(Schedule::class, 'kode_kegiatan');
+        return $this->belongsTo(Schedule::class, 'schedule_id');
     }
 }

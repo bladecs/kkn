@@ -16,6 +16,7 @@ class DetailSchema extends Model
 
     protected $fillable = [
         'id_detail_schema',
+        'schedule_id',
         'schema_id',
         'kategori_id',
         'kuota',
@@ -34,7 +35,7 @@ class DetailSchema extends Model
         return $this->belongsTo(Schema::class, 'schema_id');
     }
 
-    public function kategoriSchema()
+    public function kategori()
     {
         return $this->belongsTo(KategoriSchema::class, 'kategori_id');
     }
