@@ -444,7 +444,6 @@
 @section('scripts')
     <script>
         const statusPendaftaran = @json($status_pendaftaran ?? '-');
-        const statusProject = @json($status_project ?? '-');
 
         (function() {
             const el = document.querySelector('.phase-step[data-phase="pendaftaran"]');
@@ -463,11 +462,11 @@
                 }
             }
 
-            const s = (statusPendaftaran || '').toLowerCase().trim();
+            const s = (statusPendaftaran.status || '').toLowerCase().trim();
 
-            if (['complete', 'selesai', 'done'].includes(s)) {
+            if (['complete'].includes(s)) {
                 setStatus(el, 'complete', 'Selesai');
-            } else if (['active', 'berjalan', 'ongoing', 'verifikasi'].includes(s)) {
+            } else if (['pending'].includes(s)) {
                 setStatus(el, 'active', 'Berjalan');
             } else {
                 setStatus(el, '', 'Menunggu');

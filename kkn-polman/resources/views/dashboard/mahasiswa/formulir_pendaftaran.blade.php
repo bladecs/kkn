@@ -756,12 +756,11 @@
             $('#registration-form').on('submit', function(e) {
                 // Validasi akhir sebelum submit
                 const ipkValid = validateIPK(parseFloat($('#ipk').val()));
-                const sksValid = validateSKS(parseInt($('#sks').val()));
                 const semesterValid = validateSemester(parseInt($('#semester').val()));
                 const scheduleSelected = $('#selected-schedule').val() !== '';
                 const statementChecked = $('#statement').is(':checked');
 
-                if (!ipkValid || !sksValid || !semesterValid || !scheduleSelected || !statementChecked) {
+                if (!ipkValid || !semesterValid || !scheduleSelected || !statementChecked) {
                     e.preventDefault();
                     alert('Harap lengkapi semua data dengan benar sebelum mengirim formulir.');
                     return false;

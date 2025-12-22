@@ -6,86 +6,84 @@ use App\Http\Controllers\Controller;
 use App\Models\DetailSchedule;
 use App\Models\DetailSchema;
 use App\Models\Dosen;
-use App\Models\dosenModel;
+use App\Models\User;
 use App\Models\KategoriSchema;
-use App\Models\lokasiModel;
-use App\Models\pendaftaranKKN;
-use App\Models\projectModel;
-use App\Models\pengelompokanModel;
+use App\Models\KelompokKkn;
+use App\Models\LokasiKkn;
+use App\Models\Mahasiswa;
+use App\Models\PendaftaranKKN;
+use App\Models\Prodi;
+use App\Models\ProjectKkn;
 use App\Models\Schedule;
 use App\Models\Schema;
-use Illuminate\Http\Request;
-use DateTime;
 use DateInterval;
 use DatePeriod;
+use DateTime;
+use Illuminate\Http\Request;
 
 class KoordinatorDashboarController extends Controller
 {
     public function index(Request $request)
     {
-        $count_pendaftaran = pendaftaranKKN::count();
-        $daily_pendaftaran = pendaftaranKKN::whereDate('created_at', now()->toDateString())->count();
-        $count_not_verif = pendaftaranKKN::where('status', 'verifikasi')->count();
-        $data = [
-            'chart_labels' => ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-            'chart_data' => [12, 19, 8, 15, 22, 10, 5],
-            'aktivitas_koordinator' => [
-                [
-                    'tanggal' => '2023-10-15',
-                    'judul' => 'Verifikasi Pendaftaran',
-                    'deskripsi' => 'Memverifikasi 15 pendaftaran baru',
-                ],
-                [
-                    'tanggal' => '2023-10-14',
-                    'judul' => 'Review Project Proposal',
-                    'deskripsi' => 'Mereview 8 proposal project KKN',
-                ],
-            ],
-        ];
+        $count_pendaftaran = PendaftaranKKN::count();
+        $daily_pendaftaran = PendaftaranKKN::whereDate('created_at', now()->toDateString())->count();
+        $project_belum_diperiksa = ProjectKkn::where('status', 'pending')->count();
+        $count_not_verif = PendaftaranKKN::where('status', 'verifikasi')->count();
+        $jumlah_schedule = DetailSchedule::where('tgl_mulai', '<=', now())
+            ->where('tgl_selesai', '>=', now())
+            ->count();
+        $jumlah_schema = DetailSchema::where('tgl_mulai', '<=', now())
+            ->where('tgl_selesai', '>=', now())
+            ->count();
+        $project_selesai = ProjectKkn::where('status', 'approved')->count();
 
-        return view('dashboard.koordinator.dashboard',compact('data', 'count_pendaftaran', 'count_not_verif', 'daily_pendaftaran'));
+        return view('dashboard.koordinator.dashboard', compact('project_belum_diperiksa', 'count_pendaftaran', 'count_not_verif', 'daily_pendaftaran',
+            'jumlah_schedule', 'jumlah_schema', 'project_selesai'));
     }
 
     public function formSchedule(Request $request)
     {
         $session = $request->session()->get('id');
-        $data_diri = Dosen::where('id',$session)->first();
+        $data_diri = Dosen::where('id', $session)->first();
+
         return view('dashboard.koordinator.form_schedule');
     }
 
-    public function formSchema(){
+    public function formSchema()
+    {
         $kategoriSchemas = KategoriSchema::all();
         $schedule = Schedule::all();
         $schedules = DetailSchedule::all();
         $schema = Schema::all();
-        return view('dashboard.koordinator.form_schema',compact('kategoriSchemas','schedules'));
+
+        return view('dashboard.koordinator.form_schema', compact('kategoriSchemas', 'schedules'));
     }
 
     public function getAvailableKategori(Request $request)
     {
         try {
             $scheduleId = $request->input('schedule_id');
-            
+
             // Validasi input
-            if (!$scheduleId) {
+            if (! $scheduleId) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Schedule ID tidak boleh kosong'
+                    'message' => 'Schedule ID tidak boleh kosong',
                 ], 422);
             }
 
             // Validasi schedule exists
             $schedule = DetailSchedule::where('schedule_id', $scheduleId)->first();
-            if (!$schedule) {
+            if (! $schedule) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Schedule tidak ditemukan'
+                    'message' => 'Schedule tidak ditemukan',
                 ], 404);
             }
 
             // Get all kategori schema
             $allKategori = KategoriSchema::all();
-            
+
             // Get kategori yang sudah digunakan di schedule ini
             $usedKategori = DetailSchema::where('schedule_id', $scheduleId)
                 ->pluck('kategori_id')
@@ -93,14 +91,14 @@ class KoordinatorDashboarController extends Controller
 
             // Filter available kategori
             $availableKategori = $allKategori->filter(function ($kategori) use ($usedKategori) {
-                return !in_array($kategori->id_kategori, $usedKategori);
+                return ! in_array($kategori->id_kategori, $usedKategori);
             })->values();
 
             // Get existing schemas for this schedule
             $existingSchemas = DetailSchema::where('schedule_id', $scheduleId)
                 ->with('kategori')
                 ->get()
-                ->map(function($schema) {
+                ->map(function ($schema) {
                     return [
                         'id_detail_schema' => $schema->id_detail_schema,
                         'id_schema' => $schema->schedule_id,
@@ -109,7 +107,7 @@ class KoordinatorDashboarController extends Controller
                         'kuota' => $schema->kuota,
                         'tgl_mulai' => $schema->tgl_mulai,
                         'tgl_selesai' => $schema->tgl_selesai,
-                        'created_at' => $schema->created_at
+                        'created_at' => $schema->created_at,
                     ];
                 });
 
@@ -123,25 +121,26 @@ class KoordinatorDashboarController extends Controller
                 'schedule_info' => [
                     'kloter' => $schedule->kloter,
                     'tgl_mulai' => $schedule->tgl_mulai,
-                    'tgl_selesai' => $schedule->tgl_selesai
-                ]
+                    'tgl_selesai' => $schedule->tgl_selesai,
+                ],
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Error in getAvailableKategori: ' . $e->getMessage());
+            \Log::error('Error in getAvailableKategori: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan server: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan server: '.$e->getMessage(),
             ], 500);
         }
     }
 
-     public function checkDateConflicts(Request $request)
+    public function checkDateConflicts(Request $request)
     {
         $request->validate([
             'schedule_id' => 'required|exists:detail_schedule,schedule_id',
             'tgl_mulai' => 'required|date',
-            'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai'
+            'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai',
         ]);
 
         try {
@@ -151,35 +150,35 @@ class KoordinatorDashboarController extends Controller
 
             // Cek konflik dengan schema lain dalam schedule yang sama
             $conflictingSchemas = DetailSchema::where('schedule_id', $scheduleId)
-                ->where(function($query) use ($tglMulai, $tglSelesai) {
+                ->where(function ($query) use ($tglMulai, $tglSelesai) {
                     $query->whereBetween('tgl_mulai', [$tglMulai, $tglSelesai])
-                          ->orWhereBetween('tgl_selesai', [$tglMulai, $tglSelesai])
-                          ->orWhere(function($q) use ($tglMulai, $tglSelesai) {
-                              $q->where('tgl_mulai', '<=', $tglMulai)
+                        ->orWhereBetween('tgl_selesai', [$tglMulai, $tglSelesai])
+                        ->orWhere(function ($q) use ($tglMulai, $tglSelesai) {
+                            $q->where('tgl_mulai', '<=', $tglMulai)
                                 ->where('tgl_selesai', '>=', $tglSelesai);
-                          });
+                        });
                 })
                 ->with('kategori')
                 ->get();
 
             return response()->json([
                 'conflicts' => $conflictingSchemas->count() > 0,
-                'conflicting_schemas' => $conflictingSchemas->map(function($schema) {
+                'conflicting_schemas' => $conflictingSchemas->map(function ($schema) {
                     return [
                         'id_schema' => $schema->id_schema,
                         'kategori_id' => $schema->kategori_id,
                         'nama_kategori' => $schema->kategori->deskripsi ?? '-',
                         'tgl_mulai' => $schema->tgl_mulai,
                         'tgl_selesai' => $schema->tgl_selesai,
-                        'kuota' => $schema->kuota
+                        'kuota' => $schema->kuota,
                     ];
-                })
+                }),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -187,37 +186,37 @@ class KoordinatorDashboarController extends Controller
     public function getUnavailableDates(Request $request)
     {
         $request->validate([
-            'schedule_id' => 'required|exists:detail_schemas,schedule_id'
+            'schedule_id' => 'required|exists:detail_schemas,schedule_id',
         ]);
 
         try {
             $scheduleId = $request->schedule_id;
-            
+
             $schemas = DetailSchema::where('schedule_id', $scheduleId)->get();
-            
+
             $unavailableDates = [];
-            
+
             foreach ($schemas as $schema) {
                 $start = new DateTime($schema->tgl_mulai);
                 $end = new DateTime($schema->tgl_selesai);
-                
+
                 $interval = new DateInterval('P1D');
                 $period = new DatePeriod($start, $interval, $end->modify('+1 day'));
-                
+
                 foreach ($period as $date) {
                     $unavailableDates[] = $date->format('Y-m-d');
                 }
             }
-            
+
             return response()->json([
                 'success' => true,
-                'unavailable_dates' => array_unique($unavailableDates)
+                'unavailable_dates' => array_unique($unavailableDates),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -227,7 +226,7 @@ class KoordinatorDashboarController extends Controller
         $request->validate([
             'schedule_id' => 'required|exists:detail_schedule,schedule_id',
             'tgl_mulai' => 'required|date',
-            'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai'
+            'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai',
         ]);
 
         try {
@@ -236,79 +235,93 @@ class KoordinatorDashboarController extends Controller
             $tglSelesai = $request->tgl_selesai;
 
             // Validasi range schedule
-            $schedule = DetailSchedule::where('schedule_id',$scheduleId);
+            $schedule = DetailSchedule::where('schedule_id', $scheduleId);
             if ($tglMulai < $schedule->tgl_mulai || $tglSelesai > $schedule->tgl_selesai) {
                 return response()->json([
                     'valid' => false,
-                    'message' => 'Tanggal harus dalam range schedule: ' . 
-                                $schedule->tgl_mulai . ' hingga ' . $schedule->tgl_selesai
+                    'message' => 'Tanggal harus dalam range schedule: '.
+                                $schedule->tgl_mulai.' hingga '.$schedule->tgl_selesai,
                 ]);
             }
 
             // Cek tabrakan dengan schema lain
             $conflictingSchemas = Schema::where('id_kegiatan', $scheduleId)
-                ->where(function($query) use ($tglMulai, $tglSelesai) {
+                ->where(function ($query) use ($tglMulai, $tglSelesai) {
                     $query->whereBetween('tgl_mulai', [$tglMulai, $tglSelesai])
-                          ->orWhereBetween('tgl_selesai', [$tglMulai, $tglSelesai])
-                          ->orWhere(function($q) use ($tglMulai, $tglSelesai) {
-                              $q->where('tgl_mulai', '<=', $tglMulai)
+                        ->orWhereBetween('tgl_selesai', [$tglMulai, $tglSelesai])
+                        ->orWhere(function ($q) use ($tglMulai, $tglSelesai) {
+                            $q->where('tgl_mulai', '<=', $tglMulai)
                                 ->where('tgl_selesai', '>=', $tglSelesai);
-                          });
+                        });
                 })
                 ->with('kategori')
                 ->get();
 
             if ($conflictingSchemas->count() > 0) {
-                $conflictingList = $conflictingSchemas->map(function($schema) {
+                $conflictingList = $conflictingSchemas->map(function ($schema) {
                     return [
                         'kategori' => $schema->kategori_id,
-                        'periode' => $schema->tgl_mulai . ' hingga ' . $schema->tgl_selesai
+                        'periode' => $schema->tgl_mulai.' hingga '.$schema->tgl_selesai,
                     ];
                 });
 
                 return response()->json([
                     'valid' => false,
                     'message' => 'Periode bertabrakan dengan schema lain',
-                    'conflicting_schemas' => $conflictingList
+                    'conflicting_schemas' => $conflictingList,
                 ]);
             }
 
             return response()->json([
                 'valid' => true,
-                'message' => 'Tanggal tersedia'
+                'message' => 'Tanggal tersedia',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'valid' => false,
-                'message' => 'Terjadi kesalahan validasi: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan validasi: '.$e->getMessage(),
             ], 500);
         }
     }
 
     public function pendaftaranKKN(Request $request)
     {
-        $data_pendaftaran = pendaftaranKKN::with('user')->get();
-        return view('dashboard.koordinator.pendaftaran_kkn', compact('data_pendaftaran'));
+        $status_counts = PendaftaranKKN::select('status', \DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+        $data_pendaftaran = PendaftaranKKN::with('detailPendaftaran','mahasiswa','mahasiswa.user')->get();
+
+        return view('dashboard.koordinator.pendaftaran_kkn', compact('data_pendaftaran', 'status_counts'));
     }
 
     public function pendaftaranProject(Request $request)
     {
-        $data_project = projectModel::all();
-        return view('dashboard.koordinator.pendaftaran_project', compact('data_project'));
+        $status_counts = ProjectKkn::select('status', \DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+        $data_project = ProjectKkn::all();
+
+        return view('dashboard.koordinator.pendaftaran_project', compact('data_project', 'status_counts'));
     }
 
     public function pengelompokanMhs(Request $request)
     {
-        $mahasiswa = pendaftaraModel::whereIn('status', ['complete','grouped'])->get();
-        $dosen = dosenModel::where('role', 'dosen')->get();
-        $lokasi = lokasiModel::all();
-        $project = projectModel::where('status', 'complete')->get();
-        $pengelompokan = pengelompokanModel::with(['lokasi','project','dosen'])->get();
+        $data_mahasiswa = PendaftaranKKN::whereIn('status', ['complete', 'grouped'])->get();
+        $mahasiswa = Mahasiswa::whereIn('nim', $data_mahasiswa->pluck('nim'))->get();
+        $prodi = Prodi::all();
+        $data_dosen = User::where('role', 'dosen')->get();
+        $dosen = Dosen::whereIn('id', $data_dosen->pluck('id'))->get();
+        $lokasi = LokasiKkn::all();
+        $project = ProjectKkn::where('status', 'complete')->get();
+        $pengelompokan = KelompokKkn::with(['lokasi', 'project', 'dosen'])->get();
 
-        return view('dashboard.koordinator.pengelompokan_mahasiswa',compact(
+        return view('dashboard.koordinator.pengelompokan_mahasiswa', compact(
             'mahasiswa',
             'dosen',
+            'prodi',
             'lokasi',
             'project',
             'pengelompokan'

@@ -24,6 +24,11 @@ class Mahasiswa extends Model
     ];
 
     // Relationships
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id', 'id');
+    }
+
     public function prodi()
     {
         return $this->belongsTo(Prodi::class, 'prodi_id');

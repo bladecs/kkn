@@ -449,23 +449,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Proposal Disetujui -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <i class="fas fa-thumbs-up stat-icon" style="color: #17a2b8;"></i>
-                    <div class="stat-number">{{ $proposal_disetujui ?? 0 }}</div>
-                    <div class="stat-label">Proposal Disetujui</div>
-                    <div class="mt-2">
-                        <span class="status-indicator status-active">
-                            <i class="fas fa-check-circle me-1" style="font-size: 6px;"></i>
-                            Approved
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Quick Actions -->

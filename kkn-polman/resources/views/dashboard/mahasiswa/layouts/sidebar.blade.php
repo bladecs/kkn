@@ -19,13 +19,12 @@
             </a>
             <ul class="dropdown-menu-custom">
                 @php
-                    $status = auth()->user()->pendaftaran->status ?? null;
-                    $statusProject = auth()->user()->project->status ?? null;
+                    $status = auth()->user()->mahasiswa->pendaftaranKkn->first()->status ?? null;
                 @endphp
                 <li>
                     <a href="{{ route('formulir') }}"
-                        class="dropdown-menu-item {{ $status === 'complete' ? 'disabled' : '' }}"
-                        {{ $status !== 'complete' ? 'onclick=return false;' : '' }}>
+                        class="dropdown-menu-item {{ in_array($status, ['pending', 'complete']) ? 'disabled' : '' }}"
+                        {{ in_array($status, ['pending', 'complete']) ? 'onclick="return false;"' : '' }}>
                         <i class="fas fa-file-alt"></i> <span>Formulir Pendaftaran</span>
                     </a>
                 </li>

@@ -28,6 +28,6 @@ class PendaftaranKkn extends Model
 
     public function detailPendaftaran()
     {
-        return $this->hasMany(DetailPendaftaranKkn::class, 'no_pendaftaran');
+        return $this->hasMany(DetailPendaftaranKkn::class, 'no_pendaftaran', 'id_pendaftaran');
     }
 }

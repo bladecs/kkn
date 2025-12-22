@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailPendaftaranKkn;
 use App\Models\pendaftaraModel;
+use App\Models\PendaftaranKkn;
 use App\Models\projectModel;
+use App\Models\Mahasiswa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,15 +22,27 @@ class MahasiswaController extends Controller
             'semester' => 'required',
         ]);
 
-        $nim = session('nim');
+        $id = session('id');
 
-        $data_diri = User::where('nim', $nim)->first();
+        $data_diri = Mahasiswa::where('id', $id)->first();
+        $id_pendaftaran = uniqid('pendaftaran_');
 
         try {
+            PendaftaranKkn::create([
+                'id_pendaftaran' => $id_pendaftaran,
+                'nim' => $data_diri->nim,
+                'status' => 'pending',
+            ]);
 
+            DetailPendaftaranKkn::create([
+                'id_detail_pendaftaran' => uniqid('detail_'),
+                'no_pendaftaran' => $id_pendaftaran,
+                'kloter' => $request->input('kloter'),
+                'semester' => $request->input('semester'),
+            ]);
             return redirect()->route('dashboard_mhs')->with('success', 'Pendaftaran KKN berhasil diajukan.');
         } catch (\Exception $e) {
-            \Log::error('Pendaftaran KKN gagal for nim '.$nim.': '.$e->getMessage(), ['exception' => $e]);
+            \Log::error('Pendaftaran KKN gagal for id '.$id.': '.$e->getMessage(), ['exception' => $e]);
 
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat mengajukan pendaftaran. Silakan coba lagi atau hubungi admin.');
         }

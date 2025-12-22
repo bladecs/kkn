@@ -5,8 +5,8 @@
     </div>
 
     <ul class="list-unstyled components">
-        <li class="{{ request()->routeIs('dashboard_mhs') ? 'active' : '' }}">
-            <a href="{{ route('dashboard_mhs') }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+        <li class="{{ request()->routeIs('dashboard_dosen') ? 'active' : '' }}">
+            <a href="{{ route('dashboard_dosen') }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
                 <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
             </a>
         </li>
@@ -19,7 +19,7 @@
             </a>
             <ul class="dropdown-menu-custom">
                 @php
-                    $status = auth()->guard('dosen')->user()->project->status ?? null;
+                    $status = auth()->user()->project->status ?? null;
                     $disabled = !($status == null || $status === 'complete');
                 @endphp
                 <li>

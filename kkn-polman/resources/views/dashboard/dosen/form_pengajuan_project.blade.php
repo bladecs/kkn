@@ -249,6 +249,33 @@
     <div class="wrapper d-flex align-items-stretch">
         <!-- Main Content -->
         <div class="form-container">
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <!-- Header -->
             <div class="form-header">
                 <h1><i class="fas fa-project-diagram me-2"></i> Formulir Pengajuan Project KKN</h1>
@@ -265,7 +292,8 @@
 
             <!-- Form Card -->
             <div class="form-card">
-                <form id="projectForm" action="#" method="POST" enctype="multipart/form-data">
+                <form id="projectForm" action="{{ route('submit-pengajuan-project') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
 
                     <!-- Data Mahasiswa -->
@@ -289,7 +317,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label"><i class="fas fa-university"></i> Program Studi</label>
-                                <input type="text" class="form-control" value="{{ $data_diri->study_program }}" readonly>
+                                <input type="text" class="form-control" value="{{ $data_diri->prodi->nama_prodi }}"
+                                    readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -387,59 +416,6 @@
                             <small class="text-muted">
                                 Karakter: <span id="charCount">0</span>/200
                             </small>
-                        </div>
-                    </div>
-
-                    <!-- Upload Dokumen -->
-                    <h3 class="section-title"><i class="fas fa-file-upload"></i> Upload Dokumen</h3>
-
-                    <!-- Proposal KKN -->
-                    <div class="form-group">
-                        <label class="form-label required-field">
-                            <i class="fas fa-file-pdf"></i> Proposal KKN
-                        </label>
-                        <div class="file-upload-area" id="proposalUploadArea">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <div class="file-upload-text">Klik untuk upload proposal KKN</div>
-                            <div class="file-upload-hint">Format: PDF (Maks. 5MB)</div>
-                            <input type="file" id="proposal_kkn" name="proposal_kkn" accept=".pdf"
-                                style="display: none;" required>
-                        </div>
-                        <div class="file-preview" id="proposalPreview">
-                            <div class="file-info">
-                                <div>
-                                    <div class="file-name" id="proposalFileName">-</div>
-                                    <div class="file-size" id="proposalFileSize">-</div>
-                                </div>
-                                <button type="button" class="btn-remove-file" onclick="removeFile('proposal')">
-                                    <i class="fas fa-times"></i> Hapus
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- RAB KKN -->
-                    <div class="form-group">
-                        <label class="form-label required-field">
-                            <i class="fas fa-calculator"></i> Rencana Anggaran Biaya (RAB) KKN
-                        </label>
-                        <div class="file-upload-area" id="rabUploadArea">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <div class="file-upload-text">Klik untuk upload RAB KKN</div>
-                            <div class="file-upload-hint">Format: PDF atau Excel (Maks. 2MB)</div>
-                            <input type="file" id="rab_kkn" name="rab_kkn" accept=".pdf,.xlsx,.xls"
-                                style="display: none;" required>
-                        </div>
-                        <div class="file-preview" id="rabPreview">
-                            <div class="file-info">
-                                <div>
-                                    <div class="file-name" id="rabFileName">-</div>
-                                    <div class="file-size" id="rabFileSize">-</div>
-                                </div>
-                                <button type="button" class="btn-remove-file" onclick="removeFile('rab')">
-                                    <i class="fas fa-times"></i> Hapus
-                                </button>
-                            </div>
                         </div>
                     </div>
 

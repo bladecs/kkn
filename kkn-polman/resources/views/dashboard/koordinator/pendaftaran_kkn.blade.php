@@ -669,18 +669,13 @@
                         </div>
                         <div class="status-item" style="border-left: 4px solid #28a745;">
                             <i class="fas fa-check-circle status-icon" style="color: #28a745;"></i>
-                            <div class="status-count">{{ $status_counts['verified'] ?? 0 }}</div>
+                            <div class="status-count">{{ $status_counts['complete'] ?? 0 }}</div>
                             <div class="status-label">Terverifikasi</div>
                         </div>
                         <div class="status-item" style="border-left: 4px solid #dc3545;">
                             <i class="fas fa-times-circle status-icon" style="color: #dc3545;"></i>
                             <div class="status-count">{{ $status_counts['rejected'] ?? 0 }}</div>
                             <div class="status-label">Ditolak</div>
-                        </div>
-                        <div class="status-item" style="border-left: 4px solid #17a2b8;">
-                            <i class="fas fa-flag-checkered status-icon" style="color: #17a2b8;"></i>
-                            <div class="status-count">{{ $status_counts['completed'] ?? 0 }}</div>
-                            <div class="status-label">Selesai</div>
                         </div>
                     </div>
                 </div>
@@ -715,19 +710,19 @@
                                     @foreach ($data_pendaftaran as $index => $mahasiswa)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $mahasiswa['name'] }}</td>
-                                            <td>{{ $mahasiswa['nim'] }}</td>
-                                            <td>{{ $mahasiswa['study_program'] }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($mahasiswa['created_at'])->format('d M Y H:i') }}
+                                            <td>{{ $mahasiswa->mahasiswa->name }}</td>
+                                            <td>{{ $mahasiswa->nim }}</td>
+                                            <td>{{ $mahasiswa->mahasiswa->prodi->nama_prodi }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($mahasiswa->created_at)->format('d M Y H:i') }}
                                             </td>
                                             <td>
-                                                @if ($mahasiswa['status'] == 'verifikasi')
+                                                @if ($mahasiswa->status == 'pending')
                                                     <span class="status-badge status-pending">Pending</span>
-                                                @elseif($mahasiswa['status'] == 'verified')
+                                                @elseif($mahasiswa->status == 'verified')
                                                     <span class="status-badge status-verified">Terverifikasi</span>
-                                                @elseif($mahasiswa['status'] == 'rejected')
+                                                @elseif($mahasiswa->status == 'rejected')
                                                     <span class="status-badge status-rejected">Ditolak</span>
-                                                @elseif($mahasiswa['status'] == 'complete')
+                                                @elseif($mahasiswa->status == 'complete')
                                                     <span class="status-badge status-completed">Selesai</span>
                                                 @endif
                                             </td>
@@ -735,16 +730,14 @@
                                                 <div class="action-buttons">
                                                     <button class="btn btn-sm btn-primary view-detail"
                                                         data-bs-toggle="modal" data-bs-target="#detailModal"
-                                                        data-mahasiswa='@json($mahasiswa)'
-                                                        title="Lihat Detail">
+                                                        data-mahasiswa='@json($mahasiswa)' title="Lihat Detail">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
                                                     <form action="{{ route('hapus-pendaftaran', $mahasiswa['nim']) }}"
                                                         method="post" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button class="btn btn-sm btn-danger" type="submit"
-                                                            title="Hapus">
+                                                        <button class="btn btn-sm btn-danger" type="submit" title="Hapus">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </form>
@@ -762,38 +755,6 @@
                                 @endif
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Coordinator Activity Timeline -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="section-header">
-                        <i class="fas fa-history section-icon"></i>
-                        <h5 class="section-title">Aktivitas Terbaru Koordinator</h5>
-                    </div>
-                    <div class="activity-timeline">
-                        @if (isset($aktivitas_koordinator) && count($aktivitas_koordinator) > 0)
-                            @foreach ($aktivitas_koordinator as $aktivitas)
-                                <div class="timeline-item {{ $loop->first ? 'recent' : '' }}">
-                                    <div class="timeline-date">{{ $aktivitas['tanggal'] }}</div>
-                                    <div class="timeline-content">
-                                        <div class="timeline-title">{{ $aktivitas['judul'] }}</div>
-                                        <p class="timeline-desc">{{ $aktivitas['deskripsi'] }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="text-center py-3">
-                                <i class="fas fa-info-circle text-muted mb-2" style="font-size: 2rem;"></i>
-                                <p class="text-muted">Belum ada aktivitas koordinator</p>
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -846,14 +807,6 @@
                                     <span class="info-label">Email</span>
                                     <span class="info-value" id="modalEmail">-</span>
                                 </div>
-                                <div class="info-item">
-                                    <span class="info-label">No. Telepon</span>
-                                    <span class="info-value" id="modalPhone">-</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Alamat</span>
-                                    <span class="info-value" id="modalAddress">-</span>
-                                </div>
                             </div>
                         </div>
 
@@ -903,65 +856,6 @@
                                     <label for="statusReject" class="btn-checkbox rejected-btn">
                                         <i class="fas fa-times"></i> Rejected
                                     </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- File Attachments -->
-                        <div class="student-info-section">
-                            <div class="section-title">
-                                <i class="fas fa-paperclip me-2"></i>
-                                Dokumen Pendaftaran
-                            </div>
-                            <div class="file-section">
-                                <div class="file-grid">
-                                    <!-- KTM -->
-                                    <div class="file-item" data-file-type="ktm" id="ktmFileItem">
-                                        <i class="fas fa-id-card file-icon"></i>
-                                        <div class="file-name" id="modalKtmName">Kartu Tanda Mahasiswa</div>
-                                        <div class="file-status" id="modalKtmStatus"></div>
-                                        <div class="file-actions">
-                                            <button class="btn btn-primary btn-sm btn-file view-file"
-                                                data-file-type="ktm">
-                                                <i class="fas fa-eye me-1"></i> Lihat
-                                            </button>
-                                            <button class="btn btn-success btn-sm btn-file download-file"
-                                                data-file-type="ktm">
-                                                <i class="fas fa-download me-1"></i> Unduh
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Proposal -->
-                                    <div class="file-item pdf-only-download" data-file-type="proposal"
-                                        id="proposalFileItem">
-                                        <i class="fas fa-file-pdf file-icon"></i>
-                                        <div class="file-name" id="modalProposalName">Proposal KKN</div>
-                                        <div class="file-status" id="modalProposalStatus"></div>
-                                        <div class="file-actions">
-                                            <button class="btn btn-success btn-sm btn-file download-file"
-                                                data-file-type="proposal">
-                                                <i class="fas fa-download me-1"></i> Unduh PDF
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Photo -->
-                                    <div class="file-item" data-file-type="photo" id="photoFileItem">
-                                        <i class="fas fa-camera file-icon"></i>
-                                        <div class="file-name" id="modalPhotoName">Foto Profil</div>
-                                        <div class="file-status" id="modalPhotoStatus"></div>
-                                        <div class="file-actions">
-                                            <button class="btn btn-primary btn-sm btn-file view-file"
-                                                data-file-type="photo">
-                                                <i class="fas fa-eye me-1"></i> Lihat
-                                            </button>
-                                            <button class="btn btn-success btn-sm btn-file download-file"
-                                                data-file-type="photo">
-                                                <i class="fas fa-download me-1"></i> Unduh
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1039,7 +933,10 @@
             viewButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const mahasiswaData = JSON.parse(this.getAttribute('data-mahasiswa'));
-                    console.log('Mahasiswa Data:', mahasiswaData);
+                    console.log('Full Mahasiswa Data:', mahasiswaData);
+                    console.log('Mahasiswa object:', mahasiswaData.mahasiswa);
+                    console.log('User object:', mahasiswaData.mahasiswa?.user);
+                    console.log('Prodi object:', mahasiswaData.mahasiswa?.prodi);
                     currentStudentData = mahasiswaData;
                     populateModal(mahasiswaData);
                 });
@@ -1048,12 +945,10 @@
             function populateModal(data) {
                 // Basic information
                 document.getElementById('nim').value = data.nim || '';
-                document.getElementById('modalName').textContent = data.name || '-';
+                document.getElementById('modalName').textContent = data.mahasiswa.name || '-';
                 document.getElementById('modalNim').textContent = data.nim || '-';
-                document.getElementById('modalStudyProgram').textContent = data.study_program || '-';
-                document.getElementById('modalEmail').textContent = data.user.email || '-';
-                document.getElementById('modalPhone').textContent = data.user.phone || '-';
-                document.getElementById('modalAddress').textContent = data.user.alamat || '-';
+                document.getElementById('modalStudyProgram').textContent = data.mahasiswa.prodi.nama_prodi || '-';
+                document.getElementById('modalEmail').textContent = data.mahasiswa.user.email || '-';
 
                 // Registration information
                 document.getElementById('modalCreatedAt').textContent = data.created_at ?
@@ -1150,20 +1045,18 @@
 
             function getStatusText(status) {
                 const statusMap = {
-                    'verifikasi': 'Pending',
-                    'verified': 'Terverifikasi',
+                    'pending': 'Pending',
                     'rejected': 'Ditolak',
-                    'completed': 'Selesai'
+                    'complete': 'Selesai'
                 };
                 return statusMap[status] || 'Unknown';
             }
 
             function getStatusClass(status) {
                 const classMap = {
-                    'verifikasi': 'status-pending',
-                    'verified': 'status-verified',
+                    'pending': 'status-pending',
                     'rejected': 'status-rejected',
-                    'completed': 'status-completed'
+                    'complete': 'status-completed'
                 };
                 return classMap[status] || 'status-pending';
             }

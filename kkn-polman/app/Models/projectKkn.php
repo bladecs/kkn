@@ -10,8 +10,11 @@ class ProjectKkn extends Model
     use HasFactory;
 
     protected $table = 'project_kkn';
+
     protected $primaryKey = 'id_project';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -25,6 +28,11 @@ class ProjectKkn extends Model
     ];
 
     // Relationships
+    public function pengajuDosen()
+    {
+        return $this->belongsTo(Dosen::class, 'pengaju', 'nip');
+    }
+
     public function lokasi()
     {
         return $this->belongsTo(LokasiKkn::class, 'lokasi_id');
@@ -38,5 +46,15 @@ class ProjectKkn extends Model
     public function detailKelompok()
     {
         return $this->hasMany(DetailKelompokKkn::class, 'project_id');
+    }
+
+    public function logbooks()
+    {
+        return $this->hasMany(LogbookKegiatan::class, 'anggota_id', 'id_project');
+    }
+
+    public function laporanAkhir()
+    {
+        return $this->hasMany(LaporanAkhir::class, 'anggota_id', 'id_project');
     }
 }

@@ -669,18 +669,13 @@
                         </div>
                         <div class="status-item" style="border-left: 4px solid #28a745;">
                             <i class="fas fa-check-circle status-icon" style="color: #28a745;"></i>
-                            <div class="status-count">{{ $status_counts['verified'] ?? 0 }}</div>
+                            <div class="status-count">{{ $status_counts['complete'] ?? 0 }}</div>
                             <div class="status-label">Terverifikasi</div>
                         </div>
                         <div class="status-item" style="border-left: 4px solid #dc3545;">
                             <i class="fas fa-times-circle status-icon" style="color: #dc3545;"></i>
                             <div class="status-count">{{ $status_counts['rejected'] ?? 0 }}</div>
                             <div class="status-label">Ditolak</div>
-                        </div>
-                        <div class="status-item" style="border-left: 4px solid #17a2b8;">
-                            <i class="fas fa-flag-checkered status-icon" style="color: #17a2b8;"></i>
-                            <div class="status-count">{{ $status_counts['complete'] ?? 0 }}</div>
-                            <div class="status-label">Selesai</div>
                         </div>
                     </div>
                 </div>
@@ -702,11 +697,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>NIM</th>
                                     <th>NIP</th>
                                     <th>Judul Project</th>
                                     <th>Lokasi</th>
-                                    <th>Jumlah Anggota</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -716,19 +709,17 @@
                                     @foreach ($data_project as $index => $project)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $project['nim'] }}</td>
-                                            <td>{{ $project['nip'] }}</td>
-                                            <td>{{ $project['judul_project'] }}</td>
-                                            <td>{{ $project['lokasi'] }}</td>
-                                            <td>{{ $project['jumlah_anggota'] }}</td>
+                                            <td>{{ $project->pengaju }}</td>
+                                            <td>{{ $project->judul }}</td>
+                                            <td>{{ $project->lokasi->nama_lokasi }}</td>
                                             <td>
-                                                @if ($project['status'] == 'verifikasi')
+                                                @if ($project->status == 'pending')
                                                     <span class="status-badge status-pending">Pending</span>
-                                                @elseif($project['status'] == 'verified')
+                                                @elseif($project->status == 'verified')
                                                     <span class="status-badge status-verified">Terverifikasi</span>
-                                                @elseif($project['status'] == 'rejected')
+                                                @elseif($project->status == 'rejected')
                                                     <span class="status-badge status-rejected">Ditolak</span>
-                                                @elseif($project['status'] == 'complete')
+                                                @elseif($project->status == 'complete')
                                                     <span class="status-badge status-completed">Selesai</span>
                                                 @endif
                                             </td>
@@ -740,7 +731,7 @@
                                                         title="Lihat Detail">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
-                                                    <form action="{{ route('hapus-pendaftaran', $project['nim']) }}"
+                                                    <form action="#"
                                                         method="post" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
@@ -801,7 +792,7 @@
         </div>
     </div>
 
-    <!-- Modal Detail Mahasiswa -->
+    <!-- Modal Detail -->
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -816,7 +807,6 @@
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
-                        <input type="text" name="nim" id="nim" hidden value="">
                         <input type="text" name="nip" id="nip" hidden value="">
 
                         <!-- Project Information -->
@@ -827,20 +817,12 @@
                             </div>
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">NIM</span>
-                                    <span class="info-value" id="modalNim">-</span>
-                                </div>
-                                <div class="info-item">
                                     <span class="info-label">NIP</span>
                                     <span class="info-value" id="modalNip">-</span>
                                 </div>
                                 <div class="info-item">
                                     <span class="info-label">Judul Project</span>
                                     <span class="info-value" id="modalJudulProject">-</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Jumlah Anggota</span>
-                                    <span class="info-value" id="modalJumlahAnggota">-</span>
                                 </div>
                                 <div class="info-item">
                                     <span class="info-label">Penyetuju</span>
@@ -885,10 +867,6 @@
                                     <span class="info-value" id="modalProvinsi">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Jalan</span>
-                                    <span class="info-value" id="modalJalan">-</span>
-                                </div>
-                                <div class="info-item">
                                     <span class="info-label">Alamat Lengkap</span>
                                     <span class="info-value" id="modalAlamat">-</span>
                                 </div>
@@ -919,45 +897,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- File Attachments -->
-                        <div class="student-info-section">
-                            <div class="section-title">
-                                <i class="fas fa-paperclip me-2"></i>
-                                Dokumen Project
-                            </div>
-                            <div class="file-section">
-                                <div class="file-grid">
-                                    <!-- Proposal -->
-                                    <div class="file-item pdf-only-download" data-file-type="proposal"
-                                        id="proposalFileItem">
-                                        <i class="fas fa-file-pdf file-icon"></i>
-                                        <div class="file-name" id="modalProposalName">Proposal KKN</div>
-                                        <div class="file-status" id="modalProposalStatus"></div>
-                                        <div class="file-actions">
-                                            <button class="btn btn-success btn-sm btn-file download-file"
-                                                data-file-type="proposal">
-                                                <i class="fas fa-download me-1"></i> Unduh PDF
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- RAB -->
-                                    <div class="file-item pdf-only-download" data-file-type="rab"
-                                        id="rabFileItem">
-                                        <i class="fas fa-file-invoice-dollar file-icon"></i>
-                                        <div class="file-name" id="modalRabName">RAB KKN</div>
-                                        <div class="file-status" id="modalRabStatus"></div>
-                                        <div class="file-actions">
-                                            <button class="btn btn-success btn-sm btn-file download-file"
-                                                data-file-type="rab">
-                                                <i class="fas fa-download me-1"></i> Unduh PDF
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -969,35 +908,6 @@
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Preview File -->
-    <div class="modal fade file-preview-modal" id="filePreviewModal" tabindex="-1"
-        aria-labelledby="filePreviewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="filePreviewModalLabel">
-                        <i class="fas fa-file-image me-2"></i>
-                        Preview Gambar
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="filePreviewContent">
-                        <!-- Content akan diisi secara dinamis -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Tutup
-                    </button>
-                    <button type="button" class="btn btn-success" id="downloadFileBtn">
-                        <i class="fas fa-download me-1"></i> Unduh
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -1040,20 +950,17 @@
 
             function populateModal(data) {
                 // Basic project information
-                document.getElementById('nim').value = data.nim || '';
-                document.getElementById('modalNim').textContent = data.nim || '-';
-                document.getElementById('modalNip').textContent = data.nip || '-';
-                document.getElementById('modalJudulProject').textContent = data.judul_project || '-';
-                document.getElementById('modalJumlahAnggota').textContent = data.jumlah_anggota || '-';
+                document.getElementById('nip').value = data.pengaju || '';
+                document.getElementById('modalNip').textContent = data.pengaju || '-';
+                document.getElementById('modalJudulProject').textContent = data.judul || '-';
                 document.getElementById('modalPenyetuju').textContent = data.penyetuju || '-';
-                document.getElementById('modalDeskripsiProject').textContent = data.deskripsi_project || '-';
+                document.getElementById('modalDeskripsiProject').textContent = data.deskripsi || '-';
 
                 // Location information
-                document.getElementById('modalLokasi').textContent = data.lokasi || '-';
-                document.getElementById('modalKota').textContent = data.kota || '-';
-                document.getElementById('modalProvinsi').textContent = data.provinsi || '-';
-                document.getElementById('modalJalan').textContent = data.jalan || '-';
-                document.getElementById('modalAlamat').textContent = data.alamat || '-';
+                document.getElementById('modalLokasi').textContent = data.lokasi.nama_lokasi || '-';
+                document.getElementById('modalKota').textContent = data.lokasi.kota || '-';
+                document.getElementById('modalProvinsi').textContent = data.lokasi.provinsi || '-';
+                document.getElementById('modalAlamat').textContent = data.lokasi.alamat || '-';
 
                 // Status
                 const statusElement = document.getElementById('modalStatus');
@@ -1111,7 +1018,7 @@
 
             function getStatusText(status) {
                 const statusMap = {
-                    'verifikasi': 'Pending',
+                    'pending': 'Pending',
                     'verified': 'Terverifikasi',
                     'rejected': 'Ditolak',
                     'complete': 'Selesai'
@@ -1121,7 +1028,7 @@
 
             function getStatusClass(status) {
                 const classMap = {
-                    'verifikasi': 'status-pending',
+                    'pending': 'status-pending',
                     'verified': 'status-verified',
                     'rejected': 'status-rejected',
                     'complete': 'status-completed'

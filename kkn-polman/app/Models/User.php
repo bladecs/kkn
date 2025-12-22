@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
@@ -60,12 +61,12 @@ class User extends Authenticatable
 
     public function schemasApproved()
     {
-        return $this->hasMany(SchemaModel::class, 'approved_by');
+        return $this->hasMany(Schema::class, 'approved_by');
     }
 
     public function schemasCreated()
     {
-        return $this->hasMany(SchemaModel::class, 'created_by');
+        return $this->hasMany(Schema::class, 'created_by');
     }
 
     public function projectsApproved()
@@ -76,5 +77,9 @@ class User extends Authenticatable
     public function kelompokCreated()
     {
         return $this->hasMany(KelompokKkn::class, 'created_by');
+    }
+
+    public function mahasiswa(){
+        return $this->hasOne(Mahasiswa::class, 'id', 'id');
     }
 }

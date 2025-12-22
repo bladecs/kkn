@@ -293,19 +293,7 @@
                 <div class="profile-info">
                     <h2 class="profile-name">{{ $data_diri->name }}</h2>
                     <div class="profile-nim">NIM: {{ $data_diri->nim }}</div>
-                    @php
-                        $jurusanMap = [
-                            'ae' => 'Automation Engineering',
-                            'me' => 'Manufactur Engineering',
-                            'de' => 'Design Engineering',
-                            'fe' => 'Foundry Engineering',
-                        ];
-
-                        $kodeJurusan = trim(strtolower($data_diri->jurusan ?? ''));
-                        $jurusanFull = $jurusanMap[$kodeJurusan] ?? ($data_diri->jurusan ?? '-');
-                    @endphp
-
-                    <div class="profile-status">Mahasiswa Aktif - {{ $jurusanFull }}</div>
+                    <div class="profile-status">Mahasiswa Aktif - {{ $data_diri->jurusan->nama_jurusan }}</div>
                 </div>
 
                 <!-- Data Pribadi -->
@@ -323,14 +311,6 @@
                         </div>
 
                         <div class="info-item">
-                            <div class="info-label"><i class="fas fa-birthday-cake"></i> Tempat, Tanggal Lahir</div>
-                            <div class="info-value">
-                                {{ $data_diri->tmp_lahir ?? '-' }},
-                                {{ $data_diri->tgl_lahir ?? '-' }}
-                            </div>
-                        </div>
-
-                        <div class="info-item">
                             <div class="info-label"><i class="fas fa-venus-mars"></i> Jenis Kelamin</div>
                             <div class="info-value">
                                 @if (($data_diri->gender ?? '') === 'male')
@@ -345,17 +325,7 @@
 
                         <div class="info-item">
                             <div class="info-label"><i class="fas fa-envelope"></i> Email</div>
-                            <div class="info-value">{{ $data_diri->email }}</div>
-                        </div>
-
-                        <div class="info-item">
-                            <div class="info-label"><i class="fas fa-phone"></i> Nomor Telepon</div>
-                            <div class="info-value">{{ $data_diri->phone ?? '-' }}</div>
-                        </div>
-
-                        <div class="info-item">
-                            <div class="info-label"><i class="fas fa-map-marker-alt"></i> Alamat</div>
-                            <div class="info-value">{{ $data_diri->alamat ?? '-' }}</div>
+                            <div class="info-value">{{ auth()->user()->email }}</div>
                         </div>
                     </div>
                 </div>
@@ -366,37 +336,22 @@
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label"><i class="fas fa-university"></i> Fakultas / Jurusan</div>
-                            @php
-                                $jurusanMap = [
-                                    'ae' => 'Automation Engineering',
-                                    'me' => 'Manufactur Engineering',
-                                    'fe' => 'Foundry Engineering',
-                                    'de' => 'Desain Engineering',
-                                ];
-                                $kodeJurusan = trim(strtolower($data_diri->jurusan ?? ''));
-                                $jurusanFull = $jurusanMap[$kodeJurusan] ?? ($data_diri->jurusan ?? '-');
-                            @endphp
-                            <div class="info-value">{{ $jurusanFull }}</div>
+                            <div class="info-value">{{ $data_diri->jurusan->nama_jurusan }}</div>
                         </div>
 
                         <div class="info-item">
                             <div class="info-label"><i class="fas fa-book"></i> Program Studi</div>
-                            <div class="info-value">{{ $data_diri->study_program }}</div>
+                            <div class="info-value">{{ $data_diri->prodi->nama_prodi }}</div>
                         </div>
 
                         <div class="info-item">
                             <div class="info-label"><i class="fas fa-calendar-alt"></i> Semester</div>
-                            <div class="info-value">{{ $data_pendaftaran->semester ?? '-' }}</div>
+                            <div class="info-value">{{ $data_pendaftaran->detailPendaftaran[0]->semester ?? '-' }}</div>
                         </div>
 
                         <div class="info-item">
                             <div class="info-label"><i class="fas fa-chart-line"></i> IPK</div>
-                            <div class="info-value">{{ $data_pendaftaran->ipk ?? '-' }}</div>
-                        </div>
-
-                        <div class="info-item">
-                            <div class="info-label"><i class="fas fa-tasks"></i> Jumlah SKS</div>
-                            <div class="info-value">{{ $data_pendaftaran->sks ?? '-' }}</div>
+                            <div class="info-value">{{ number_format($data_pendaftaran->detailPendaftaran[0]->ipk ?? 0, 2, ',', '.') }}</div>
                         </div>
                     </div>
                 </div>
@@ -410,7 +365,7 @@
                             <div class="info-value">
                                 @if ($data_pendaftaran->status == 'complete')
                                     <span class="badge bg-success">Terverifikasi</span>
-                                @elseif ($data_pendaftaran->status == 'verifikasi')
+                                @elseif ($data_pendaftaran->status == 'pending')
                                     <span class="badge bg-info">Menunggu Verifikasi</span>
                                 @else
                                     <span class="badge bg-warning text-dark">Belum Mendaftar</span>
@@ -485,23 +440,6 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
-                                        value="{{ $data_diri->tempat_lahir ?? '' }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir"
-                                        value="{{ $data_diri->tanggal_lahir ?? '' }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label for="gender" class="form-label">Jenis Kelamin</label>
                                     <select class="form-control" id="gender" name="gender">
                                         <option value="male"
@@ -517,20 +455,9 @@
                                 <div class="form-group">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" name="email"
-                                        value="{{ $data_diri->email }}" required>
+                                        value="{{ auth()->user()->email }}" required>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="no_tlp" class="form-label">Nomor Telepon</label>
-                            <input type="text" class="form-control" id="phone" name="phone"
-                                value="{{ $data_diri->phone ?? '' }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="alamat" class="form-label">Alamat</label>
-                            <textarea class="form-control" id="alamat" name="alamat" rows="3">{{ $data_diri->alamat ?? '' }}</textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

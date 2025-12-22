@@ -795,7 +795,7 @@
         </div>
     </div>
 
-    <!-- Enhanced Modal Tambah Kelompok -->
+    <!-- Modal Tambah Kelompok -->
     <div class="modal fade modal-enhanced" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -846,7 +846,7 @@
                                     <select class="form-select" id="id_project" name="id_project">
                                         <option value="" disabled selected>Pilih Project (Opsional)</option>
                                         @foreach ($project as $projectItem)
-                                            <option value="{{ $projectItem->id }}">{{ $projectItem->judul_project }}
+                                            <option value="{{ $projectItem->id_project }}">{{ $projectItem->judul }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -896,10 +896,9 @@
                                         <label for="filterProdi">Program Studi</label>
                                         <select class="form-select" id="filterProdi">
                                             <option value="">Semua Program Studi</option>
-                                            <option value="ae">Automation Engineering</option>
-                                            <option value="me">Manufacture Engineering</option>
-                                            <option value="de">Desain Engineering</option>
-                                            <option value="fe">Foundry Engineering</option>
+                                            @foreach ($prodi as $prd)
+                                                <option value="{{ $prd->id_prodi }}">{{ $prd->nama_prodi }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="filter-group">
@@ -957,7 +956,7 @@
 
                                             @if ($availableStudents->count() > 0)
                                                 @foreach ($availableStudents as $mhs)
-                                                    <tr class="member-row" data-prodi="{{ $mhs->jurusan }}"
+                                                    <tr class="member-row" data-prodi="{{ $mhs->prodi->id_prodi }}"
                                                         data-nim="{{ $mhs->nim }}" data-nama="{{ $mhs->name }}">
                                                         <td class="text-center">
                                                             <input type="checkbox" name="anggota[]"
@@ -966,17 +965,9 @@
                                                         </td>
                                                         <td>{{ $mhs->nim }}</td>
                                                         <td>{{ $mhs->name }}</td>
-                                                        <td>{{ $mhs->study_program }}</td>
+                                                        <td>{{ $mhs->prodi->nama_prodi }}</td>
                                                         <td>
-                                                            @if ($mhs->jurusan == 'ae')
-                                                                Automation Engineering
-                                                            @elseif ($mhs->jurusan == 'me')
-                                                                Manufacture Engineering
-                                                            @elseif ($mhs->jurusan == 'de')
-                                                                Desain Engineering
-                                                            @elseif ($mhs->jurusan == 'fe')
-                                                                Foundry Engineering
-                                                            @endif
+                                                            {{ $mhs->jurusan->nama_jurusan }}
                                                         </td>
                                                         <td>
                                                             <span class="badge bg-success">Tersedia</span>
@@ -1075,7 +1066,6 @@
 
                 $('.member-row').each(function() {
                     const $row = $(this);
-
                     // Get data with fallback to empty string if undefined
                     const prodi = ($row.data('prodi') || '').toString().toLowerCase();
                     const nim = ($row.data('nim') || '').toString().toLowerCase();
@@ -1097,6 +1087,45 @@
 
                 updateSelectedCounter();
             }
+
+            // function filterMembers() {
+            //     const selectedProdi = $('#filterProdi').val() || '';
+            //     const searchTerm = $('#searchNim').val() || '';
+
+            //     const selectedProdiLower = selectedProdi.toLowerCase();
+            //     const searchTermLower = searchTerm.toLowerCase();
+
+            //     $('.member-row').each(function() {
+            //         const $row = $(this);
+
+            //         // Ambil semua data yang sudah tersimpan di elemen
+            //         const memberData = $row.data();
+            //         console.log('Member data:', memberData);
+
+            //         // Gunakan data dari objek yang sudah ada
+            //         const prodiObj = memberData.prodi || {};
+            //         const prodi = (prodiObj.nama_prodi || '').toString().toLowerCase();
+            //         const nim = (memberData.nim || '').toString().toLowerCase();
+            //         const nama = (memberData.nama || '').toString().toLowerCase();
+
+            //         console.log('Filtering row:', prodi, nim, nama);
+
+            //         // Check if row matches filters
+            //         const prodiMatch = !selectedProdiLower || prodi.includes(selectedProdiLower);
+            //         const searchMatch = !searchTermLower ||
+            //             nim.includes(searchTermLower) ||
+            //             nama.includes(searchTermLower);
+
+            //         // Show/hide row based on filter matches
+            //         if (prodiMatch && searchMatch) {
+            //             $row.show();
+            //         } else {
+            //             $row.hide();
+            //         }
+            //     });
+
+            //     updateSelectedCounter();
+            // }
 
             // Filter members by program study and search in real-time
             $('#filterProdi').on('change', function() {

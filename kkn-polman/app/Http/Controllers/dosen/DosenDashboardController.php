@@ -3,28 +3,55 @@
 namespace App\Http\Controllers\dosen;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dosen;
 use App\Models\dosenModel;
+use App\Models\KelompokKkn;
+use App\Models\LaporanAkhir;
+use App\Models\LogbookKegiatan;
 use App\Models\pengelompokanModel;
-use App\Models\projectModel;
+use App\Models\ProjectKkn;
 use Illuminate\Http\Request;
 
 class DosenDashboardController extends Controller
 {
     public function index()
     {
-        $status_project = projectModel::where('nip', session('nip'))->first();
-        return view('dashboard.dosen.dashboard',compact('status_project'));
+        $session = session('id');
+        $dosen = Dosen::where('id', $session)->first();
+
+        $kelompokKkn = KelompokKkn::with(['detailKelompok', 'anggotaKelompok'])
+            ->where('pembimbing', $dosen->nip)
+            ->first();
+
+        // Ambil semua project dosen
+        $projects = ProjectKkn::where('pengaju', $dosen->nip)->get();
+
+        // Ambil semua logbooks dari semua project
+        $projectIds = $projects->pluck('id_project');
+        $allLogbooks = LogbookKegiatan::whereIn('anggota_id', $projectIds)
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        // Ambil semua laporan akhir yang menunggu
+        $laporanMenunggu = LaporanAkhir::whereIn('anggota_id', $projectIds)
+            ->where('status', 'submitted')
+            ->get();
+
+        return view('dashboard.dosen.dashboard', compact('projects', 'kelompokKkn', 'allLogbooks', 'laporanMenunggu'));
     }
+
     public function formPengajuanProject(Request $request)
     {
-        $nip = $request->session()->get('nip');
-        $data_diri = dosenModel::where('nip', $nip)->first();
-        $data_pengelompokan = pengelompokanModel::where('nip',$nip)->first();
+        $session = $request->session()->get('id');
+        $data_diri = Dosen::where('id', $session)->first();
+        $data_pengelompokan = KelompokKkn::where('pembimbing', $data_diri->nip)->first();
 
-        return view('dashboard.dosen.form_pengajuan_project', compact('data_diri','data_pengelompokan'));
+        return view('dashboard.dosen.form_pengajuan_project', compact('data_diri', 'data_pengelompokan'));
     }
 
-    public function penilaianLogbook(){
-       return view('dashboard.dosen.penilaian_logbook');
+    public function penilaianLogbook()
+    {
+        return view('dashboard.dosen.penilaian_logbook');
     }
 }

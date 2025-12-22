@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\dosen\DosenDashboardController;
+use App\Http\Controllers\dosen\DosenController;
 use App\Http\Controllers\koordinator\KoordinatorController;
 use App\Http\Controllers\koordinator\KoordinatorDashboarController;
 use App\Http\Controllers\mahasiswa\DashboardController;
@@ -47,11 +48,12 @@ Route::middleware('auth', 'role:koordinator')->group(function () {
     Route::delete('/delete-schema',[KoordinatorController::class,'deleteSchema'])->name('delete_schema');
 });
 
-// Route::middleware('auth:dosen','role:dosen')->group(function () {
-//     Route::get('/dashboard-dosen', [DosenDashboardController::class,'index'])->name('dashboard_dosen');
-//     Route::get('/form-pengajuan-kkn-dosen', [DosenDashboardController::class, 'formPengajuanProject'])->name('form-pengajuan-kkn-dosen');
-//     Route::get('/penilaian-logbook',[DosenDashboardController::class,'penilaianLogbook'])->name('penilaian-logbook');
-// });
+Route::middleware('auth','role:dosen')->group(function () {
+    Route::get('/dashboard-dosen', [DosenDashboardController::class,'index'])->name('dashboard_dosen');
+    Route::get('/form-pengajuan-kkn-dosen', [DosenDashboardController::class, 'formPengajuanProject'])->name('form-pengajuan-kkn-dosen');
+    Route::post('/submit-pengajuan-project', [DosenController::class,'pengajuanProject'])->name('submit-pengajuan-project');
+    Route::get('/penilaian-logbook',[DosenDashboardController::class,'penilaianLogbook'])->name('penilaian-logbook');
+});
 
 Route::post('/schema/get-available-kategori', [KoordinatorDashboarController::class, 'getAvailableKategori'])->name('schema.getAvailableKategori');
 Route::post('/check-date-conflicts', [KoordinatorDashboarController::class, 'checkDateConflicts'])->name('schema.checkDateConflicts');

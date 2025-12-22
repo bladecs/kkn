@@ -37,23 +37,14 @@ class KoordinatorController extends Controller
             'status' => 'required|in:complete,rejected',
         ]);
 
-        if (! empty($request->nim)) {
-            $data_project = ProjectKkn::where('nim', $request->nim)->first();
+        if (! empty($request->nip)) {
+            $data_project = ProjectKkn::where('pengaju', $request->nip)->first();
             if (! $data_project) {
-                return back()->with('error', 'Data project dengan NIM tersebut tidak ditemukan.');
-            } else {
-                lokasiModel::create([
-                    'id' => uniqid('LOK-'),
-                    'nama_lokasi' => $data_project->lokasi,
-                    'kota' => $data_project->kota,
-                    'provinsi' => $data_project->provinsi,
-                    'jalan' => $data_project->jalan,
-                    'alamat' => $data_project->alamat,
-                ]);
+                return back()->with('error', 'Data project dengan NIP tersebut tidak ditemukan.');
             }
 
-            $updated = ProjectKkn::where('nim', $request->nim)->update([
-                'penyetuju' => 'Koordinator',
+            $updated = ProjectKkn::where('pengaju', $request->nip)->update([
+                'approved_by' => session('id'),
                 'status' => $request->status,
             ]);
 
@@ -63,34 +54,6 @@ class KoordinatorController extends Controller
                 return back()->with('error', 'NIM tidak ditemukan.');
             }
         }
-
-        if (! empty($request->nip)) {
-            $data_project = ProjectKkn::where('nip', $request->nip)->first();
-            if (! $data_project) {
-                return back()->with('error', 'Data project dengan NIP tersebut tidak ditemukan.');
-            } else {
-                lokasiModel::create([
-                    'id' => uniqid('LOK-'),
-                    'nama_lokasi' => $data_project->lokasi,
-                    'kota' => $data_project->kota,
-                    'provinsi' => $data_project->provinsi,
-                    'jalan' => $data_project->jalan,
-                    'alamat' => $data_project->alamat,
-                ]);
-            }
-
-            $updated = projectModel::where('nip', $request->nip)->update([
-                'penyetuju' => 'Koordinator',
-                'status' => $request->status,
-            ]);
-
-            if ($updated) {
-                return back()->with('success', 'Verifikasi berdasarkan NIP berhasil.');
-            } else {
-                return back()->with('error', 'NIP tidak ditemukan.');
-            }
-        }
-
         return back()->with('error', 'Harus mengisi NIM atau NIP untuk verifikasi.');
     }
 
