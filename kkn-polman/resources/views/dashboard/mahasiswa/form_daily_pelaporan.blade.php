@@ -1,327 +1,104 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Laporan Harian KKN - Sistem Informasi KKN</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+@extends('dashboard.mahasiswa.layouts.app')
+
+@section('title', 'Form Laporan Harian KKN')
+
+@section('style')
     <style>
-        :root {
-            --primary-color: #1e4fbe;
-            --secondary-color: #2c6de9;
-            --light-color: #e8f0fe;
-            --dark-color: #0a2a75;
-            --sidebar-width: 250px;
-            --sidebar-collapsed-width: 70px;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            overflow-x: hidden;
-        }
-
-        /* Sidebar Styles */
-        #sidebar {
-            position: fixed;
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: var(--primary-color);
-            color: white;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        #sidebar.collapsed {
-            width: var(--sidebar-collapsed-width);
-        }
-
-        #sidebar .sidebar-header {
+        .container-fluid {
             padding: 20px;
-            background: var(--dark-color);
-            text-align: center;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            overflow: hidden;
+            max-width: 100%;
         }
 
-        #sidebar.collapsed .sidebar-header {
-            padding: 20px 10px;
+        .main-content {
+            width: 100%;
+            margin: 0 auto;
         }
 
-        #sidebar.collapsed .sidebar-header h3 {
-            display: none;
-        }
-
-        #sidebar.collapsed .sidebar-header p {
-            display: none;
-        }
-
-        #sidebar ul.components {
-            transition: all 0.3s ease;
-            flex-grow: 1;
-        }
-
-        #sidebar ul li a {
-            padding: 15px 25px;
-            display: block;
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            transition: all 0.3s;
-            font-size: 1rem;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        #sidebar.collapsed ul li a {
-            padding: 15px;
-            text-align: center;
-        }
-
-        #sidebar.collapsed ul li a span {
-            display: none;
-        }
-
-        #sidebar ul li a:hover {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        #sidebar ul li a i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        #sidebar.collapsed ul li a i {
-            margin-right: 0;
-            font-size: 1.3rem;
-        }
-
-        #sidebar ul li.active > a {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        /* Sidebar footer */
-        #sidebar .sidebar-footer {
-            padding: 15px;
-            margin-top: auto;
-        }
-
-        #sidebar.collapsed .sidebar-footer {
-            padding: 15px 5px;
-        }
-
-        #sidebar.collapsed .sidebar-footer .btn span {
-            display: none;
-        }
-
-        #sidebar.collapsed .sidebar-footer .btn i {
-            margin-right: 0;
-        }
-
-        /* Navbar Styles */
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px 20px;
-            position: fixed;
-            top: 0;
-            left: var(--sidebar-width);
-            right: 0;
-            z-index: 999;
-            transition: all 0.3s ease;
-        }
-
-        #content.collapsed .navbar {
-            left: var(--sidebar-collapsed-width);
-        }
-
-        /* Content Styles */
-        #content {
-            width: calc(100% - var(--sidebar-width));
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            transition: all 0.3s ease;
-            padding-top: 80px;
-        }
-
-        #content.collapsed {
-            width: calc(100% - var(--sidebar-collapsed-width));
-            margin-left: var(--sidebar-collapsed-width);
-        }
-
-        /* Card Styles */
         .card {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: none;
-            margin-bottom: 20px;
-            transition: transform 0.3s;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 25px 30px;
+        }
+
+        .card-body {
+            padding: 30px;
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         .section-icon {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: var(--primary-color);
             margin-right: 15px;
+            background: rgba(30, 79, 190, 0.1);
+            padding: 12px;
+            border-radius: 10px;
         }
 
         .section-title {
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: var(--dark-color);
             margin: 0;
         }
 
-        /* Form Styles */
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
         .form-label {
             font-weight: 600;
-            color: var(--dark-color);
-            margin-bottom: 8px;
-        }
-
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 10px 15px;
-            border: 1px solid #ced4da;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(30, 79, 190, 0.25);
-        }
-
-        .file-upload-area {
-            border: 2px dashed #ced4da;
-            border-radius: 8px;
-            padding: 40px 20px;
-            text-align: center;
-            background-color: #f8f9fa;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .file-upload-area:hover {
-            border-color: var(--primary-color);
-            background-color: var(--light-color);
-        }
-
-        .file-upload-area.dragover {
-            border-color: var(--primary-color);
-            background-color: var(--light-color);
-            transform: scale(1.02);
-        }
-
-        .file-upload-area i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .file-upload-area h5 {
-            color: var(--dark-color);
+            color: #344767;
             margin-bottom: 10px;
+            font-size: 0.95rem;
         }
 
-        .file-upload-area p {
-            margin-bottom: 0;
-            color: #6c757d;
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            padding: 12px 18px;
+            border: 1px solid #dce1e7;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
         }
 
-        .file-list {
-            margin-top: 20px;
-        }
-
-        .file-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .file-item i {
-            color: var(--primary-color);
-            margin-right: 12px;
-            font-size: 1.3rem;
-        }
-
-        .file-item .file-info {
-            flex-grow: 1;
-        }
-
-        .file-item .file-name {
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .file-item .file-size {
-            font-size: 0.85rem;
-            color: #6c757d;
-        }
-
-        .file-item .file-remove {
-            color: #dc3545;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-
-        .file-item .file-remove:hover {
-            background-color: #f8d7da;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--primary-color);
-            padding: 10px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
+            box-shadow: 0 0 0 3px rgba(30, 79, 190, 0.15);
+            background-color: #fff;
         }
 
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            transform: translateY(-2px);
+        .form-control:read-only {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
         }
 
         .btn-outline-primary {
             color: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 10px 25px;
-            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+            padding: 12px 30px;
+            border-radius: 10px;
             font-weight: 600;
-            transition: all 0.3s;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
         .btn-outline-primary:hover {
@@ -330,264 +107,492 @@
             transform: translateY(-2px);
         }
 
-        .upload-status {
-            margin-top: 15px;
-            padding: 10px;
+        .btn-sm {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+        }
+
+        .activities-container {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .activity-item {
+            background: white;
             border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .activity-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .activity-title {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .activity-meta {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .activity-meta i {
+            color: var(--primary-color);
+            margin-right: 5px;
+        }
+
+        .activity-description {
+            color: #4a5568;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .activity-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .activity-hidden-inputs {
             display: none;
         }
 
-        .upload-status.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #94a3b8;
         }
 
-        .upload-status.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+            opacity: 0.5;
+        }
+
+        .empty-state h5 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #64748b;
+        }
+
+        .time-input-group {
+            position: relative;
+        }
+
+        .time-unit {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-weight: 500;
+            background: #f8fafc;
+            padding: 0 5px;
+        }
+
+        .total-time {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid #cbd5e1;
+        }
+
+        .total-time h5 {
+            margin: 0;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .total-time .time-value {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f0f9ff, #e6f7ff);
+            border: 1px solid #bae6fd;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .info-card h5 {
+            color: #0369a1;
+            margin-bottom: 15px;
+        }
+
+        .info-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .info-card li {
+            margin-bottom: 8px;
+            color: #475569;
+        }
+
+        /* Alert Styling */
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            #sidebar {
-                margin-left: -var(--sidebar-width);
-                width: var(--sidebar-width);
+        @media (max-width: 992px) {
+            .container-fluid {
+                padding: 15px;
             }
 
-            #sidebar.active {
-                margin-left: 0;
+            .card-body {
+                padding: 20px;
             }
 
-            #content {
-                width: 100%;
-                margin-left: 0;
-                padding-top: 0;
-            }
-
-            #content.active {
-                width: calc(100% - var(--sidebar-width));
-                margin-left: var(--sidebar-width);
-            }
-
-            #sidebar.collapsed {
-                margin-left: -var(--sidebar-collapsed-width);
-                width: var(--sidebar-collapsed-width);
-            }
-
-            #content.collapsed {
-                width: 100%;
-                margin-left: 0;
-            }
-
-            .navbar {
-                left: 0;
-                right: 0;
-            }
-
-            #content.collapsed .navbar {
-                left: 0;
-            }
-
-            .form-container {
-                padding: 0 15px;
+            .activity-header {
+                flex-direction: column;
+                gap: 10px;
             }
         }
+
+        @media (max-width: 768px) {
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .section-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .activity-actions {
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Custom form styling */
+        .form-floating {
+            margin-bottom: 20px;
+        }
+
+        .input-group-text {
+            background-color: #f8fafc;
+            border-color: #dce1e7;
+            color: #64748b;
+        }
+
+        .badge {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+        }
+
+        .btn-group {
+            gap: 10px;
+        }
+
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        .validation-message {
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+
+        .validation-message.error {
+            color: #dc3545;
+        }
+
+        .validation-message.success {
+            color: #198754;
+        }
     </style>
-</head>
-<body>
-    <div class="wrapper d-flex align-items-stretch">
-        <!-- Sidebar -->
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3><i class="fas fa-graduation-cap me-2"></i> SIKKN</h3>
-                <p class="mb-0 text-light">Sistem Informasi KKN</p>
-            </div>
+@endsection
 
-            <ul class="list-unstyled components">
-                <li>
-                    <a href="dashboard.html" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
-                        <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Penerjunan">
-                        <i class="fas fa-rocket"></i> <span>Penerjunan</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Pelaksanaan">
-                        <i class="fas fa-cogs"></i> <span>Pelaksanaan</span>
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="laporan-harian.html" data-bs-toggle="tooltip" data-bs-placement="right" title="Pelaporan">
-                        <i class="fas fa-file-alt"></i> <span>Pelaporan</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Statistik">
-                        <i class="fas fa-chart-bar"></i> <span>Statistik</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Pengaturan">
-                        <i class="fas fa-cog"></i> <span>Pengaturan</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="Bantuan">
-                        <i class="fas fa-question-circle"></i> <span>Bantuan</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="sidebar-footer">
-                <div class="d-grid gap-2">
-                    <button class="btn btn-outline-light btn-sm">
-                        <i class="fas fa-sign-out-alt me-2"></i> <span>Logout</span>
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Page Content -->
-        <div id="content">
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <div class="container-fluid">
-                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
-                        <i class="fas fa-bars"></i>
-                    </button>
-
-                    <div class="d-flex align-items-center ms-auto">
-                        <div class="dropdown">
-                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="https://via.placeholder.com/40" alt="User" width="40" height="40" class="rounded-circle me-2">
-                                <span class="d-none d-md-inline">Nama Mahasiswa</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profil</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Pengaturan</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <!-- Main Content -->
-            <div class="container-fluid p-4">
-                <!-- Header -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card bg-primary text-white">
-                            <div class="card-body py-4">
-                                <h1 class="card-title"><i class="fas fa-file-upload me-2"></i> Form Laporan Harian KKN</h1>
-                                <p class="card-text mb-0">Unggah dokumen laporan harian KKN Anda di sini</p>
+@section('content')
+    <!-- Main Content -->
+    <div class="container-fluid">
+        <div class="main-content">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clipboard-list me-3" style="font-size: 2.5rem;"></i>
+                            <div>
+                                <h1 class="mb-2">Form Laporan Harian KKN</h1>
+                                <p class="mb-0 opacity-75">Catat semua kegiatan harian KKN Anda di sini secara detail dan
+                                    terstruktur</p>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Form Content -->
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="card">
-                            <div class="card-body">
+            <!-- Main Form -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <form id="laporanForm" action="{{ route('logbook-submit') }}" method="POST">
+                                @csrf
+                                
+                                <!-- Informasi Dasar -->
                                 <div class="section-header">
-                                    <i class="fas fa-upload section-icon"></i>
-                                    <h5 class="section-title">Upload Laporan Harian</h5>
+                                    <i class="fas fa-calendar-alt section-icon"></i>
+                                    <h5 class="section-title">Informasi Laporan</h5>
                                 </div>
 
-                                <div class="form-container">
-                                    <form id="laporanForm">
-                                        <!-- Informasi Dasar -->
-                                        <div class="row mb-4">
-                                            <div class="col-md-6 mb-3">
-                                                <label for="tanggal" class="form-label">Tanggal Laporan <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control" id="tanggal" required>
+                                <div class="row g-4 mb-4">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="tanggal" class="form-label required">Tanggal Laporan</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light">
+                                                    <i class="fas fa-calendar-day"></i>
+                                                </span>
+                                                <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                                    value="{{ date('Y-m-d') }}" required>
                                             </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label for="kelompok" class="form-label">Kelompok KKN <span class="text-danger">*</span></label>
-                                                <select class="form-select" id="kelompok" required>
-                                                    <option value="" selected disabled>Pilih kelompok KKN</option>
-                                                    <option value="kelompok-1">Kelompok 1 - Desa Sukamaju</option>
-                                                    <option value="kelompok-2">Kelompok 2 - Desa Sukaasih</option>
-                                                    <option value="kelompok-3">Kelompok 3 - Desa Mekarsari</option>
-                                                    <option value="kelompok-4">Kelompok 4 - Desa Cipadung</option>
+                                            <div id="tanggal-error" class="validation-message error"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="kelompok" class="form-label required">Kelompok KKN</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light">
+                                                    <i class="fas fa-users"></i>
+                                                </span>
+                                                <input type="text" class="form-control" id="kelompok" name="kelompok"
+                                                    value="{{ $anggotaKelompok->kelompok->detailKelompok->first()->nama_kelompok ?? 'Belum ditentukan' }}"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="week" class="form-label required">Minggu KKN</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light">
+                                                    <i class="fas fa-clock"></i>
+                                                </span>
+                                                <input type="number" class="form-control" id="week" name="week" 
+                                                    min="1" max="20" required>
+                                            </div>
+                                            <div id="week-error" class="validation-message error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Form Input Kegiatan -->
+                                <div class="section-header mt-5">
+                                    <i class="fas fa-plus-circle section-icon"></i>
+                                    <h5 class="section-title">Tambah Kegiatan Baru</h5>
+                                </div>
+
+                                <div class="info-card mb-4">
+                                    <div class="row g-4">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="nama_kegiatan" class="form-label required">Nama Kegiatan</label>
+                                                <input type="text" class="form-control" id="nama_kegiatan"
+                                                    placeholder="Contoh: Koordinasi dengan Kepala Desa, Sosialisasi Program, dll.">
+                                                <div id="nama-kegiatan-error" class="validation-message error"></div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="kategori_id" class="form-label required">Kategori Kegiatan</label>
+                                                <select class="form-select" id="kategori_id">
+                                                    <option value="" selected disabled>-- Pilih Kategori --</option>
+                                                    @foreach ($kat_kegiatan as $kat)
+                                                        <option value="{{ $kat->id_kategori }}">{{ $kat->nama }}</option>
+                                                    @endforeach
                                                 </select>
+                                                <div id="kategori-error" class="validation-message error"></div>
                                             </div>
                                         </div>
 
-                                        <!-- Upload Dokumen -->
-                                        <div class="mb-4">
-                                            <label class="form-label">Upload Dokumen Laporan <span class="text-danger">*</span></label>
-                                            <div class="file-upload-area" id="fileUploadArea">
-                                                <i class="fas fa-cloud-upload-alt"></i>
-                                                <h5>Seret file laporan ke sini atau klik untuk mengunggah</h5>
-                                                <p>Format yang didukung: PDF, DOC, DOCX (Maks. 10MB per file)</p>
-                                                <input type="file" id="fileInput" style="display: none;" accept=".pdf,.doc,.docx">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label for="jumlah_waktu" class="form-label required">Durasi Kegiatan</label>
+                                                <div class="time-input-group">
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="jumlah_waktu"
+                                                            min="15" max="480" placeholder="Contoh: 120">
+                                                        <span class="input-group-text bg-light">menit</span>
+                                                    </div>
+                                                    <div id="waktu-error" class="validation-message error"></div>
+                                                    <small class="text-muted mt-2 d-block">Durasi minimal 15 menit, maksimal 8 jam (480 menit)</small>
+                                                </div>
                                             </div>
-                                            <div class="file-list" id="fileList">
-                                                <!-- File list akan ditampilkan di sini -->
-                                            </div>
-                                            <div class="upload-status" id="uploadStatus"></div>
                                         </div>
 
-                                        <!-- Keterangan -->
-                                        <div class="mb-4">
-                                            <label for="keterangan" class="form-label">Keterangan (Opsional)</label>
-                                            <textarea class="form-control" id="keterangan" rows="3" placeholder="Tambahkan keterangan tambahan jika diperlukan"></textarea>
-                                        </div>
-
-                                        <!-- Tombol Aksi -->
-                                        <div class="d-flex justify-content-between mt-5">
-                                            <a href="dashboard.html" class="btn btn-outline-primary">
-                                                <i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard
-                                            </a>
-                                            <div>
-                                                <button type="button" class="btn btn-outline-primary me-2" id="resetBtn">
-                                                    <i class="fas fa-redo me-2"></i> Reset
-                                                </button>
-                                                <button type="submit" class="btn btn-primary">
-                                                    <i class="fas fa-paper-plane me-2"></i> Kirim Laporan
-                                                </button>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="deskripsi_kegiatan" class="form-label required">Deskripsi Kegiatan</label>
+                                                <textarea class="form-control" id="deskripsi_kegiatan" rows="3"
+                                                    placeholder="Jelaskan secara detail kegiatan yang dilakukan, termasuk tujuan, proses, dan hasilnya..."></textarea>
+                                                <div id="deskripsi-error" class="validation-message error"></div>
                                             </div>
                                         </div>
-                                    </form>
+
+                                        <div class="col-12 text-center mt-2">
+                                            <button type="button" class="btn btn-primary btn-lg px-5" id="addActivityBtn">
+                                                <i class="fas fa-plus-circle me-2"></i> Tambah ke Daftar Kegiatan
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+
+                                <!-- Daftar Kegiatan -->
+                                <div class="section-header mt-5">
+                                    <i class="fas fa-list-check section-icon"></i>
+                                    <h5 class="section-title">Daftar Kegiatan Harian</h5>
+                                </div>
+
+                                <div class="activities-container" id="activitiesList">
+                                    <div class="empty-state" id="emptyState">
+                                        <i class="fas fa-clipboard-list"></i>
+                                        <h5>Belum Ada Kegiatan</h5>
+                                        <p>Mulai tambahkan kegiatan pertama Anda menggunakan form di atas</p>
+                                    </div>
+                                </div>
+
+                                <!-- Total Waktu -->
+                                <div class="total-time" id="totalTime" style="display: none;">
+                                    <h5 class="mb-0">
+                                        Total Waktu Kegiatan Hari Ini:
+                                        <span class="time-value" id="totalTimeValue">0</span>
+                                        <span class="text-muted">menit</span>
+                                    </h5>
+                                    <small class="text-muted" id="timeConversion"></small>
+                                </div>
+
+                                <!-- Keterangan Tambahan -->
+                                <div class="section-header mt-5">
+                                    <i class="fas fa-sticky-note section-icon"></i>
+                                    <h5 class="section-title">Keterangan Tambahan</h5>
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    <textarea class="form-control" id="keterangan" name="keterangan" rows="4"
+                                        placeholder="Tambahkan catatan khusus, kendala yang dihadapi, rencana untuk hari berikutnya, atau informasi lain yang relevan..."></textarea>
+                                    <small class="text-muted">*Keterangan tambahan bersifat opsional</small>
+                                </div>
+
+                                <!-- Tombol Aksi -->
+                                <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                                    <a href="{{ route('dashboard_mhs') }}" class="btn btn-outline-primary px-4">
+                                        <i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard
+                                    </a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-danger px-4" id="resetBtn">
+                                            <i class="fas fa-redo me-2"></i> Reset Form
+                                        </button>
+                                        <button type="submit" class="btn btn-primary px-5" id="submitBtn">
+                                            <i class="fas fa-paper-plane me-2"></i> Simpan Laporan Harian
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Informasi Tambahan -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title"><i class="fas fa-info-circle me-2"></i> Panduan Upload Laporan</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6>Ketentuan Laporan Harian</h6>
-                                        <ul>
-                                            <li>Laporan harus diunggah setiap hari selama periode KKN</li>
-                                            <li>Format laporan harus sesuai dengan template yang telah disediakan</li>
-                                            <li>Pastikan laporan sudah mencakup kegiatan, hasil, kendala, dan rencana</li>
-                                            <li>Laporan harus dikirim sebelum pukul 23:59 WIB</li>
-                                        </ul>
+            <!-- Informasi Panduan -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-graduation-cap section-icon"></i>
+                                <h5 class="section-title">Panduan Pengisian Laporan</h5>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-lg-6">
+                                    <div class="card border-light mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-primary mb-3">
+                                                <i class="fas fa-check-circle me-2"></i>Ketentuan Laporan
+                                            </h6>
+                                            <ul class="list-unstyled">
+                                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Laporan
+                                                    diisi setiap hari sebelum pukul 23:59</li>
+                                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>
+                                                    Deskripsi harus jelas dan detail</li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <h6>Format Dokumen</h6>
-                                        <ul>
-                                            <li>Dokumen: PDF, DOC, DOCX</li>
-                                            <li>Maksimal ukuran file: 10MB</li>
-                                            <li>Nama file: Laporan_[Tanggal]_[NamaKelompok]</li>
-                                            <li>Contoh: Laporan_2023-06-15_Kelompok1.pdf</li>
-                                        </ul>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card border-light mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-primary mb-3">
+                                                <i class="fas fa-lightbulb me-2"></i>Tips Pengisian
+                                            </h6>
+                                            <ul class="list-unstyled">
+                                                <li class="mb-2"><i class="fas fa-star text-warning me-2"></i> Catat
+                                                    kegiatan segera setelah selesai</li>
+                                                <li class="mb-2"><i class="fas fa-star text-warning me-2"></i> Gunakan
+                                                    kategori yang sesuai</li>
+                                                <li class="mb-2"><i class="fas fa-star text-warning me-2"></i> Periksa
+                                                    estimasi waktu dengan teliti</li>
+                                                <li class="mb-2"><i class="fas fa-star text-warning me-2"></i> Gunakan
+                                                    keterangan untuk penjelasan penting</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -597,240 +602,347 @@
             </div>
         </div>
     </div>
+@endsection
 
-    <!-- Bootstrap 5 JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+@section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar toggle
-            const sidebar = document.getElementById('sidebar');
-            const content = document.getElementById('content');
-            const navbar = document.querySelector('.navbar');
-            const sidebarCollapse = document.getElementById('sidebarCollapse');
+            // State management
+            let activities = [];
+            let activityCounter = 0;
 
-            sidebarCollapse.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                content.classList.toggle('collapsed');
+            // Elements
+            const addActivityBtn = document.getElementById('addActivityBtn');
+            const activitiesList = document.getElementById('activitiesList');
+            const emptyState = document.getElementById('emptyState');
+            const totalTimeDiv = document.getElementById('totalTime');
+            const totalTimeValue = document.getElementById('totalTimeValue');
+            const timeConversion = document.getElementById('timeConversion');
+            const laporanForm = document.getElementById('laporanForm');
+            const submitBtn = document.getElementById('submitBtn');
 
-                // Adjust navbar position
-                if (sidebar.classList.contains('collapsed')) {
-                    navbar.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-collapsed-width');
-                } else {
-                    navbar.style.left = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
-                }
+            // Validation elements
+            const validationElements = {
+                nama_kegiatan: document.getElementById('nama-kegiatan-error'),
+                kategori_id: document.getElementById('kategori-error'),
+                deskripsi_kegiatan: document.getElementById('deskripsi-error'),
+                jumlah_waktu: document.getElementById('waktu-error'),
+                week: document.getElementById('week-error'),
+                tanggal: document.getElementById('tanggal-error')
+            };
 
-                // Toggle icon
-                const icon = this.querySelector('i');
-                if (sidebar.classList.contains('collapsed')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-chevron-right');
-                } else {
-                    icon.classList.remove('fa-chevron-right');
-                    icon.classList.add('fa-bars');
-                }
-
-                // Initialize tooltips when sidebar is collapsed
-                if (sidebar.classList.contains('collapsed')) {
-                    initTooltips();
-                } else {
-                    destroyTooltips();
-                }
-            });
-
-            // Initialize tooltips
-            function initTooltips() {
-                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl);
+            // Clear validation messages
+            function clearValidationMessages() {
+                Object.values(validationElements).forEach(element => {
+                    if (element) element.textContent = '';
                 });
             }
 
-            function destroyTooltips() {
-                const tooltipList = document.querySelectorAll('.tooltip');
-                tooltipList.forEach(tooltip => {
-                    tooltip.remove();
-                });
+            // Show validation message
+            function showValidationMessage(elementId, message) {
+                if (validationElements[elementId]) {
+                    validationElements[elementId].textContent = message;
+                }
             }
 
-            // File upload functionality
-            const fileUploadArea = document.getElementById('fileUploadArea');
-            const fileInput = document.getElementById('fileInput');
-            const fileList = document.getElementById('fileList');
-            const uploadStatus = document.getElementById('uploadStatus');
-            let uploadedFile = null;
+            // Validate activity form
+            function validateActivityForm() {
+                let isValid = true;
+                clearValidationMessages();
 
-            fileUploadArea.addEventListener('click', function() {
-                fileInput.click();
-            });
+                const namaKegiatan = document.getElementById('nama_kegiatan').value.trim();
+                const kategoriId = document.getElementById('kategori_id').value;
+                const deskripsi = document.getElementById('deskripsi_kegiatan').value.trim();
+                const waktu = document.getElementById('jumlah_waktu').value;
 
-            // Drag and drop functionality
-            fileUploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                fileUploadArea.classList.add('dragover');
-            });
+                return isValid;
+            }
 
-            fileUploadArea.addEventListener('dragleave', function() {
-                fileUploadArea.classList.remove('dragover');
-            });
+            // Validate main form
+            function validateMainForm() {
+                let isValid = true;
+                clearValidationMessages();
 
-            fileUploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                fileUploadArea.classList.remove('dragover');
+                const week = document.getElementById('week').value;
+                const tanggal = document.getElementById('tanggal').value;
 
-                if (e.dataTransfer.files.length > 0) {
-                    handleFile(e.dataTransfer.files[0]);
+                if (!week || week < 1) {
+                    showValidationMessage('week', 'Minggu KKN wajib diisi dengan angka positif');
+                    isValid = false;
                 }
-            });
 
-            fileInput.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    handleFile(this.files[0]);
+                if (!tanggal) {
+                    showValidationMessage('tanggal', 'Tanggal laporan wajib diisi');
+                    isValid = false;
                 }
-            });
 
-            function handleFile(file) {
-                // Clear previous file
-                uploadedFile = null;
-                fileList.innerHTML = '';
-                hideUploadStatus();
+                return isValid;
+            }
 
-                // Check file size (max 10MB)
-                if (file.size > 10 * 1024 * 1024) {
-                    showUploadStatus(`File ${file.name} terlalu besar. Maksimal ukuran file adalah 10MB.`, 'error');
+            // Add activity to list
+            addActivityBtn.addEventListener('click', function() {
+                if (!validateActivityForm()) {
                     return;
                 }
 
-                // Check file type
-                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-                if (!allowedTypes.includes(file.type)) {
-                    showUploadStatus(`File ${file.name} tidak didukung. Hanya file PDF, DOC, dan DOCX yang diperbolehkan.`, 'error');
-                    return;
-                }
+                // Get form values
+                const namaKegiatan = document.getElementById('nama_kegiatan').value.trim();
+                const kategoriId = document.getElementById('kategori_id').value;
+                const kategoriText = document.getElementById('kategori_id').selectedOptions[0].text;
+                const deskripsi = document.getElementById('deskripsi_kegiatan').value.trim();
+                const waktu = parseInt(document.getElementById('jumlah_waktu').value);
 
-                // Add to uploaded files
-                uploadedFile = file;
+                // Create activity object
+                const activity = {
+                    id: activityCounter++,
+                    nama_kegiatan: namaKegiatan,
+                    kategori_id: kategoriId,
+                    kategori_text: kategoriText,
+                    deskripsi_kegiatan: deskripsi,
+                    jumlah_waktu: waktu,
+                    timestamp: new Date().toLocaleTimeString('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                };
 
-                // Add to file list
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
+                // Add to activities array
+                activities.push(activity);
 
-                // Determine icon based on file type
-                let fileIcon = 'fa-file';
-                if (file.type === 'application/pdf') {
-                    fileIcon = 'fa-file-pdf';
-                } else if (file.type.includes('word')) {
-                    fileIcon = 'fa-file-word';
-                }
-
-                // Format file size
-                const fileSize = formatFileSize(file.size);
-
-                fileItem.innerHTML = `
-                    <i class="fas ${fileIcon}"></i>
-                    <div class="file-info">
-                        <div class="file-name">${file.name}</div>
-                        <div class="file-size">${fileSize}</div>
-                    </div>
-                    <div class="file-remove">
-                        <i class="fas fa-times"></i>
-                    </div>
-                `;
-
-                fileList.appendChild(fileItem);
-
-                // Add event listener to remove button
-                fileItem.querySelector('.file-remove').addEventListener('click', function() {
-                    uploadedFile = null;
-                    fileList.innerHTML = '';
-                    hideUploadStatus();
-                });
+                // Update UI
+                updateActivitiesList();
+                updateTotalTime();
+                resetActivityForm();
 
                 // Show success message
-                showUploadStatus(`File "${file.name}" berhasil dipilih. Silakan klik "Kirim Laporan" untuk mengunggah.`, 'success');
-            }
-
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-
-            function showUploadStatus(message, type) {
-                uploadStatus.textContent = message;
-                uploadStatus.className = `upload-status ${type}`;
-                uploadStatus.style.display = 'block';
-            }
-
-            function hideUploadStatus() {
-                uploadStatus.style.display = 'none';
-            }
-
-            // Reset button
-            document.getElementById('resetBtn').addEventListener('click', function() {
-                document.getElementById('laporanForm').reset();
-                uploadedFile = null;
-                fileList.innerHTML = '';
-                hideUploadStatus();
+                showAlert(`Kegiatan "${namaKegiatan}" berhasil ditambahkan!`, 'success');
             });
 
-            // Form submission
-            document.getElementById('laporanForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                // Validate form
-                const tanggal = document.getElementById('tanggal').value;
-                const kelompok = document.getElementById('kelompok').value;
-
-                if (!tanggal || !kelompok) {
-                    showUploadStatus('Harap isi semua field yang wajib diisi!', 'error');
+            // Update activities list in UI
+            function updateActivitiesList() {
+                if (activities.length === 0) {
+                    emptyState.style.display = 'block';
+                    activitiesList.innerHTML = '';
+                    activitiesList.appendChild(emptyState);
+                    totalTimeDiv.style.display = 'none';
                     return;
                 }
 
-                if (!uploadedFile) {
-                    showUploadStatus('Harap pilih file laporan untuk diunggah!', 'error');
-                    return;
+                emptyState.style.display = 'none';
+                totalTimeDiv.style.display = 'block';
+
+                let html = '';
+                activities.forEach((activity, index) => {
+                    html += `
+                    <div class="activity-item" data-id="${activity.id}">
+                        <div class="activity-header">
+                            <div>
+                                <h6 class="activity-title">${activity.nama_kegiatan}</h6>
+                                <div class="activity-meta">
+                                    <i class="fas fa-tag"></i> ${activity.kategori_id} 
+                                    • <i class="fas fa-clock ms-2"></i> ${activity.jumlah_waktu} menit
+                                    • <i class="fas fa-clock ms-2"></i> Ditambahkan: ${activity.timestamp}
+                                </div>
+                            </div>
+                            <span class="badge bg-primary fs-6">${activity.jumlah_waktu} mnt</span>
+                        </div>
+                        <p class="activity-description mt-2">${activity.deskripsi_kegiatan}</p>
+                        
+                        <!-- Hidden Inputs untuk form submission -->
+                        <div class="activity-hidden-inputs">
+                            <input type="hidden" name="kegiatan[${index}][nama_kegiatan]" value="${escapeHtml(activity.nama_kegiatan)}">
+                            <input type="hidden" name="kegiatan[${index}][kategori_id]" value="${activity.kategori_id}">
+                            <input type="hidden" name="kegiatan[${index}][deskripsi_kegiatan]" value="${escapeHtml(activity.deskripsi_kegiatan)}">
+                            <input type="hidden" name="kegiatan[${index}][jumlah_waktu]" value="${activity.jumlah_waktu}">
+                        </div>
+                        
+                        <div class="activity-actions">
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteActivity(${activity.id})">
+                                <i class="fas fa-trash me-1"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+                `;
+                });
+
+                activitiesList.innerHTML = html;
+            }
+
+            // Escape HTML untuk mencegah XSS
+            function escapeHtml(text) {
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+
+            // Update total time
+            function updateTotalTime() {
+                const total = activities.reduce((sum, activity) => sum + activity.jumlah_waktu, 0);
+                totalTimeValue.textContent = total;
+
+                // Convert to hours
+                if (total >= 60) {
+                    const hours = Math.floor(total / 60);
+                    const minutes = total % 60;
+                    let conversionText = '';
+
+                    if (minutes > 0) {
+                        conversionText = `(${hours} jam ${minutes} menit)`;
+                    } else {
+                        conversionText = `(${hours} jam)`;
+                    }
+
+                    timeConversion.textContent = conversionText;
+                } else {
+                    timeConversion.textContent = '';
                 }
+            }
 
-                // Create form data
-                const formData = new FormData();
-                formData.append('tanggal', tanggal);
-                formData.append('kelompok', kelompok);
-                formData.append('keterangan', document.getElementById('keterangan').value);
-                formData.append('laporan', uploadedFile);
+            // Reset activity form
+            function resetActivityForm() {
+                document.getElementById('nama_kegiatan').value = '';
+                document.getElementById('kategori_id').value = '';
+                document.getElementById('deskripsi_kegiatan').value = '';
+                document.getElementById('jumlah_waktu').value = '';
+                document.getElementById('nama_kegiatan').focus();
+                clearValidationMessages();
+            }
 
-                // Simulate form submission with loading state
-                const submitBtn = this.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Mengunggah...';
-                submitBtn.disabled = true;
+            // Global function to delete activity
+            window.deleteActivity = function(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus kegiatan ini?')) {
+                    // Filter out the activity to delete
+                    activities = activities.filter(activity => activity.id !== id);
 
-                // Simulate API call
-                setTimeout(function() {
-                    // Show success message
-                    showUploadStatus('Laporan harian berhasil diunggah!', 'success');
+                    // Update UI
+                    updateActivitiesList();
+                    updateTotalTime();
+
+                    showAlert('Kegiatan berhasil dihapus!', 'success');
+                }
+            };
+
+            // Reset entire form
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                if (confirm('Apakah Anda yakin ingin mereset form? Semua kegiatan yang belum disimpan akan hilang.')) {
+                    // Reset activities
+                    activities = [];
+                    activityCounter = 0;
 
                     // Reset form
                     document.getElementById('laporanForm').reset();
-                    uploadedFile = null;
-                    fileList.innerHTML = '';
+                    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
 
-                    // Reset button
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
+                    // Update UI
+                    updateActivitiesList();
+                    clearValidationMessages();
 
-                    // Redirect after 2 seconds
-                    setTimeout(function() {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
-                }, 2000);
+                    showAlert('Form berhasil direset!', 'success');
+                }
             });
+
+            // Form submit handler
+            laporanForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                if (!validateMainForm()) {
+                    return false;
+                }
+                
+                // Show loading state
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Menyimpan...';
+                submitBtn.disabled = true;
+                
+                // Rebuild hidden inputs dengan index yang benar
+                rebuildHiddenInputs();
+                
+                // Submit form setelah 500ms (untuk memastikan DOM terupdate)
+                setTimeout(() => {
+                    laporanForm.submit();
+                }, 500);
+            });
+
+            // Rebuild hidden inputs dengan index yang berurutan
+            function rebuildHiddenInputs() {
+                // Hapus semua hidden inputs yang ada
+                const existingHiddenInputs = document.querySelectorAll('.activity-hidden-inputs');
+                existingHiddenInputs.forEach(input => input.remove());
+                
+                // Buat hidden inputs baru dengan index yang berurutan
+                activities.forEach((activity, index) => {
+                    const hiddenDiv = document.createElement('div');
+                    hiddenDiv.className = 'activity-hidden-inputs';
+                    hiddenDiv.innerHTML = `
+                        <input type="hidden" name="kegiatan[${index}][nama_kegiatan]" value="${escapeHtml(activity.nama_kegiatan)}">
+                        <input type="hidden" name="kegiatan[${index}][kategori_id]" value="${activity.kategori_id}">
+                        <input type="hidden" name="kegiatan[${index}][deskripsi_kegiatan]" value="${escapeHtml(activity.deskripsi_kegiatan)}">
+                        <input type="hidden" name="kegiatan[${index}][jumlah_waktu]" value="${activity.jumlah_waktu}">
+                    `;
+                    activitiesList.appendChild(hiddenDiv);
+                });
+            }
+
+            // Alert function
+            function showAlert(message, type) {
+                // Remove existing alerts
+                const existingAlert = document.querySelector('.alert');
+                if (existingAlert) {
+                    existingAlert.remove();
+                }
+
+                // Create alert element
+                const alertDiv = document.createElement('div');
+                const alertClass = type === 'error' ? 'danger' :
+                    type === 'success' ? 'success' : 'info';
+                const alertIcon = type === 'error' ? 'exclamation-circle' :
+                    type === 'success' ? 'check-circle' : 'info-circle';
+
+                alertDiv.className = `alert alert-${alertClass} alert-dismissible fade show`;
+                alertDiv.role = 'alert';
+                alertDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${alertIcon} me-2"></i>
+                    <div>${message}</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+
+                // Insert at the top of form container
+                const formContainer = document.querySelector('.card-body');
+                formContainer.insertBefore(alertDiv, formContainer.firstChild);
+
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentElement) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
+            }
+
+            // Check for existing error messages from Laravel
+            @if($errors->any())
+                showAlert('{{ $errors->first() }}', 'error');
+            @endif
+
+            // Check if there's a success message from previous save
+            @if(session('success'))
+                showAlert('{{ session('success') }}', 'success');
+            @endif
+
+            // Initialize
+            updateActivitiesList();
 
             // Set today's date as default
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('tanggal').value = today;
+            
+            // Focus on first input
+            document.getElementById('nama_kegiatan').focus();
         });
     </script>
-</body>
-</html>
+@endsection

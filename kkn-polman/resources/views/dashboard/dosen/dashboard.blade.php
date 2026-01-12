@@ -168,7 +168,10 @@
             color: var(--success-color);
         }
 
-
+        .badge-secondary {
+            background-color: rgba(108, 117, 125, 0.15);
+            color: var(--secondary-color);
+        }
 
         .badge-rejected {
             background-color: rgba(220, 53, 69, 0.15);
@@ -401,7 +404,7 @@
         <div class="col-md-3 col-sm-6 mb-4">
             <div class="stat-card">
                 <i class="fas fa-book-open stat-icon"></i>
-                <div class="stat-number">{{ $projects->sum(function ($project) {return $project->logbooks->count();}) }}
+                <div class="stat-number">{{ $allLogbooks->count() }}
                 </div>
                 <div class="stat-label">Logbook Harian</div>
             </div>
@@ -410,7 +413,7 @@
             <div class="stat-card">
                 <i class="fas fa-file-signature stat-icon"></i>
                 <div class="stat-number">
-                    {{ $projects->sum(function ($project) {return $project->laporanAkhir->count();}) }}</div>
+                    {{ $laporanMenunggu->count() }}</div>
                 <div class="stat-label">Laporan Menunggu</div>
             </div>
         </div>
@@ -462,7 +465,7 @@
                                     </div>
                                     <h5 class="quick-action-title">Penilaian Laporan</h5>
                                     <p class="quick-action-desc">Berikan penilaian untuk laporan akhir mahasiswa</p>
-                                    <a href="" class="btn btn-action">
+                                    <a href="{{ route('penilaian-laporan-akhir') }}" class="btn btn-action">
                                         <i class="fas fa-arrow-right me-1"></i> Akses
                                     </a>
                                 </div>
@@ -495,7 +498,6 @@
                                         <th>Kelompok</th>
                                         <th>Lokasi</th>
                                         <th>Status</th>
-                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -514,11 +516,6 @@
                                                 @else
                                                     <span class="badge badge-waiting">Perencanaan</span>
                                                 @endif
-                                            </td>
-                                            <td>
-                                                <a href="" class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -553,7 +550,7 @@
                                     <i class="fas fa-book"></i>
                                 </div>
                                 <div class="activity-content">
-                                    <div class="activity-title">{{ $logbook->mahasiswa->name ?? 'Mahasiswa' }}</div>
+                                    <div class="activity-title">{{ $logbook->anggota->mahasiswa->name ?? 'Mahasiswa' }}</div>
                                     <p class="mb-1" style="font-size: 0.9rem;">{{ Str::limit($logbook->kegiatan, 50) }}
                                     </p>
                                     <div class="d-flex justify-content-between">
@@ -593,17 +590,14 @@
                                 <thead>
                                     <tr>
                                         <th>Mahasiswa</th>
-                                        <th>Judul Laporan</th>
                                         <th>Tanggal Kirim</th>
                                         <th>Status</th>
-                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($laporanMenunggu as $laporan)
                                         <tr>
-                                            <td>{{ $laporan->mahasiswa->name ?? 'N/A' }}</td>
-                                            <td>{{ Str::limit($laporan->judul, 30) }}</td>
+                                            <td>{{ $laporan->kelompok->anggotaKelompok->first()->mahasiswa->name ?? 'N/A' }}</td>
                                             <td>{{ $laporan->created_at->format('d/m/Y') }}</td>
                                             <td>
                                                 @if ($laporan->status == 'submitted')
@@ -613,11 +607,6 @@
                                                 @else
                                                     <span class="badge badge-secondary">{{ $laporan->status }}</span>
                                                 @endif
-                                            </td>
-                                            <td>
-                                                <a href="" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-edit me-1"></i> Nilai
-                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -635,34 +624,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Filter & Grafik Progress -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5><i class="fas fa-chart-bar me-2"></i> Statistik Progress Project</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Filter -->
-                    <div class="filter-container">
-                        <div class="filter-title">Filter berdasarkan status:</div>
-                        <div class="d-flex flex-wrap gap-2">
-                            <span class="badge filter-badge active" data-filter="all">Semua</span>
-                            <span class="badge filter-badge" data-filter="active">Aktif</span>
-                            <span class="badge filter-badge" data-filter="completed">Selesai</span>
-                            <span class="badge filter-badge" data-filter="pending">Perencanaan</span>
-                        </div>
-                    </div>
-
-                    <!-- Grafik -->
-                    <div class="chart-container">
-                        <canvas id="projectProgressChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('scripts')
@@ -670,57 +631,6 @@
     <script>
         // Inisialisasi Chart
         document.addEventListener('DOMContentLoaded', function() {
-            // Data untuk chart
-            const ctx = document.getElementById('projectProgressChart').getContext('2d');
-
-            const projectProgressChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags'],
-                    datasets: [{
-                        label: 'Project Aktif',
-                        data: [2, 4, 6, 8, 10, 12, 10, 8],
-                        backgroundColor: 'rgba(58, 87, 232, 0.7)',
-                        borderColor: 'rgba(58, 87, 232, 1)',
-                        borderWidth: 1
-                    }, {
-                        label: 'Project Selesai',
-                        data: [0, 0, 1, 2, 4, 6, 8, 10],
-                        backgroundColor: 'rgba(26, 160, 83, 0.7)',
-                        borderColor: 'rgba(26, 160, 83, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Jumlah Project'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Bulan'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false
-                        }
-                    }
-                }
-            });
-
             // Filter functionality
             document.querySelectorAll('.filter-badge').forEach(badge => {
                 badge.addEventListener('click', function() {

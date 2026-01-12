@@ -17,7 +17,7 @@ class AnggotaKelompok extends Model
     protected $fillable = [
         'id_anggota',
         'nim',
-        'kelompok',
+        'kelompok_id',
         'role_anggota',
     ];
 
@@ -29,7 +29,7 @@ class AnggotaKelompok extends Model
 
     public function kelompok()
     {
-        return $this->belongsTo(KelompokKkn::class, 'kelompok');
+        return $this->belongsTo(KelompokKkn::class, 'kelompok_id');
     }
 
     public function logbooks()

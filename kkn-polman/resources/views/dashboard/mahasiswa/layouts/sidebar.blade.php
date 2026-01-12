@@ -50,7 +50,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="dropdown-menu-item">
+                    <a href="{{ route('pelaporan-akhir') }}" class="dropdown-menu-item">
                         <i class="fas fa-file-contract"></i> <span>Laporan Mingguan</span>
                     </a>
                 </li>

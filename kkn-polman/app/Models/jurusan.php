@@ -22,7 +22,7 @@ class Jurusan extends Model
     // Relationships
     public function prodi()
     {
-        return $this->hasMany(ProdiModel::class, 'jurusan_id');
+        return $this->hasMany(Prodi::class, 'jurusan_id');
     }
 
     public function mahasiswa()

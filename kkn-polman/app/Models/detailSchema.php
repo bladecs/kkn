@@ -37,6 +37,6 @@ class DetailSchema extends Model
 
     public function kategori()
     {
-        return $this->belongsTo(KategoriSchema::class, 'kategori_id');
+        return $this->belongsTo(KategoriSchema::class, 'kategori_id', 'id_kategori');
     }
 }

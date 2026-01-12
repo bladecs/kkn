@@ -1104,7 +1104,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <form id="edit-schema-form" method="POST" action="{{ route('update_schema') }}">
+                <form id="edit-schema-form" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
@@ -2077,7 +2077,7 @@
                     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                     $.ajax({
-                        url: `{{ route('delete_schema') }}`,
+                        url: `/delete-schema/${schemaId}`,
                         type: 'DELETE',
                         data: {
                             _token: csrfToken,
@@ -2114,7 +2114,8 @@
             e.preventDefault();
 
             const formData = $(this).serialize();
-            const url = $(this).attr('action');
+            const schemaId = $('#edit_schema_id').val();
+            const url = `/update-schema/${schemaId}`;
 
             // Tampilkan loading
             Swal.fire({

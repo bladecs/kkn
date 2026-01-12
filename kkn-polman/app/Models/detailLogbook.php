@@ -10,12 +10,12 @@ class DetailLogbook extends Model
     use HasFactory;
 
     protected $table = 'detail_logbook';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_detail_logbook';
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
-        'logbook',
+        'id_detail_logbook',
+        'logbook_id',
         'nama_kegiatan',
         'kategori_id',
         'deskripsi_kegiatan',

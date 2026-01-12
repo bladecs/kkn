@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\koordinator;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailKelompokKkn;
 use App\Models\DetailSchedule;
 use App\Models\DetailSchema;
 use App\Models\Dosen;
-use App\Models\User;
 use App\Models\KategoriSchema;
-use App\Models\KelompokKkn;
 use App\Models\LokasiKkn;
 use App\Models\Mahasiswa;
 use App\Models\PendaftaranKKN;
@@ -16,6 +15,7 @@ use App\Models\Prodi;
 use App\Models\ProjectKkn;
 use App\Models\Schedule;
 use App\Models\Schema;
+use App\Models\User;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -36,9 +36,10 @@ class KoordinatorDashboarController extends Controller
             ->where('tgl_selesai', '>=', now())
             ->count();
         $project_selesai = ProjectKkn::where('status', 'approved')->count();
+        $schedules = DetailSchedule::with('schema')->get();
 
         return view('dashboard.koordinator.dashboard', compact('project_belum_diperiksa', 'count_pendaftaran', 'count_not_verif', 'daily_pendaftaran',
-            'jumlah_schedule', 'jumlah_schema', 'project_selesai'));
+            'jumlah_schedule', 'jumlah_schema', 'project_selesai', 'schedules'));
     }
 
     public function formSchedule(Request $request)
@@ -285,13 +286,32 @@ class KoordinatorDashboarController extends Controller
         }
     }
 
+    public function getSchemasBySchedule($id)
+    {
+        try {
+            $schemas = Schema::with('detailSchemas.kategori')->where('schedule_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'schemas' => $schemas,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data schema',
+            ], 500);
+        }
+    }
+
     public function pendaftaranKKN(Request $request)
     {
         $status_counts = PendaftaranKKN::select('status', \DB::raw('count(*) as total'))
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
-        $data_pendaftaran = PendaftaranKKN::with('detailPendaftaran','mahasiswa','mahasiswa.user')->get();
+        $data_pendaftaran = PendaftaranKKN::with('detailPendaftaran', 'mahasiswa', 'mahasiswa.user')->get();
 
         return view('dashboard.koordinator.pendaftaran_kkn', compact('data_pendaftaran', 'status_counts'));
     }
@@ -310,13 +330,18 @@ class KoordinatorDashboarController extends Controller
     public function pengelompokanMhs(Request $request)
     {
         $data_mahasiswa = PendaftaranKKN::whereIn('status', ['complete', 'grouped'])->get();
-        $mahasiswa = Mahasiswa::whereIn('nim', $data_mahasiswa->pluck('nim'))->get();
+        $mahasiswa = Mahasiswa::whereIn('nim', $data_mahasiswa->pluck('nim'))->with('anggotaKelompok')->get();
         $prodi = Prodi::all();
         $data_dosen = User::where('role', 'dosen')->get();
         $dosen = Dosen::whereIn('id', $data_dosen->pluck('id'))->get();
         $lokasi = LokasiKkn::all();
         $project = ProjectKkn::where('status', 'complete')->get();
-        $pengelompokan = KelompokKkn::with(['lokasi', 'project', 'dosen'])->get();
+        $pengelompokan = DetailKelompokKkn::with(['project', 'kelompok'])->get();
+        $schema = DetailSchema::where('tgl_mulai', '<=', now())
+            ->where('tgl_selesai', '>=', now())
+            ->where('kategori_id', 'SCH_003')
+            ->orderBy('tgl_mulai', 'asc')
+            ->first();
 
         return view('dashboard.koordinator.pengelompokan_mahasiswa', compact(
             'mahasiswa',
@@ -324,7 +349,8 @@ class KoordinatorDashboarController extends Controller
             'prodi',
             'lokasi',
             'project',
-            'pengelompokan'
+            'pengelompokan',
+            'schema',
         ));
     }
 }

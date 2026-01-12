@@ -17,6 +17,7 @@ class LogbookKegiatan extends Model
     protected $fillable = [
         'id_logbook',
         'anggota_id',
+        'kelompok_id',
         'nilai',
         'status',
         'week',

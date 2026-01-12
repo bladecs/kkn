@@ -14,10 +14,6 @@
             height: 100%;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
         .section-header {
             display: flex;
             align-items: center;
@@ -39,30 +35,86 @@
             margin: 0;
         }
 
-        /* Report Card Styles */
-        .report-card {
-            border-left: 4px solid var(--primary-color);
-            transition: all 0.3s ease;
+        /* Table Styles */
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 25px;
         }
 
-        .report-card:hover {
-            border-left-color: var(--secondary-color);
+        .table-header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eaeaea;
         }
 
-        .student-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-color);
+        .table-responsive {
+            overflow-x: auto;
         }
 
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-color: #eaeaea;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Tab Styles */
+        .nav-tabs {
+            border-bottom: 2px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: #6c757d;
+            border-radius: 8px 8px 0 0;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-color);
+            background-color: #f8f9fa;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: white;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        /* Status Badges */
         .status-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
             display: inline-block;
+            min-width: 100px;
+            text-align: center;
         }
 
         .status-pending {
@@ -89,19 +141,10 @@
             border: 1px solid #f1b0b7;
         }
 
-        .score-badge {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-weight: 600;
-            font-size: 0.75rem;
-        }
-
+        /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 8px;
-            margin-top: 15px;
         }
 
         .btn-sm {
@@ -109,7 +152,6 @@
             border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 600;
-            flex: 1;
         }
 
         .btn-outline-primary {
@@ -120,7 +162,6 @@
         .btn-outline-primary:hover {
             background-color: var(--primary-color);
             color: white;
-            transform: translateY(-2px);
         }
 
         .btn-success {
@@ -131,16 +172,6 @@
         .btn-success:hover {
             background-color: #218838;
             border-color: #1e7e34;
-            transform: translateY(-2px);
-        }
-
-        /* Filter Section */
-        .filter-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         /* Modal Styles */
@@ -155,36 +186,201 @@
             border-radius: 10px 10px 0 0;
         }
 
-        .document-preview {
-            border: 1px solid #eaeaea;
-            border-radius: 8px;
-            padding: 20px;
+        /* Document Info */
+        .document-info {
             background-color: #f8f9fa;
-            min-height: 400px;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #eaeaea;
         }
 
-        .document-info {
-            background-color: #e8f0fe;
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            min-width: 180px;
+        }
+
+        .info-value {
+            color: #6c757d;
+        }
+
+        /* Action Buttons in Modal */
+        .action-buttons-modal {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .btn-action {
+            flex: 1;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-verify {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .btn-verify:hover,
+        .btn-verify.active {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+        }
+
+        .btn-revise {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .btn-revise:hover,
+        .btn-revise.active {
+            background-color: #dc3545;
+            color: white;
+            border-color: #dc3545;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
+        }
+
+        /* Rating Section */
+        .rating-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #eaeaea;
+        }
+
+        .rating-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rating-title i {
+            color: var(--primary-color);
+        }
+
+        .rating-input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             margin-bottom: 15px;
         }
 
-        /* Search and Filter */
-        .search-box {
-            position: relative;
+        .rating-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            min-width: 120px;
         }
 
-        .search-box .form-control {
-            padding-left: 40px;
+        .rating-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
+        .rating-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            outline: none;
+        }
+
+        .rating-value {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 20px;
+        }
+
+        .comments-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .comments-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .comments-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            outline: none;
+        }
+
+        /* Modal Table Styles */
+        .modal-table {
+            margin-top: 20px;
+        }
+
+        .modal-table .table {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .modal-table th {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            font-weight: 600;
+            border: none;
+            padding: 12px 15px;
+        }
+
+        .modal-table td {
+            padding: 12px 15px;
+            border-color: #eaeaea;
+        }
+
+        .kegiatan-time {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .kegiatan-desc {
+            color: var(--dark-color);
         }
 
         /* Empty State */
@@ -200,84 +396,42 @@
             color: #dee2e6;
         }
 
-        /* Report Card Content */
-        .report-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .student-main-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .student-details {
-            flex: 1;
-        }
-
-        .student-name {
-            font-weight: 600;
-            margin-bottom: 2px;
-            font-size: 0.95rem;
-        }
-
-        .student-meta {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-
-        .report-meta {
-            text-align: right;
-        }
-
-        .report-date {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-bottom: 5px;
-        }
-
-        /* Results Indicator */
-        .results-indicator {
-            background-color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .results-count {
-            font-weight: 600;
-            color: var(--dark-color);
-            font-size: 1.1rem;
-        }
-
-        .results-text {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .action-buttons {
                 flex-direction: column;
             }
-
-            .report-header {
-                flex-direction: column;
-                gap: 10px;
+            
+            .table-responsive {
+                font-size: 0.9rem;
             }
-
-            .report-meta {
-                text-align: left;
+            
+            .action-buttons-modal {
+                flex-direction: column;
+            }
+            
+            .rating-input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .rating-label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+            
+            .rating-input {
                 width: 100%;
             }
-
-            .card {
-                margin-bottom: 20px;
+            
+            .info-row {
+                flex-direction: column;
+                margin-bottom: 15px;
+            }
+            
+            .info-label {
+                min-width: auto;
+                margin-bottom: 5px;
             }
         }
     </style>
@@ -308,419 +462,439 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
     <div class="container-fluid p-4">
         <!-- Header -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card bg-primary text-white">
                     <div class="card-body py-4">
-                        <h1 class="card-title"><i class="fas fa-clipboard-list me-2"></i> Daftar Laporan Harian
-                            Mahasiswa</h1>
+                        <h1 class="card-title"><i class="fas fa-clipboard-list me-2"></i> Daftar Laporan Harian Mahasiswa</h1>
                         <p class="card-text mb-0">Kelola dan nilai laporan harian kegiatan KKN mahasiswa</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Filter Section -->
+        <!-- Tabs Navigation -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="filter-section">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" class="form-control"
-                                    placeholder="Cari nama mahasiswa atau kelompok...">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-select">
-                                <option value="">Semua Status</option>
-                                <option value="pending">Menunggu Penilaian</option>
-                                <option value="reviewed">Sudah Dinilai</option>
-                                <option value="completed">Selesai</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-select">
-                                <option value="">Semua Kelompok</option>
-                                <option value="1">Kelompok 1</option>
-                                <option value="2">Kelompok 2</option>
-                                <option value="3">Kelompok 3</option>
-                                <option value="4">Kelompok 4</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary w-100">
-                                <i class="fas fa-filter me-2"></i> Filter
-                            </button>
-                        </div>
+                <ul class="nav nav-tabs" id="statusTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" 
+                                type="button" role="tab" aria-controls="pending" aria-selected="true">
+                            <i class="fas fa-clock me-2"></i>Menunggu Penilaian
+                            <span class="badge bg-warning ms-2">{{ $statusCounts['draft'] ?? 0 }}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="reviewed-tab" data-bs-toggle="tab" data-bs-target="#reviewed" 
+                                type="button" role="tab" aria-controls="reviewed" aria-selected="false">
+                            <i class="fas fa-check-circle me-2"></i>Sudah Dinilai
+                            <span class="badge bg-success ms-2">{{ $statusCounts['dinilai'] ?? 0 }}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="revised-tab" data-bs-toggle="tab" data-bs-target="#revised" 
+                                type="button" role="tab" aria-controls="revised" aria-selected="false">
+                            <i class="fas fa-redo me-2"></i>Perlu Revisi
+                            <span class="badge bg-danger ms-2">{{ $statusCounts['direvisi'] ?? 0 }}</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="statusTabContent">
+            <!-- Tab 1: Menunggu Penilaian -->
+            <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h5 class="mb-0"><i class="fas fa-clock me-2 text-warning"></i>Laporan Menunggu Penilaian</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>NIM</th>
+                                    <th>Kelompok</th>
+                                    <th>Tanggal Laporan</th>
+                                    <th>Waktu Pengumpulan</th>
+                                    <th>Jumlah Kegiatan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($allLogbooks->where('status', 'draft') as $index => $logbook)
+                                    @php
+                                        $kelompokName = $kelompokKkn->detailKelompok->first()->nama_kelompok ?? 'Tidak Ada Kelompok';
+                                        $kegiatanCount = $logbook->detailLogbooks->count() ?? 0;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{ $logbook->anggota->mahasiswa->foto ?? 'https://via.placeholder.com/40' }}" 
+                                                     alt="Student" 
+                                                     class="rounded-circle me-2"
+                                                     width="40"
+                                                     height="40"
+                                                     style="object-fit: cover;">
+                                                {{ $logbook->anggota->mahasiswa->name ?? 'N/A' }}
+                                            </div>
+                                        </td>
+                                        <td>{{ $logbook->anggota->mahasiswa->nim ?? 'N/A' }}</td>
+                                        <td>{{ $kelompokName }}</td>
+                                        <td>{{ $logbook->created_at->format('d M Y') }}</td>
+                                        <td>{{ $logbook->created_at->format('H:i') }} WIB</td>
+                                        <td>
+                                            <span class="badge bg-info">{{ $kegiatanCount }} Kegiatan</span>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-primary btn-sm pre-btn" 
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#previewModal" 
+                                                        data-logbook-id="{{ $logbook->id_logbook }}"
+                                                        data-mahasiswa-name="{{ $logbook->anggota->mahasiswa->name ?? 'N/A' }}"
+                                                        data-mahasiswa-nim="{{ $logbook->anggota->mahasiswa->nim ?? 'N/A' }}"
+                                                        data-kelompok-name="{{ $kelompokName }}"
+                                                        data-kegiatan="{{ json_encode($logbook->detailLogbooks ?? []) }}"
+                                                        data-status="{{ $logbook->status }}"
+                                                        data-tanggal-laporan="{{ $logbook->created_at->format('d M Y') }}"
+                                                        data-waktu-pengumpulan="{{ $logbook->created_at->format('H:i') }}">
+                                                    <i class="fas fa-edit me-1"></i> Nilai
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center py-4">
+                                            <div class="empty-state">
+                                                <i class="fas fa-clock"></i>
+                                                <h5>Tidak Ada Laporan</h5>
+                                                <p class="mb-0">Belum ada laporan yang menunggu penilaian</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Sudah Dinilai -->
+            <div class="tab-pane fade" id="reviewed" role="tabpanel" aria-labelledby="reviewed-tab">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h5 class="mb-0"><i class="fas fa-check-circle me-2 text-success"></i>Laporan Sudah Dinilai</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>NIM</th>
+                                    <th>Kelompok</th>
+                                    <th>Tanggal Laporan</th>
+                                    <th>Nilai</th>
+                                    <th>Status</th>
+                                    <th>Tanggal Dinilai</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($allLogbooks->where('status', 'dinilai') as $index => $logbook)
+                                    @php
+                                        $kelompokName = $kelompokKkn->detailKelompok->first()->nama_kelompok ?? 'Tidak Ada Kelompok';
+                                        $penilaian = $logbook->penilaian ?? null;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{ $logbook->anggota->mahasiswa->foto ?? 'https://via.placeholder.com/40' }}" 
+                                                     alt="Student" 
+                                                     class="rounded-circle me-2"
+                                                     width="40"
+                                                     height="40"
+                                                     style="object-fit: cover;">
+                                                {{ $logbook->anggota->mahasiswa->name ?? 'N/A' }}
+                                            </div>
+                                        </td>
+                                        <td>{{ $logbook->anggota->mahasiswa->nim ?? 'N/A' }}</td>
+                                        <td>{{ $kelompokName }}</td>
+                                        <td>{{ $logbook->created_at->format('d M Y') }}</td>
+                                        <td>
+                                            @if($logbook->nilai)
+                                                <span class="badge bg-success" style="font-size: 0.9rem;">
+                                                    {{ $logbook->nilai }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-secondary">Belum Dinilai</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span class="status-badge status-reviewed">Sudah Dinilai</span>
+                                        </td>
+                                        <td>
+                                            @if($penilaian)
+                                                {{ $penilaian->created_at->format('d M Y H:i') }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-primary btn-sm pre-btn" 
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#previewModal" 
+                                                        data-logbook-id="{{ $logbook->id_logbook }}"
+                                                        data-mahasiswa-name="{{ $logbook->anggota->mahasiswa->name ?? 'N/A' }}"
+                                                        data-mahasiswa-nim="{{ $logbook->anggota->mahasiswa->nim ?? 'N/A' }}"
+                                                        data-kelompok-name="{{ $kelompokName }}"
+                                                        data-kegiatan="{{ json_encode($logbook->detailLogbooks ?? []) }}"
+                                                        data-status="{{ $logbook->status }}"
+                                                        data-tanggal-laporan="{{ $logbook->created_at->format('d M Y') }}"
+                                                        data-waktu-pengumpulan="{{ $logbook->created_at->format('H:i') }}">
+                                                    <i class="fas fa-eye me-1"></i> Lihat
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="9" class="text-center py-4">
+                                            <div class="empty-state">
+                                                <i class="fas fa-check-circle"></i>
+                                                <h5>Tidak Ada Laporan</h5>
+                                                <p class="mb-0">Belum ada laporan yang sudah dinilai</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Perlu Revisi -->
+            <div class="tab-pane fade" id="revised" role="tabpanel" aria-labelledby="revised-tab">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h5 class="mb-0"><i class="fas fa-redo me-2 text-danger"></i>Laporan Perlu Revisi</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>NIM</th>
+                                    <th>Kelompok</th>
+                                    <th>Tanggal Laporan</th>
+                                    <th>Komentar</th>
+                                    <th>Status</th>
+                                    <th>Tanggal Revisi</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($allLogbooks->where('status', 'direvisi') as $index => $logbook)
+                                    @php
+                                        $kelompokName = $kelompokKkn->detailKelompok->first()->nama_kelompok ?? 'Tidak Ada Kelompok';
+                                        $penilaian = $logbook->penilaian ?? null;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{ $logbook->anggota->mahasiswa->foto ?? 'https://via.placeholder.com/40' }}" 
+                                                     alt="Student" 
+                                                     class="rounded-circle me-2"
+                                                     width="40"
+                                                     height="40"
+                                                     style="object-fit: cover;">
+                                                {{ $logbook->anggota->mahasiswa->name ?? 'N/A' }}
+                                            </div>
+                                        </td>
+                                        <td>{{ $logbook->anggota->mahasiswa->nim ?? 'N/A' }}</td>
+                                        <td>{{ $kelompokName }}</td>
+                                        <td>{{ $logbook->created_at->format('d M Y') }}</td>
+                                        <td>
+                                            @if($penilaian && $penilaian->komentar)
+                                                <span class="text-truncate d-inline-block" style="max-width: 200px;" 
+                                                      title="{{ $penilaian->komentar }}">
+                                                    {{ Str::limit($penilaian->komentar, 50) }}
+                                                </span>
+                                            @else
+                                                <span class="text-muted">Tidak ada komentar</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span class="status-badge status-late">Perlu Revisi</span>
+                                        </td>
+                                        <td>
+                                            @if($penilaian)
+                                                {{ $penilaian->updated_at->format('d M Y H:i') }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-primary btn-sm pre-btn" 
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#previewModal" 
+                                                        data-logbook-id="{{ $logbook->id_logbook }}"
+                                                        data-mahasiswa-name="{{ $logbook->anggota->mahasiswa->name ?? 'N/A' }}"
+                                                        data-mahasiswa-nim="{{ $logbook->anggota->mahasiswa->nim ?? 'N/A' }}"
+                                                        data-kelompok-name="{{ $kelompokName }}"
+                                                        data-kegiatan="{{ json_encode($logbook->detailLogbooks ?? []) }}"
+                                                        data-status="{{ $logbook->status }}"
+                                                        data-tanggal-laporan="{{ $logbook->created_at->format('d M Y') }}"
+                                                        data-waktu-pengumpulan="{{ $logbook->created_at->format('H:i') }}">
+                                                    <i class="fas fa-eye me-1"></i> Nilai
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="9" class="text-center py-4">
+                                            <div class="empty-state">
+                                                <i class="fas fa-redo"></i>
+                                                <h5>Tidak Ada Laporan</h5>
+                                                <p class="mb-0">Belum ada laporan yang perlu revisi</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Statistics -->
-        <div class="row mb-4">
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="text-primary mb-2">
-                            <i class="fas fa-clock fa-2x"></i>
+        <!-- Modal Preview -->
+        <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form id="penilaianForm" method="POST" action="{{ route('nilai-logbook') }}">
+                        @csrf
+                        <input type="hidden" name="id_logbook" id="modalLogbookId">
+                        
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="previewModalLabel">
+                                <i class="fas fa-clipboard-check me-2"></i> Penilaian Laporan Harian
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <h3 class="card-title">12</h3>
-                        <p class="card-text">Menunggu Penilaian</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="text-success mb-2">
-                            <i class="fas fa-check-circle fa-2x"></i>
-                        </div>
-                        <h3 class="card-title">28</h3>
-                        <p class="card-text">Sudah Dinilai</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="text-warning mb-2">
-                            <i class="fas fa-exclamation-circle fa-2x"></i>
-                        </div>
-                        <h3 class="card-title">5</h3>
-                        <p class="card-text">Perlu Revisi</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="text-danger mb-2">
-                            <i class="fas fa-times-circle fa-2x"></i>
-                        </div>
-                        <h3 class="card-title">3</h3>
-                        <p class="card-text">Terlambat</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Results Indicator -->
-        <div class="row mb-3">
-            <div class="col-12">
-                <div class="results-indicator">
-                    <span class="results-count">8 Laporan Ditemukan</span>
-                    <span class="results-text"> - Menampilkan semua laporan harian mahasiswa</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Reports List - 4 cards per row on large screens, 3 on medium -->
-        <div class="row" id="reportsList">
-            <!-- Report Card 1 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card report-card">
-                    <div class="card-body">
-                        <div class="report-header">
-                            <div class="student-main-info">
-                                <img src="https://via.placeholder.com/50" alt="Student" class="student-avatar">
-                                <div class="student-details">
-                                    <div class="student-name">Muhammad Rizki</div>
-                                    <div class="student-meta">1234567890</div>
-                                    <div class="student-meta">Kelompok 1</div>
+                        <div class="modal-body">
+                            <!-- Document Info -->
+                            <div class="document-info">
+                                <div class="info-row">
+                                    <div class="info-label">Nama Mahasiswa:</div>
+                                    <div class="info-value" id="modalMahasiswaName"></div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">NIM:</div>
+                                    <div class="info-value" id="modalMahasiswaNim"></div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">Kelompok:</div>
+                                    <div class="info-value" id="modalKelompokName"></div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">Tanggal Laporan:</div>
+                                    <div class="info-value" id="modalTanggalLaporan"></div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">Waktu Pengumpulan:</div>
+                                    <div class="info-value" id="modalWaktuPengumpulan"></div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-label">Status:</div>
+                                    <div class="info-value">
+                                        <span id="modalStatus" class="status-badge d-inline-block mt-1"></span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="report-meta">
-                                <div class="report-date">15 Juni 2023</div>
-                                <span class="status-badge status-pending">Menunggu</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#previewModal">
-                                <i class="fas fa-eye me-1"></i> Preview
-                            </button>
-                            <a href="form-penilaian.html" class="btn btn-success btn-sm">
-                                <i class="fas fa-edit me-1"></i> Nilai
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Report Card 2 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card report-card">
-                    <div class="card-body">
-                        <div class="report-header">
-                            <div class="student-main-info">
-                                <img src="https://via.placeholder.com/50" alt="Student" class="student-avatar">
-                                <div class="student-details">
-                                    <div class="student-name">Sarah Nurhaliza</div>
-                                    <div class="student-meta">1234567891</div>
-                                    <div class="student-meta">Kelompok 2</div>
+                            <!-- Table for Kegiatan -->
+                            <div class="modal-table">
+                                <h6 class="section-title mb-3">
+                                    <i class="fas fa-tasks me-2"></i> Daftar Kegiatan Harian
+                                </h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="kegiatanTable">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Kegiatan</th>
+                                                <th>Waktu</th>
+                                                <th>Deskripsi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="kegiatanTableBody">
+                                            <!-- Kegiatan will be loaded here -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="report-meta">
-                                <div class="report-date">15 Juni 2023</div>
-                                <span class="score-badge">85/100</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#previewModal">
-                                <i class="fas fa-eye me-1"></i> Preview
-                            </button>
-                            <a href="form-penilaian.html" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-redo me-1"></i> Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Report Card 3 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card report-card">
-                    <div class="card-body">
-                        <div class="report-header">
-                            <div class="student-main-info">
-                                <img src="https://via.placeholder.com/50" alt="Student" class="student-avatar">
-                                <div class="student-details">
-                                    <div class="student-name">Ahmad Fauzi</div>
-                                    <div class="student-meta">1234567892</div>
-                                    <div class="student-meta">Kelompok 1</div>
-                                </div>
-                            </div>
-                            <div class="report-meta">
-                                <div class="report-date">14 Juni 2023</div>
-                                <span class="status-badge status-late">Terlambat</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#previewModal">
-                                <i class="fas fa-eye me-1"></i> Preview
-                            </button>
-                            <a href="form-penilaian.html" class="btn btn-success btn-sm">
-                                <i class="fas fa-edit me-1"></i> Nilai
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Report Card 4 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card report-card">
-                    <div class="card-body">
-                        <div class="report-header">
-                            <div class="student-main-info">
-                                <img src="https://via.placeholder.com/50" alt="Student" class="student-avatar">
-                                <div class="student-details">
-                                    <div class="student-name">Lisa Handayani</div>
-                                    <div class="student-meta">1234567893</div>
-                                    <div class="student-meta">Kelompok 3</div>
-                                </div>
-                            </div>
-                            <div class="report-meta">
-                                <div class="report-date">15 Juni 2023</div>
-                                <span class="status-badge status-reviewed">Dinilai</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#previewModal">
-                                <i class="fas fa-eye me-1"></i> Preview
-                            </button>
-                            <a href="form-penilaian.html" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-redo me-1"></i> Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Report Card 5 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card report-card">
-                    <div class="card-body">
-                        <div class="report-header">
-                            <div class="student-main-info">
-                                <img src="https://via.placeholder.com/50" alt="Student" class="student-avatar">
-                                <div class="student-details">
-                                    <div class="student-name">Budi Santoso</div>
-                                    <div class="student-meta">1234567894</div>
-                                    <div class="student-meta">Kelompok 2</div>
-                                </div>
-                            </div>
-                            <div class="report-meta">
-                                <div class="report-date">14 Juni 2023</div>
-                                <span class="score-badge">92/100</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#previewModal">
-                                <i class="fas fa-eye me-1"></i> Preview
-                            </button>
-                            <a href="form-penilaian.html" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-redo me-1"></i> Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Report Card 6 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card report-card">
-                    <div class="card-body">
-                        <div class="report-header">
-                            <div class="student-main-info">
-                                <img src="https://via.placeholder.com/50" alt="Student" class="student-avatar">
-                                <div class="student-details">
-                                    <div class="student-name">Dewi Anggraini</div>
-                                    <div class="student-meta">1234567895</div>
-                                    <div class="student-meta">Kelompok 4</div>
-                                </div>
-                            </div>
-                            <div class="report-meta">
-                                <div class="report-date">15 Juni 2023</div>
-                                <span class="status-badge status-pending">Menunggu</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#previewModal">
-                                <i class="fas fa-eye me-1"></i> Preview
-                            </button>
-                            <a href="form-penilaian.html" class="btn btn-success btn-sm">
-                                <i class="fas fa-edit me-1"></i> Nilai
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Report Card 7 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card report-card">
-                    <div class="card-body">
-                        <div class="report-header">
-                            <div class="student-main-info">
-                                <img src="https://via.placeholder.com/50" alt="Student" class="student-avatar">
-                                <div class="student-details">
-                                    <div class="student-name">Rizki Pratama</div>
-                                    <div class="student-meta">1234567896</div>
-                                    <div class="student-meta">Kelompok 1</div>
-                                </div>
-                            </div>
-                            <div class="report-meta">
-                                <div class="report-date">15 Juni 2023</div>
-                                <span class="status-badge status-completed">Selesai</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#previewModal">
-                                <i class="fas fa-eye me-1"></i> Preview
-                            </button>
-                            <a href="form-penilaian.html" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-redo me-1"></i> Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Report Card 8 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card report-card">
-                    <div class="card-body">
-                        <div class="report-header">
-                            <div class="student-main-info">
-                                <img src="https://via.placeholder.com/50" alt="Student" class="student-avatar">
-                                <div class="student-details">
-                                    <div class="student-name">Siti Rahma</div>
-                                    <div class="student-meta">1234567897</div>
-                                    <div class="student-meta">Kelompok 3</div>
-                                </div>
-                            </div>
-                            <div class="report-meta">
-                                <div class="report-date">14 Juni 2023</div>
-                                <span class="score-badge">78/100</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#previewModal">
-                                <i class="fas fa-eye me-1"></i> Preview
-                            </button>
-                            <a href="form-penilaian.html" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-redo me-1"></i> Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Load More Button -->
-        <div class="row mt-2">
-            <div class="col-12 text-center">
-                <button class="btn btn-outline-primary">
-                    <i class="fas fa-plus me-2"></i> Muat Lebih Banyak
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="previewModalLabel">
-                        <i class="fas fa-file-alt me-2"></i> Preview Laporan Harian
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Document Info -->
-                    <div class="document-info">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p class="mb-1"><strong>Nama Mahasiswa:</strong> Muhammad Rizki</p>
-                                <p class="mb-1"><strong>NIM:</strong> 1234567890</p>
-                                <p class="mb-1"><strong>Kelompok:</strong> Kelompok 1 - Desa Sukamaju</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mb-1"><strong>Tanggal Laporan:</strong> 15 Juni 2023</p>
-                                <p class="mb-1"><strong>Waktu Pengumpulan:</strong> 15.30 WIB</p>
-                                <p class="mb-0"><strong>Status:</strong> <span
-                                        class="status-badge status-pending">Menunggu Penilaian</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Document Preview -->
-                    <div class="document-preview">
-                        <div class="text-center py-5">
-                            <i class="fas fa-file-pdf fa-4x text-danger mb-3"></i>
-                            <h5>Laporan_Harian_15062023_Muhammad_Rizki.pdf</h5>
-                            <p class="text-muted">Dokumen akan ditampilkan di sini</p>
-                            <div class="mt-4">
-                                <button class="btn btn-primary me-2">
-                                    <i class="fas fa-download me-2"></i> Download PDF
+                            <!-- Action Buttons - Verify/Revisi -->
+                            <div class="action-buttons-modal" id="actionButtonsSection">
+                                <button type="button" class="btn-action btn-verify" id="btnVerify" data-action="dinilai">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Verifikasi Laporan</span>
                                 </button>
-                                <button class="btn btn-outline-primary">
-                                    <i class="fas fa-print me-2"></i> Print
+                                <button type="button" class="btn-action btn-revise" id="btnRevisi" data-action="direvisi">
+                                    <i class="fas fa-redo"></i>
+                                    <span>Minta Revisi</span>
                                 </button>
                             </div>
+                            <input type="hidden" name="action" id="hiddenAction" value="">
+
+                            <!-- Rating Section -->
+                            <div class="rating-section" id="ratingSection">
+                                <div class="rating-title">
+                                    <i class="fas fa-star"></i>
+                                    Penilaian Laporan
+                                </div>
+                                
+                                <div class="rating-input-group">
+                                    <label class="rating-label">Nilai (0-100):</label>
+                                    <input type="number" 
+                                           class="rating-input" 
+                                           id="ratingValue" 
+                                           name="nilai"
+                                           min="0" 
+                                           max="100" 
+                                           step="1"
+                                           placeholder="Masukkan nilai (0-100)"
+                                           required>
+                                    <span class="rating-value" id="ratingDisplay">-</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <a href="form-penilaian.html" class="btn btn-primary">
-                        <i class="fas fa-edit me-2"></i> Lanjut ke Penilaian
-                    </a>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitRating">
+                                <i class="fas fa-paper-plane me-2"></i>Simpan Penilaian
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -728,37 +902,18 @@
 @endsection
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Search functionality
-            const searchInput = document.querySelector('.search-box input');
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const reportCards = document.querySelectorAll('.report-card');
-                let visibleCount = 0;
-
-                reportCards.forEach(card => {
-                    const studentName = card.querySelector('.student-name').textContent
-                        .toLowerCase();
-                    const studentNim = card.querySelector('.student-meta').textContent
-                        .toLowerCase();
-
-                    if (studentName.includes(searchTerm) || studentNim.includes(searchTerm)) {
-                        card.parentElement.style.display = 'block';
-                        visibleCount++;
-                    } else {
-                        card.parentElement.style.display = 'none';
-                    }
+            // Tab functionality
+            const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            tabEls.forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function (event) {
+                    // Handle tab switch if needed
                 });
-
-                // Update results indicator
-                document.querySelector('.results-count').textContent = `${visibleCount} Laporan Ditemukan`;
             });
-        });
-    </script>
 
-    <script>
-        (function() {
+            // Auto-dismiss alerts
             const alerts = document.querySelectorAll('.alert-dismissible');
             alerts.forEach(a => {
                 setTimeout(() => {
@@ -771,6 +926,365 @@
                     }
                 }, 4000);
             });
-        })();
+        });
+
+        $(document).ready(function() {
+            // Button click untuk preview
+            $(document).on('click', '.pre-btn', function() {
+                const logbookId = $(this).data('logbook-id');
+                const mahasiswaName = $(this).data('mahasiswa-name');
+                const mahasiswaNim = $(this).data('mahasiswa-nim');
+                const kelompokName = $(this).data('kelompok-name');
+                const kegiatanData = $(this).data('kegiatan');
+                const status = $(this).data('status');
+                const tanggalLaporan = $(this).data('tanggal-laporan');
+                const waktuPengumpulan = $(this).data('waktu-pengumpulan');
+
+                // Set modal data
+                $('#previewModal .modal-title').html(`<i class="fas fa-clipboard-check me-2"></i>Penilaian Laporan - ${mahasiswaName}`);
+                $('#modalMahasiswaName').text(mahasiswaName);
+                $('#modalMahasiswaNim').text(mahasiswaNim);
+                $('#modalKelompokName').text(kelompokName);
+                $('#modalTanggalLaporan').text(tanggalLaporan);
+                $('#modalWaktuPengumpulan').text(waktuPengumpulan);
+                $('#modalLogbookId').val(logbookId);
+                
+                // Set status badge
+                const statusBadge = $('#modalStatus');
+                statusBadge.text(status.charAt(0).toUpperCase() + status.slice(1));
+                statusBadge.removeClass('status-pending status-reviewed status-late');
+                
+                if (status === 'dinilai' || status === 'verified') {
+                    statusBadge.addClass('status-reviewed');
+                } else if (status === 'draft' || status === 'pending') {
+                    statusBadge.addClass('status-pending');
+                } else if (status === 'direvisi' || status === 'rejected') {
+                    statusBadge.addClass('status-late');
+                }
+
+                // Show/hide action buttons and rating section based on status
+                if (status === 'dinilai') {
+                    $('#actionButtonsSection').hide();
+                    $('#ratingSection').hide();
+                } else {
+                    $('#actionButtonsSection').show();
+                    $('#ratingSection').show();
+                    
+                    // Reset buttons
+                    $('#btnVerify').removeClass('active');
+                    $('#btnRevisi').removeClass('active');
+                    $('#hiddenAction').val('');
+                    
+                    // Set initial button state based on status
+                    if (status === 'dinilai' || status === 'verified') {
+                        $('#btnVerify').addClass('active');
+                        $('#hiddenAction').val('dinilai');
+                    } else if (status === 'direvisi') {
+                        $('#btnRevisi').addClass('active');
+                        $('#hiddenAction').val('direvisi');
+                    }
+                }
+
+                // Reset form
+                $('#ratingValue').val('');
+                $('#ratingDisplay').text('-');
+                $('#comments').val('');
+
+                // Handle kegiatan data in table
+                const kegiatanTableBody = $('#kegiatanTableBody');
+                kegiatanTableBody.empty();
+                
+                if (kegiatanData && Array.isArray(kegiatanData) && kegiatanData.length > 0) {
+                    $.each(kegiatanData, function(index, item) {
+                        const row = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>
+                                    <div class="kegiatan-time">
+                                        <i class="fas fa-briefcase me-1"></i>${item.nama_kegiatan || '-'}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="kegiatan-time">
+                                        <i class="far fa-clock me-1"></i>${item.jumlah_waktu || '-'}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="kegiatan-desc">
+                                        ${item.deskripsi_kegiatan || '-'}
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        kegiatanTableBody.append(row);
+                    });
+                } else {
+                    kegiatanTableBody.html(`
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">Tidak ada data kegiatan</p>
+                            </td>
+                        </tr>
+                    `);
+                }
+            });
+
+            // Tombol Nilai langsung
+            $(document).on('click', '.nilai-btn', function() {
+                const logbookId = $(this).data('logbook-id');
+                
+                // Cari data dari row table
+                const row = $(this).closest('tr');
+                const mahasiswaName = row.find('td:nth-child(2)').text().trim();
+                const mahasiswaNim = row.find('td:nth-child(3)').text().trim();
+                const kelompokName = row.find('td:nth-child(4)').text().trim();
+                const tanggalLaporan = row.find('td:nth-child(5)').text().trim();
+                
+                // Set data untuk modal
+                $('#modalMahasiswaName').text(mahasiswaName);
+                $('#modalMahasiswaNim').text(mahasiswaNim);
+                $('#modalKelompokName').text(kelompokName);
+                $('#modalTanggalLaporan').text(tanggalLaporan);
+                $('#modalWaktuPengumpulan').text('-');
+                $('#modalStatus').text('Menunggu Penilaian').addClass('status-pending');
+                $('#modalLogbookId').val(logbookId);
+                
+                // Show action buttons and rating section
+                $('#actionButtonsSection').show();
+                $('#ratingSection').show();
+                
+                // Reset form
+                $('#btnVerify').removeClass('active');
+                $('#btnRevisi').removeClass('active');
+                $('#hiddenAction').val('');
+                $('#ratingValue').val('');
+                $('#ratingDisplay').text('-');
+                $('#comments').val('');
+                
+                // Load kegiatan data via AJAX
+                loadKegiatanData(logbookId);
+                
+                // Tampilkan modal
+                $('#previewModal').modal('show');
+            });
+
+            function loadKegiatanData(logbookId) {
+                $.ajax({
+                    url: '/dosen/logbook/' + logbookId + '/kegiatan',
+                    method: 'GET',
+                    beforeSend: function() {
+                        $('#kegiatanTableBody').html(`
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="text-muted mt-2">Memuat data kegiatan...</p>
+                                </td>
+                            </tr>
+                        `);
+                    },
+                    success: function(response) {
+                        const kegiatanTableBody = $('#kegiatanTableBody');
+                        kegiatanTableBody.empty();
+                        
+                        if (response.data && response.data.length > 0) {
+                            $.each(response.data, function(index, item) {
+                                const row = `
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td>
+                                            <div class="kegiatan-time">
+                                                <i class="fas fa-briefcase me-1"></i>${item.nama_kegiatan || '-'}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="kegiatan-time">
+                                                <i class="far fa-clock me-1"></i>${item.jumlah_waktu || '-'}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="kegiatan-desc">
+                                                ${item.deskripsi_kegiatan || '-'}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                                kegiatanTableBody.append(row);
+                            });
+                        } else {
+                            kegiatanTableBody.html(`
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                                        <p class="text-muted mb-0">Tidak ada data kegiatan</p>
+                                    </td>
+                                </tr>
+                            `);
+                        }
+                    },
+                    error: function() {
+                        $('#kegiatanTableBody').html(`
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-danger mb-2"></i>
+                                    <p class="text-danger mb-0">Gagal memuat data kegiatan</p>
+                                </td>
+                            </tr>
+                        `);
+                    }
+                });
+            }
+
+            // Button Verify/Revisi functionality
+            $('#btnVerify').click(function() {
+                $(this).addClass('active');
+                $('#btnRevisi').removeClass('active');
+                $('#hiddenAction').val('dinilai');
+            });
+
+            $('#btnRevisi').click(function() {
+                $(this).addClass('active');
+                $('#btnVerify').removeClass('active');
+                $('#hiddenAction').val('direvisi');
+            });
+
+            // Update rating display
+            $('#ratingValue').on('input', function() {
+                let value = $(this).val();
+                
+                // Validate range
+                if (value > 100) {
+                    value = 100;
+                    $(this).val(100);
+                } else if (value < 0) {
+                    value = 0;
+                    $(this).val(0);
+                }
+                
+                $('#ratingDisplay').text(value || '-');
+                
+                // Color coding based on value
+                const ratingDisplay = $('#ratingDisplay');
+                ratingDisplay.removeClass('text-danger text-warning text-success');
+                
+                if (value >= 80) {
+                    ratingDisplay.addClass('text-success');
+                } else if (value >= 60) {
+                    ratingDisplay.addClass('text-warning');
+                } else if (value > 0) {
+                    ratingDisplay.addClass('text-danger');
+                }
+            });
+
+            // Form submission
+            $('#penilaianForm').submit(function(e) {
+                e.preventDefault();
+                
+                const action = $('#hiddenAction').val();
+                const rating = $('#ratingValue').val();
+                const comments = $('#comments').val();
+                const logbookId = $('#modalLogbookId').val();
+
+                if (!action) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Pilihan Belum Dipilih',
+                        text: 'Silakan pilih Verifikasi atau Revisi terlebih dahulu',
+                        confirmButtonColor: '#3085d6',
+                    });
+                    return;
+                }
+
+                if (!rating || rating < 0 || rating > 100) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Nilai Tidak Valid',
+                        text: 'Silakan masukkan nilai antara 0-100',
+                        confirmButtonColor: '#3085d6',
+                    });
+                    return;
+                }
+
+                // Show confirmation
+                Swal.fire({
+                    title: 'Konfirmasi Penilaian',
+                    html: `
+                        <div class="text-start">
+                            <p>Apakah Anda yakin ingin menyimpan penilaian?</p>
+                            <p><strong>Aksi:</strong> ${action === 'verify' ? 'Verifikasi' : 'Minta Revisi'}</p>
+                            <p><strong>Nilai:</strong> ${rating}</p>
+                            ${comments ? `<p><strong>Komentar:</strong> ${comments.substring(0, 100)}${comments.length > 100 ? '...' : ''}</p>` : ''}
+                        </div>
+                    `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Simpan',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading
+                        Swal.fire({
+                            title: 'Menyimpan...',
+                            text: 'Sedang menyimpan penilaian',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // AJAX submission
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            method: 'POST',
+                            data: $(this).serialize(),
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil!',
+                                    text: 'Penilaian berhasil disimpan',
+                                    confirmButtonColor: '#3085d6',
+                                }).then(() => {
+                                    $('#previewModal').modal('hide');
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal!',
+                                    text: xhr.responseJSON?.message || 'Terjadi kesalahan saat menyimpan',
+                                    confirmButtonColor: '#3085d6',
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Keyboard shortcuts
+            $(document).keydown(function(e) {
+                if ($('#previewModal').hasClass('show')) {
+                    // Escape to close modal
+                    if (e.key === 'Escape') {
+                        $('#previewModal').modal('hide');
+                    }
+                    // Ctrl+Enter to submit
+                    if (e.ctrlKey && e.key === 'Enter') {
+                        $('#submitRating').click();
+                    }
+                    // 1 for verify, 2 for revise
+                    if (e.key === '1') {
+                        $('#btnVerify').click();
+                    }
+                    if (e.key === '2') {
+                        $('#btnRevisi').click();
+                    }
+                }
+            });
+        });
     </script>
 @endsection

@@ -46,7 +46,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="dropdown-menu-item">
+                    <a href="{{ route('penilaian-laporan-akhir') }}" class="dropdown-menu-item">
                         <i class="fas fa-file-contract"></i> <span>Penilaian Laporan</span>
                     </a>
                 </li>

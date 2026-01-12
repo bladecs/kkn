@@ -314,7 +314,7 @@
                                 <div class="phase-status">Menunggu</div>
                             </div>
                             <!-- Pengelompokan-->
-                            <div class="phase-step" data-phase="penerjunan">
+                            <div class="phase-step" data-phase="pengelompokan">
                                 <div class="phase-indicator-circle">
                                     <i class="fas fa-rocket"></i>
                                 </div>
@@ -377,11 +377,29 @@
                         <i class="fas fa-file-alt section-icon"></i>
                         <h5 class="section-title">Pelaporan & Evaluasi</h5>
                     </div>
-                    <a href="{{ route('pelaporan-harian') }}" class="menu-item">
+                    <?php
+                    use Carbon\Carbon;
+                    $now = Carbon::now();
+                    
+                    $tglMulai = $detail_kelompok->tgl_mulai ? Carbon::parse($detail_kelompok->tgl_mulai) : null;
+                    $tglSelesai = $detail_kelompok->tgl_selesai ? Carbon::parse($detail_kelompok->tgl_selesai) : null;
+                    
+                    $isWithinDateRange = $tglMulai && $tglSelesai && $now->between($tglMulai, $tglSelesai);
+                    $isAfterEndDate = $tglSelesai && $now->gt($tglSelesai);
+                    ?>
+
+                    {{-- Laporan Harian --}}
+                    <a href="{{ $isWithinDateRange ? route('pelaporan-harian') : 'javascript:void(0)' }}"
+                        class="menu-item {{ !$isWithinDateRange ? 'disabled' : '' }}"
+                        @if (!$isWithinDateRange) title="Laporan harian hanya tersedia dari {{ $tglMulai?->format('d/m/Y') }} hingga {{ $tglSelesai?->format('d/m/Y') }}" @endif>
                         <i class="fas fa-file-invoice"></i>
                         <span>Laporan Harian</span>
                     </a>
-                    <a href="#" class="menu-item">
+
+                    {{-- Laporan Akhir --}}
+                    <a href="{{ $isAfterEndDate ? route('pelaporan-akhir') : 'javascript:void(0)' }}"
+                        class="menu-item {{ !$isAfterEndDate ? 'disabled' : '' }}"
+                        @if (!$isAfterEndDate) title="Laporan akhir dapat diakses setelah {{ $tglSelesai?->format('d/m/Y') }}" @endif>
                         <i class="fas fa-file-contract"></i>
                         <span>Laporan Akhir</span>
                     </a>
@@ -470,6 +488,76 @@
                 setStatus(el, 'active', 'Berjalan');
             } else {
                 setStatus(el, '', 'Menunggu');
+            }
+        })();
+    </script>
+
+    <script>
+        const statusPengelompokan = @json($data ?? '-');
+
+        (function() {
+            const el = document.querySelector('.phase-step[data-phase="pengelompokan"]');
+            if (!el) return;
+
+            el.classList.remove('complete', 'active');
+
+            function setStatus(el, statusClass, text) {
+                el.classList.add(statusClass);
+                const statusEl = el.querySelector('.phase-status');
+                if (statusEl) {
+                    statusEl.className = 'phase-status ' +
+                        (statusClass === 'complete' ? 'status-completed' :
+                            (statusClass === 'active' ? 'status-active' : 'status-pending'));
+                    statusEl.textContent = text;
+                }
+            }
+
+            const s = (statusPengelompokan.anggota_kelompok);
+            if (s) {
+                setStatus(el, 'complete', 'Terdaftar');
+            } else {
+                setStatus(el, 'pending', 'Menunggu');
+            }
+        })();
+    </script>
+
+    <script>
+        const statusPelaksanaan = @json($detail_kelompok ?? '-');
+
+        (function() {
+            const el = document.querySelector('.phase-step[data-phase="pelaksanaan"]');
+            if (!el) return;
+
+            el.classList.remove('complete', 'active');
+
+            function setStatus(el, statusClass, text) {
+                el.classList.add(statusClass);
+                const statusEl = el.querySelector('.phase-status');
+                if (statusEl) {
+                    statusEl.className = 'phase-status ' +
+                        (statusClass === 'complete' ? 'status-completed' :
+                            (statusClass === 'active' ? 'status-active' : 'status-pending'));
+                    statusEl.textContent = text;
+                }
+            }
+
+            const tgl_s = (statusPelaksanaan.tgl_mulai)?.split('T')[0];
+            const tgl_e = (statusPelaksanaan.tgl_selesai)?.split('T')[0];
+            const s = (statusPelaksanaan.kelompok.status);
+            if (s === 'active' && tgl_s && tgl_e) {
+                const now = new Date();
+                const startDate = new Date(tgl_s);
+                const endDate = new Date(tgl_e);
+
+                console.log(now, startDate, endDate);
+
+                if (now >= startDate && now <= endDate) {
+                    setStatus(el, 'active', 'Berjalan');
+                } else if (now > endDate) {
+                    setStatus(el, 'complete', 'Selesai');
+                } else {
+                    setStatus(el, 'pending', 'Menunggu');
+                }
             }
         })();
     </script>

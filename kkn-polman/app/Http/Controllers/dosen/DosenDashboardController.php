@@ -4,11 +4,9 @@ namespace App\Http\Controllers\dosen;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dosen;
-use App\Models\dosenModel;
 use App\Models\KelompokKkn;
 use App\Models\LaporanAkhir;
 use App\Models\LogbookKegiatan;
-use App\Models\pengelompokanModel;
 use App\Models\ProjectKkn;
 use Illuminate\Http\Request;
 
@@ -28,15 +26,10 @@ class DosenDashboardController extends Controller
 
         // Ambil semua logbooks dari semua project
         $projectIds = $projects->pluck('id_project');
-        $allLogbooks = LogbookKegiatan::whereIn('anggota_id', $projectIds)
-            ->orderBy('created_at', 'desc')
-            ->take(10)
-            ->get();
+        $allLogbooks = LogbookKegiatan::where('kelompok_id', $kelompokKkn->id_kelompok)->limit(5)->get();
 
         // Ambil semua laporan akhir yang menunggu
-        $laporanMenunggu = LaporanAkhir::whereIn('anggota_id', $projectIds)
-            ->where('status', 'submitted')
-            ->get();
+        $laporanMenunggu = LaporanAkhir::where('status', 'dinilai')->get();
 
         return view('dashboard.dosen.dashboard', compact('projects', 'kelompokKkn', 'allLogbooks', 'laporanMenunggu'));
     }
@@ -52,6 +45,33 @@ class DosenDashboardController extends Controller
 
     public function penilaianLogbook()
     {
-        return view('dashboard.dosen.penilaian_logbook');
+        $session = session('id');
+        $dosen = Dosen::where('id', $session)->first();
+        $kelompokKkn = KelompokKkn::with(['detailKelompok', 'anggotaKelompok'])->where('pembimbing', $dosen->nip)->first();
+        $allLogbooks = LogbookKegiatan::where('kelompok_id', $kelompokKkn->id_kelompok)
+            ->paginate(10);
+        $statusCounts = [
+            'draft' => $allLogbooks->where('status', 'draft')->count(),
+            'dinilai' => $allLogbooks->where('status', 'dinilai')->count(),
+            'direvisi' => $allLogbooks->where('status', 'direvisi')->count(),
+        ];
+
+        return view('dashboard.dosen.dashboard_penilaian_logbook', compact('kelompokKkn', 'allLogbooks', 'statusCounts'));
+    }
+    
+    public function penilaianLaporanAkhir()
+    {
+        $session = session('id');
+        $dosen = Dosen::where('id', $session)->first();
+        $kelompokKkn = KelompokKkn::with(['detailKelompok', 'anggotaKelompok'])->where('pembimbing', $dosen->nip)->first();
+        $allLaporanAkhir = LaporanAkhir::where('kelompok_id', $kelompokKkn->id_kelompok)
+            ->paginate(10);
+        $statusCounts = [
+            'submitted' => $allLaporanAkhir->where('status', 'submitted')->count(),
+            'dinilai' => $allLaporanAkhir->where('status', 'dinilai')->count(),
+            'revisi' => $allLaporanAkhir->where('status', 'revisi')->count(),
+        ];
+
+        return view('dashboard.dosen.dashboard_penilaian_laporan_akhir', compact('kelompokKkn', 'allLaporanAkhir', 'statusCounts'));
     }
 }

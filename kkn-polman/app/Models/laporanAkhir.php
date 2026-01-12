@@ -16,8 +16,13 @@ class LaporanAkhir extends Model
 
     protected $fillable = [
         'id_laporan_akhir',
+        'kelompok_id',
         'anggota_id',
-        'path',
+        'path_pdf',
+        'path_ppt',
+        'catatan',
+        'comment',
+        'link_tambahan',
         'nilai',
         'status',
     ];
@@ -26,5 +31,10 @@ class LaporanAkhir extends Model
     public function anggota()
     {
         return $this->belongsTo(AnggotaKelompok::class, 'anggota_id');
+    }
+
+    public function kelompok()
+    {
+        return $this->belongsTo(KelompokKkn::class, 'kelompok_id', 'id_kelompok');
     }
 }

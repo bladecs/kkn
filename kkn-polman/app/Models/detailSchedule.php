@@ -33,4 +33,9 @@ class DetailSchedule extends Model
     {
         return $this->belongsTo(Schedule::class, 'schedule_id');
     }
+
+    public function schema()
+    {
+        return $this->belongsTo(Schema::class, 'schedule_id', 'schedule_id');
+    }   
 }

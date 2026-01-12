@@ -23,7 +23,7 @@ class Prodi extends Model
     // Relationships
     public function jurusan()
     {
-        return $this->belongsTo(JurusanModel::class, 'jurusan_id');
+        return $this->belongsTo(Jurusan::class, 'jurusan_id');
     }
 
     public function mahasiswa()

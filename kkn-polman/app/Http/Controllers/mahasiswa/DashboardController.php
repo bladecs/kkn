@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\AnggotaKelompok;
+use App\Models\DetailKelompokKkn;
 use App\Models\DetailSchedule;
 use App\Models\Jurusan;
+use App\Models\KategoriKegiatan;
 use App\Models\Mahasiswa;
 use App\Models\pendaftaranKkn;
 use App\Models\Prodi;
@@ -16,10 +19,12 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $session = $request->session()->get('id');
-        $data = Mahasiswa::where('id', $session)->first();
+        $data = Mahasiswa::with('anggotaKelompok')->where('id', $session)->first();
         $status_pendaftaran = pendaftaranKkn::where('nim', $data->nim)->first();
+        $data_anggota = AnggotaKelompok::where('nim', $data->nim)->first();
+        $detail_kelompok = DetailKelompokKkn::with('kelompok')->where('kelompok_id', $data_anggota->kelompok_id)->first();
 
-        return view('dashboard.mahasiswa.dashboard', compact('session', 'status_pendaftaran'));
+        return view('dashboard.mahasiswa.dashboard', compact('session', 'status_pendaftaran', 'data', 'detail_kelompok'));
     }
 
     public function pendaftaran(Request $request)
@@ -51,5 +56,20 @@ class DashboardController extends Controller
         $data_pendaftaran = pendaftaranKkn::where('nim', $nim)->first();
 
         return view('dashboard.mahasiswa.form_pengajuan_project', compact('data_pendaftaran', 'data_diri'));
+    }
+
+    public function formLogbook(){
+        $session = session('id');
+        $data_diri = Mahasiswa::with('anggotaKelompok')->where('id', $session)->first();
+        $anggotaKelompok = AnggotaKelompok::with('kelompok.detailKelompok')->where('nim', $data_diri->nim)->first();
+        $kat_kegiatan = KategoriKegiatan::all();
+        return view('dashboard.mahasiswa.form_daily_pelaporan', compact('data_diri', 'kat_kegiatan', 'anggotaKelompok'));
+    }
+
+    public function formLaporanAkhir(){
+        $session = session('id');
+        $data_diri = Mahasiswa::with('anggotaKelompok')->where('id', $session)->first();
+        $anggotaKelompok = AnggotaKelompok::with(['kelompok.detailKelompok','kelompok.pembimbingDosen'])->where('nim', $data_diri->nim)->first();
+        return view('dashboard.mahasiswa.form_pelaporan_akhir', compact('data_diri', 'anggotaKelompok'));
     }
 }
