@@ -29,6 +29,7 @@ Route::post('/users/create', [AdminController::class, 'store']);
 Route::post('/users/{id}/toggle-status', [AdminController::class, 'toggleStatus']);
 Route::get('/users/statistics', [AdminController::class, 'getStatistics']);
 Route::get('/users/datatable', [AdminController::class, 'datatable']);
-
+Route::post('/users/{id}/update', [AdminController::class, 'update']);
+Route::delete('/users/{id}', [AdminController::class, 'destroy']);
 
 Route::get('/schedules/{id}/schemas', [KoordinatorDashboarController::class, 'getSchemasBySchedule'])->name('schedule.schemas');

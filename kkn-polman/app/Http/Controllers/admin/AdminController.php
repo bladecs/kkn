@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AnggotaKelompok;
 use App\Models\Dosen;
 use App\Models\Jurusan;
 use App\Models\Mahasiswa;
+use App\Models\Prodi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,15 +23,30 @@ class AdminController extends Controller
         $dosen = User::where('role', 'dosen')->count();
         $koordinator = User::where('role', 'koordinator')->count();
         $new_users = User::whereDate('created_at', now()->subDays(7))->paginate(15);
+
         return view('dashboard.admin.dashboard', compact('mahasiswa', 'dosen', 'koordinator', 'new_users'));
     }
 
-    public function kelolaUser(){
-        return view('dashboard.admin.kelola_user');
+    public function kelolaUser()
+    {
+        $mahasiswa = Mahasiswa::count();
+        $mahasiswa_list = Mahasiswa::with('user')->paginate(10);
+        $dosen = User::where('role', 'dosen')->count();
+        $dosen_list = User::where('role', 'dosen')->with('dosen')->paginate(10);
+        $koordinator = User::where('role', 'koordinator')->count();
+        $koordinator_list = User::where('role', 'koordinator')->with('dosen')->paginate(10);
+        $totalUsers = User::count();
+        $new_users = User::whereDate('created_at', now()->subDays(7))->paginate(15);
+        $jurusan = Jurusan::all();
+        $prodi = Prodi::all();
+
+        return view('dashboard.admin.kelola_user', compact('mahasiswa', 'mahasiswa_list', 'dosen', 'dosen_list', 'koordinator', 'koordinator_list', 'totalUsers', 'new_users', 'jurusan', 'prodi'));
     }
-    
-    public function createUser(){
+
+    public function createUser()
+    {
         $jurusan = Jurusan::with('prodi')->get();
+
         return view('dashboard.admin.form_create_user', compact('jurusan'));
     }
 
@@ -40,32 +57,32 @@ class AdminController extends Controller
     {
         // Validasi input berdasarkan role
         $validator = $this->validateUser($request);
-        
+
         if ($validator->fails()) {
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Validasi gagal',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
-            
+
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
-        
+
         try {
             DB::beginTransaction();
-            
+
             if ($request->role === 'mahasiswa') {
                 $user = $this->createMahasiswa($request);
             } else {
                 $user = $this->createDosen($request);
             }
-            
+
             DB::commit();
-            
+
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
@@ -74,26 +91,26 @@ class AdminController extends Controller
                         'id' => $user->id,
                         'name' => $request->name,
                         'role' => $request->role,
-                        'dosen_role_type' => $request->dosen_role_type ?? null
-                    ]
+                        'dosen_role_type' => $request->dosen_role_type ?? null,
+                    ],
                 ], 201);
             }
-            
+
             return redirect()->route('dashboard_admin')
                 ->with('success', 'Akun berhasil dibuat!');
-                
+
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal membuat akun: ' . $e->getMessage()
+                    'message' => 'Gagal membuat akun: '.$e->getMessage(),
                 ], 500);
             }
-            
+
             return redirect()->back()
-                ->with('error', 'Gagal membuat akun: ' . $e->getMessage())
+                ->with('error', 'Gagal membuat akun: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -104,14 +121,14 @@ class AdminController extends Controller
     public function show(string $id)
     {
         $user = User::with(['mahasiswa', 'mahasiswa.prodi', 'mahasiswa.jurusan'])->findOrFail($id);
-        
+
         if (request()->ajax() || request()->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'data' => $user
+                'data' => $user,
             ]);
         }
-        
+
         return view('admin.users.show', compact('user'));
     }
 
@@ -121,20 +138,20 @@ class AdminController extends Controller
     public function edit(string $id)
     {
         $user = User::with(['mahasiswa', 'mahasiswa.prodi', 'mahasiswa.jurusan'])->findOrFail($id);
-        $prodis = Prodi::orderBy('nama')->get();
-        $jurusans = Jurusan::orderBy('nama')->get();
-        
+        $prodis = Prodi::orderBy('nama_prodi')->get();
+        $jurusans = Jurusan::orderBy('nama_jurusan')->get();
+
         if (request()->ajax() || request()->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'data' => [
                     'user' => $user,
                     'prodis' => $prodis,
-                    'jurusans' => $jurusans
-                ]
+                    'jurusans' => $jurusans,
+                ],
             ]);
         }
-        
+
         return view('admin.users.edit', compact('user', 'prodis', 'jurusans'));
     }
 
@@ -144,66 +161,170 @@ class AdminController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
-        
+
         // Validasi berdasarkan role user
         $validator = $this->validateUserUpdate($request, $user);
-        
+
         if ($validator->fails()) {
+            \Log::error('Validation failed:', $validator->errors()->toArray());
+
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Validasi gagal',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
-            
+
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
-        
+
         try {
             DB::beginTransaction();
+
+            $oldUserId = $user->id; // Simpan ID lama untuk update relasi
             
-            if ($user->role === 'mahasiswa') {
-                $this->updateMahasiswa($request, $user);
-            } else {
-                $this->updateDosen($request, $user);
+            // Update user data
+            $user->email = $request->email;
+
+            // Update ID jika NIM/NIP berubah
+            if ($user->role === 'mahasiswa' && $request->filled('nim') && $request->nim !== $user->mahasiswa->nim) {
+                $user->id = $request->nim; // Update ID user dengan NIM baru
+            } elseif (in_array($user->role, ['dosen', 'koordinator']) && $request->filled('nip') && $request->nip !== $user->dosen->nip) {
+                $user->id = $request->nip; // Update ID user dengan NIP baru
             }
-            
-            // Update password jika diisi
+
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
             }
-            
+
             $user->save();
-            
+
+            // Update berdasarkan role
+            if ($user->role === 'mahasiswa') {
+                $this->updateMahasiswaData($user, $request, $oldUserId);
+            } elseif (in_array($user->role, ['dosen', 'koordinator'])) {
+                $this->updateDosenData($user, $request, $oldUserId);
+            }
+
             DB::commit();
-            
+
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Akun berhasil diperbarui!',
-                    'data' => $user
+                    'data' => $user->load($user->role === 'mahasiswa' ? 'mahasiswa' : 'dosen'),
                 ]);
             }
-            
-            return redirect()->route('admin.users.index')
+
+            return redirect()->route('admin.kelola.user')
                 ->with('success', 'Akun berhasil diperbarui!');
-                
+
         } catch (\Exception $e) {
             DB::rollBack();
-            
+            \Log::error('Update error: '.$e->getMessage());
+
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal memperbarui akun: ' . $e->getMessage()
+                    'message' => 'Gagal memperbarui akun: '.$e->getMessage(),
                 ], 500);
             }
-            
+
             return redirect()->back()
-                ->with('error', 'Gagal memperbarui akun: ' . $e->getMessage())
+                ->with('error', 'Gagal memperbarui akun: '.$e->getMessage())
                 ->withInput();
+        }
+    }
+
+    /**
+     * Update data mahasiswa dan relasi terkait
+     */
+    private function updateMahasiswaData(User $user, Request $request, $oldUserId)
+    {
+        $mahasiswa = $user->mahasiswa;
+        $oldNim = $mahasiswa->nim;
+        $newNim = $request->nim;
+
+        if ($mahasiswa) {
+            // Update data mahasiswa
+            $mahasiswa->update([
+                'id' => $user->id, // Update ID reference ke users
+                'nim' => $newNim,
+                'name' => $request->name,
+                'semester' => $request->semester,
+                'prodi_id' => $request->prodi_id,
+                'jurusan_id' => $request->jurusan_id,
+            ]);
+
+            // Jika NIM berubah, update semua relasi yang menggunakan NIM
+            if ($oldNim !== $newNim) {
+                // Update anggota_kelompok
+                DB::table('anggota_kelompok')
+                    ->where('nim', $oldNim)
+                    ->update(['nim' => $newNim]);
+
+                // Update pendaftaran_kkn
+                DB::table('pendaftaran_kkn')
+                    ->where('nim', $oldNim)
+                    ->update(['nim' => $newNim]);
+
+                // Update user ID di tabel sessions jika ada
+                DB::table('sessions')
+                    ->where('user_id', $oldUserId)
+                    ->update(['user_id' => $user->id]);
+            }
+        }
+    }
+
+    /**
+     * Update data dosen dan relasi terkait
+     */
+    private function updateDosenData(User $user, Request $request, $oldUserId)
+    {
+        $dosen = $user->dosen;
+        $oldNip = $dosen->nip;
+        $newNip = $request->nip;
+
+        if ($dosen) {
+            // Update data dosen
+            $dosen->update([
+                'id' => $user->id, // Update ID reference ke users
+                'nip' => $newNip,
+                'name' => $request->name,
+                'prodi_id' => $request->prodi_id,
+                'jurusan_id' => $request->jurusan_id,
+            ]);
+
+            // Jika NIP berubah, update semua relasi yang menggunakan NIP
+            if ($oldNip !== $newNip) {
+                // Update kelompok_kkn (pembimbing)
+                DB::table('kelompok_kkn')
+                    ->where('pembimbing', $oldNip)
+                    ->update(['pembimbing' => $newNip]);
+
+                // Update project_kkn (pengaju)
+                DB::table('project_kkn')
+                    ->where('pengaju', $oldNip)
+                    ->update(['pengaju' => $newNip]);
+                    
+                // Update user ID di tabel sessions jika ada
+                DB::table('sessions')
+                    ->where('user_id', $oldUserId)
+                    ->update(['user_id' => $user->id]);
+            }
+
+            // Update role jika diubah dari admin
+            if (auth()->user()->role === 'admin' && $request->filled('dosen_role_type')) {
+                $newRole = $request->dosen_role_type === 'koordinator' ? 'koordinator' : 'dosen';
+                
+                if ($user->role !== $newRole) {
+                    $user->role = $newRole;
+                    $user->save();
+                }
+            }
         }
     }
 
@@ -214,44 +335,172 @@ class AdminController extends Controller
     {
         try {
             DB::beginTransaction();
-            
-            $user = User::findOrFail($id);
-            
+
+            $user = User::with(['dosen', 'mahasiswa'])->findOrFail($id);
+            $userRole = $user->role;
+            $userId = $user->id;
+
             // Hapus data relasi berdasarkan role
-            if ($user->role === 'mahasiswa') {
-                Mahasiswa::where('id', $user->id)->delete();
-            } elseif ($user->role === 'dosen') {
-                Dosen::where('id', $user->id)->delete();
+            if ($userRole === 'mahasiswa' && $user->mahasiswa) {
+                $nim = $user->mahasiswa->nim;
+                
+                // Hapus relasi yang terhubung dengan mahasiswa
+                $this->deleteMahasiswaRelations($nim, $userId);
+                
+                // Hapus mahasiswa
+                Mahasiswa::where('nim', $nim)->delete();
+                
+            } elseif (($userRole === 'dosen' || $userRole === 'koordinator') && $user->dosen) {
+                $nip = $user->dosen->nip;
+                
+                // Hapus relasi yang terhubung dengan dosen
+                $this->deleteDosenRelations($nip, $userId);
+                
+                // Hapus dosen
+                Dosen::where('nip', $nip)->delete();
             }
-            
-            // Hapus user
+
+            // Hapus user terakhir untuk menjaga foreign key constraint
             $user->delete();
-            
+
             DB::commit();
-            
+
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Akun berhasil dihapus!'
+                    'message' => 'Akun berhasil dihapus!',
                 ]);
             }
-            
-            return redirect()->route('admin.users.index')
+
+            return redirect()->route('admin.kelola.user')
                 ->with('success', 'Akun berhasil dihapus!');
-                
+
         } catch (\Exception $e) {
             DB::rollBack();
-            
+            \Log::error('Delete error: '.$e->getMessage());
+
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal menghapus akun: ' . $e->getMessage()
+                    'message' => 'Gagal menghapus akun: '.$e->getMessage(),
                 ], 500);
             }
-            
+
             return redirect()->back()
-                ->with('error', 'Gagal menghapus akun: ' . $e->getMessage());
+                ->with('error', 'Gagal menghapus akun: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Hapus semua relasi mahasiswa
+     */
+    private function deleteMahasiswaRelations($nim, $userId)
+    {
+        // Cari semua pendaftaran milik mahasiswa ini
+        $pendaftaranIds = DB::table('pendaftaran_kkn')
+            ->where('nim', $nim)
+            ->pluck('id_pendaftaran');
+
+        // Hapus detail_pendaftaran_kkn
+        if ($pendaftaranIds->count() > 0) {
+            DB::table('detail_pendaftaran_kkn')
+                ->whereIn('no_pendaftaran', $pendaftaranIds)
+                ->delete();
+        }
+
+        // Hapus pendaftaran_kkn
+        DB::table('pendaftaran_kkn')
+            ->where('nim', $nim)
+            ->delete();
+
+        // Hapus anggota_kelompok
+        $anggotaIds = DB::table('anggota_kelompok')
+            ->where('nim', $nim)
+            ->pluck('id_anggota');
+
+        if ($anggotaIds->count() > 0) {
+            // Hapus detail logbook terkait anggota
+            DB::table('detail_logbook')
+                ->whereIn('logbook_id', function($query) use ($anggotaIds) {
+                    $query->select('id_logbook')
+                        ->from('logbook_kegiatan')
+                        ->whereIn('anggota_id', $anggotaIds);
+                })
+                ->delete();
+
+            // Hapus logbook kegiatan
+            DB::table('logbook_kegiatan')
+                ->whereIn('anggota_id', $anggotaIds)
+                ->delete();
+
+            // Hapus laporan akhir
+            DB::table('laporan_akhir')
+                ->whereIn('anggota_id', $anggotaIds)
+                ->delete();
+
+            // Hapus anggota kelompok
+            DB::table('anggota_kelompok')
+                ->where('nim', $nim)
+                ->delete();
+        }
+
+        // Hapus sessions
+        DB::table('sessions')
+            ->where('user_id', $userId)
+            ->delete();
+    }
+
+    /**
+     * Hapus semua relasi dosen
+     */
+    private function deleteDosenRelations($nip, $userId)
+    {
+        // Periksa apakah dosen ini masih menjadi pembimbing di kelompok
+        $kelompokIds = DB::table('kelompok_kkn')
+            ->where('pembimbing', $nip)
+            ->pluck('id_kelompok');
+
+        if ($kelompokIds->count() > 0) {
+            // Jika dosen masih menjadi pembimbing, set pembimbing ke NULL
+            DB::table('kelompok_kkn')
+                ->where('pembimbing', $nip)
+                ->update(['pembimbing' => null]);
+        }
+
+        // Periksa apakah dosen ini masih menjadi pengaju project
+        DB::table('project_kkn')
+            ->where('pengaju', $nip)
+            ->update(['pengaju' => '1225444665']); // Set ke koordinator default
+
+        // Periksa apakah dosen ini masih menjadi approved_by di project
+        DB::table('project_kkn')
+            ->where('approved_by', $userId)
+            ->update(['approved_by' => 'USRKOOR01']); // Set ke koordinator default
+
+        // Periksa apakah dosen ini masih menjadi created_by di schedules
+        DB::table('schedules')
+            ->where('created_by', $userId)
+            ->update(['created_by' => 'USRKOOR01']); // Set ke koordinator default
+
+        // Periksa apakah dosen ini masih menjadi created_by di schemas
+        DB::table('schemas')
+            ->where('created_by', $userId)
+            ->update(['created_by' => 'USRKOOR01']); // Set ke koordinator default
+
+        // Periksa apakah dosen ini masih menjadi approved_by di schemas
+        DB::table('schemas')
+            ->where('approved_by', $userId)
+            ->update(['approved_by' => 'USRKOOR01']); // Set ke koordinator default
+
+        // Periksa apakah dosen ini masih menjadi created_by di kelompok_kkn
+        DB::table('kelompok_kkn')
+            ->where('created_by', $userId)
+            ->update(['created_by' => 'USRKOOR01']); // Set ke koordinator default
+
+        // Hapus sessions
+        DB::table('sessions')
+            ->where('user_id', $userId)
+            ->delete();
     }
 
     /**
@@ -272,8 +521,8 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'prodi_id' => ['required', 'exists:prodi,id'],
-            'jurusan_id' => ['required', 'exists:jurusan,id'],
+            'prodi_id' => ['required', 'exists:prodi,id_prodi'],
+            'jurusan_id' => ['required', 'exists:jurusan,id_jurusan'],
         ];
 
         if ($request->role === 'mahasiswa') {
@@ -282,7 +531,7 @@ class AdminController extends Controller
         } else {
             $rules['nip'] = ['required', 'string', 'max:30', 'unique:dosen,nip', 'unique:users,id'];
             $rules['dosen_role_type'] = ['required', 'in:dosen_biasa,koordinator'];
-            
+
             // Validasi untuk koordinator
             if ($request->dosen_role_type === 'koordinator') {
                 $rules['koordinator_wilayah'] = ['nullable', 'string', 'max:100'];
@@ -300,32 +549,36 @@ class AdminController extends Controller
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'prodi_id' => ['required', 'exists:prodi,id'],
-            'jurusan_id' => ['required', 'exists:jurusan,id'],
+            'email' => ['required', 'string', 'email', 'max:255',
+                Rule::unique('users')->ignore($user->id)],
+            'password' => ['nullable', 'string', 'min:8'],
         ];
 
+        // Tambahkan validasi untuk prodi_id dan jurusan_id
+        if ($request->has('prodi_id')) {
+            $rules['prodi_id'] = ['required', 'exists:prodi,id_prodi'];
+        }
+        
+        if ($request->has('jurusan_id')) {
+            $rules['jurusan_id'] = ['required', 'exists:jurusan,id_jurusan'];
+        }
+
         if ($user->role === 'mahasiswa') {
-            $rules['nim'] = ['required', 'string', 'max:20', 
-                Rule::unique('mahasiswa', 'nim')->ignore($user->id, 'id'),
-                Rule::unique('users', 'id')->ignore($user->id)
+            $mahasiswa = $user->mahasiswa;
+            $rules['nim'] = ['required', 'string', 'max:20',
+                Rule::unique('mahasiswa')->ignore($mahasiswa ? $mahasiswa->nim : null, 'nim'),
             ];
             $rules['semester'] = ['required', 'integer', 'min:1', 'max:14'];
-        } else {
-            $rules['nip'] = ['required', 'string', 'max:30', 
-                Rule::unique('dosen', 'nip')->ignore($user->id, 'id'),
-                Rule::unique('users', 'id')->ignore($user->id)
+
+        } elseif (in_array($user->role, ['dosen', 'koordinator'])) {
+            $dosen = $user->dosen;
+            $rules['nip'] = ['required', 'string', 'max:30',
+                Rule::unique('dosen')->ignore($dosen ? $dosen->nip : null, 'nip'),
             ];
             
-            // Untuk update, hanya admin yang bisa ubah role type
+            // Validasi untuk role type jika admin mengubah
             if (auth()->user()->role === 'admin') {
                 $rules['dosen_role_type'] = ['required', 'in:dosen_biasa,koordinator'];
-                
-                if ($request->dosen_role_type === 'koordinator') {
-                    $rules['koordinator_wilayah'] = ['nullable', 'string', 'max:100'];
-                    $rules['koordinator_telepon'] = ['nullable', 'string', 'max:20'];
-                }
             }
         }
 
@@ -339,7 +592,7 @@ class AdminController extends Controller
     {
         // Create User
         $user = User::create([
-            'id' => uniqid('USR' . $request->nim),
+            'id' => $request->nim,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'mahasiswa',
@@ -365,7 +618,7 @@ class AdminController extends Controller
     {
         // Determine role based on dosen_role_type
         $role = $request->dosen_role_type === 'koordinator' ? 'koordinator' : 'dosen';
-        
+
         // Create User
         $user = User::create([
             'id' => $request->nip,
@@ -383,76 +636,9 @@ class AdminController extends Controller
             'jurusan_id' => $request->jurusan_id,
         ];
 
-        // Add koordinator specific fields
-        if ($role === 'koordinator') {
-            $dosenData['is_koordinator'] = true;
-            $dosenData['koordinator_wilayah'] = $request->koordinator_wilayah;
-            $dosenData['koordinator_telepon'] = $request->koordinator_telepon;
-        }
-
         Dosen::create($dosenData);
 
         return $user;
-    }
-
-    /**
-     * Update Mahasiswa
-     */
-    private function updateMahasiswa(Request $request, User $user)
-    {
-        // Update User
-        $user->email = $request->email;
-        $user->id = $request->nim; // Update ID jika NIM berubah
-        
-        // Update Mahasiswa
-        $mahasiswa = Mahasiswa::where('id', $user->id)->firstOrFail();
-        $mahasiswa->update([
-            'nim' => $request->nim,
-            'name' => $request->name,
-            'semester' => $request->semester,
-            'prodi_id' => $request->prodi_id,
-            'jurusan_id' => $request->jurusan_id,
-        ]);
-    }
-
-    /**
-     * Update Dosen
-     */
-    private function updateDosen(Request $request, User $user)
-    {
-        // Update User
-        $user->email = $request->email;
-        $user->id = $request->nip; // Update ID jika NIP berubah
-        
-        // Update role jika admin mengubah
-        if (auth()->user()->role === 'admin') {
-            $role = $request->dosen_role_type === 'koordinator' ? 'koordinator' : 'dosen';
-            $user->role = $role;
-        }
-        
-        // Update Dosen
-        $dosen = Dosen::where('id', $user->id)->firstOrFail();
-        $dosenData = [
-            'nip' => $request->nip,
-            'name' => $request->name,
-            'prodi_id' => $request->prodi_id,
-            'jurusan_id' => $request->jurusan_id,
-        ];
-
-        // Update koordinator fields
-        if (auth()->user()->role === 'admin') {
-            $dosenData['is_koordinator'] = $request->dosen_role_type === 'koordinator';
-            
-            if ($request->dosen_role_type === 'koordinator') {
-                $dosenData['koordinator_wilayah'] = $request->koordinator_wilayah;
-                $dosenData['koordinator_telepon'] = $request->koordinator_telepon;
-            } else {
-                $dosenData['koordinator_wilayah'] = null;
-                $dosenData['koordinator_telepon'] = null;
-            }
-        }
-
-        $dosen->update($dosenData);
     }
 
     /**
@@ -462,34 +648,34 @@ class AdminController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            
-            // Toggle status
-            $user->is_active = !$user->is_active;
+
+            // Toggle status - perlu menambahkan field is_active di tabel users jika belum ada
+            $user->is_active = ! $user->is_active;
             $user->save();
-            
+
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Status akun berhasil diubah.',
                     'data' => [
-                        'is_active' => $user->is_active
-                    ]
+                        'is_active' => $user->is_active,
+                    ],
                 ]);
             }
-            
+
             return redirect()->back()
                 ->with('success', 'Status akun berhasil diubah.');
-                
+
         } catch (\Exception $e) {
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal mengubah status: ' . $e->getMessage()
+                    'message' => 'Gagal mengubah status: '.$e->getMessage(),
                 ], 500);
             }
-            
+
             return redirect()->back()
-                ->with('error', 'Gagal mengubah status: ' . $e->getMessage());
+                ->with('error', 'Gagal mengubah status: '.$e->getMessage());
         }
     }
 
@@ -506,16 +692,16 @@ class AdminController extends Controller
                 'koordinator_count' => User::where('role', 'koordinator')->count(),
                 'active_users' => User::where('is_active', true)->count(),
             ];
-            
+
             return response()->json([
                 'success' => true,
-                'data' => $stats
+                'data' => $stats,
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengambil statistik: ' . $e->getMessage()
+                'message' => 'Gagal mengambil statistik: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -526,26 +712,26 @@ class AdminController extends Controller
     public function search(Request $request)
     {
         $search = $request->get('search');
-        
+
         $users = User::where('email', 'like', "%{$search}%")
-                    ->orWhere('id', 'like', "%{$search}%")
-                    ->orWhereHas('mahasiswa', function($query) use ($search) {
-                        $query->where('name', 'like', "%{$search}%")
-                              ->orWhere('nim', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('dosen', function($query) use ($search) {
-                        $query->where('name', 'like', "%{$search}%")
-                              ->orWhere('nip', 'like', "%{$search}%");
-                    })
-                    ->paginate(10);
-        
+            ->orWhere('id', 'like', "%{$search}%")
+            ->orWhereHas('mahasiswa', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('nim', 'like', "%{$search}%");
+            })
+            ->orWhereHas('dosen', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('nip', 'like', "%{$search}%");
+            })
+            ->paginate(10);
+
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'data' => $users
+                'data' => $users,
             ]);
         }
-        
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -556,55 +742,60 @@ class AdminController extends Controller
     {
         try {
             $users = User::with(['mahasiswa', 'dosen'])->get();
-            
+
             $headers = [
                 'Content-Type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename="users_' . date('Y-m-d') . '.csv"',
+                'Content-Disposition' => 'attachment; filename="users_'.date('Y-m-d').'.csv"',
             ];
-            
-            $callback = function() use ($users) {
+
+            $callback = function () use ($users) {
                 $file = fopen('php://output', 'w');
-                
+
                 // Header
-                fputcsv($file, ['ID', 'Role', 'Email', 'Nama', 'Prodi', 'Jurusan', 'Status', 'Tanggal Daftar']);
-                
+                fputcsv($file, ['ID', 'Role', 'Email', 'Nama', 'NIM/NIP', 'Prodi', 'Jurusan', 'Status', 'Tanggal Daftar']);
+
                 // Data
                 foreach ($users as $user) {
                     $nama = '';
+                    $nimNip = '';
                     $prodi = '';
                     $jurusan = '';
-                    
+                    $status = 'Aktif';
+
                     if ($user->role === 'mahasiswa' && $user->mahasiswa) {
                         $nama = $user->mahasiswa->name;
-                        $prodi = $user->mahasiswa->prodi->nama ?? '';
-                        $jurusan = $user->mahasiswa->jurusan->nama ?? '';
+                        $nimNip = $user->mahasiswa->nim;
+                        $prodi = $user->mahasiswa->prodi->nama_prodi ?? '';
+                        $jurusan = $user->mahasiswa->jurusan->nama_jurusan ?? '';
                     } elseif (($user->role === 'dosen' || $user->role === 'koordinator') && $user->dosen) {
                         $nama = $user->dosen->name;
-                        $prodi = $user->dosen->prodi->nama ?? '';
-                        $jurusan = $user->dosen->jurusan->nama ?? '';
+                        $nimNip = $user->dosen->nip;
+                        $prodi = $user->dosen->prodi->nama_prodi ?? '';
+                        $jurusan = $user->dosen->jurusan->nama_jurusan ?? '';
                     }
-                    
+
                     fputcsv($file, [
                         $user->id,
                         $user->role,
                         $user->email,
                         $nama,
+                        $nimNip,
                         $prodi,
                         $jurusan,
-                        $user->is_active ? 'Aktif' : 'Nonaktif',
+                        $status,
                         $user->created_at->format('Y-m-d H:i:s'),
                     ]);
                 }
-                
+
                 fclose($file);
             };
-            
+
             return response()->stream($callback, 200, $headers);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal export data: ' . $e->getMessage()
+                'message' => 'Gagal export data: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -616,68 +807,63 @@ class AdminController extends Controller
     {
         try {
             $query = User::with(['mahasiswa', 'dosen']);
-            
+
             // Filter berdasarkan role jika ada
             if ($request->has('role') && $request->role) {
                 $query->where('role', $request->role);
             }
-            
-            // Filter berdasarkan status jika ada
-            if ($request->has('is_active') && $request->is_active !== '') {
-                $query->where('is_active', $request->is_active);
-            }
-            
+
             // Search
             if ($request->has('search') && $request->search['value']) {
                 $search = $request->search['value'];
-                $query->where(function($q) use ($search) {
+                $query->where(function ($q) use ($search) {
                     $q->where('email', 'like', "%{$search}%")
-                      ->orWhere('id', 'like', "%{$search}%")
-                      ->orWhereHas('mahasiswa', function($q2) use ($search) {
-                          $q2->where('name', 'like', "%{$search}%")
-                             ->orWhere('nim', 'like', "%{$search}%");
-                      })
-                      ->orWhereHas('dosen', function($q2) use ($search) {
-                          $q2->where('name', 'like', "%{$search}%")
-                             ->orWhere('nip', 'like', "%{$search}%");
-                      });
+                        ->orWhere('id', 'like', "%{$search}%")
+                        ->orWhereHas('mahasiswa', function ($q2) use ($search) {
+                            $q2->where('name', 'like', "%{$search}%")
+                                ->orWhere('nim', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('dosen', function ($q2) use ($search) {
+                            $q2->where('name', 'like', "%{$search}%")
+                                ->orWhere('nip', 'like', "%{$search}%");
+                        });
                 });
             }
-            
+
             // Order
             $orderColumn = $request->order[0]['column'] ?? 0;
             $orderDirection = $request->order[0]['dir'] ?? 'desc';
             $columns = ['id', 'role', 'email', 'created_at'];
-            
+
             if (isset($columns[$orderColumn])) {
                 $query->orderBy($columns[$orderColumn], $orderDirection);
             }
-            
+
             // Pagination
             $length = $request->length ?? 10;
             $users = $query->paginate($length);
-            
+
             return response()->json([
                 'draw' => $request->draw ?? 1,
                 'recordsTotal' => User::count(),
                 'recordsFiltered' => $users->total(),
-                'data' => $users->map(function($user) {
+                'data' => $users->map(function ($user) {
                     return [
                         'id' => $user->id,
                         'name' => $user->mahasiswa->name ?? $user->dosen->name ?? '-',
                         'email' => $user->email,
                         'role' => $user->role,
-                        'status' => $user->is_active ? 'Aktif' : 'Nonaktif',
+                        'status' => 'Aktif',
                         'created_at' => $user->created_at->format('Y-m-d H:i:s'),
-                        'actions' => view('admin.users.partials.actions', compact('user'))->render()
+                        'actions' => view('admin.users.partials.actions', compact('user'))->render(),
                     ];
-                })
+                }),
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengambil data: ' . $e->getMessage()
+                'message' => 'Gagal mengambil data: '.$e->getMessage(),
             ], 500);
         }
     }
